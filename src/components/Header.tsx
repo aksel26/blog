@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Link } from "gatsby";
 import DarkModeToggle from "./DarkModeToggle";
-import SearchBox from "./SearchBox";
+import SearchDialog from "./SearchDialog";
 
 const Header: React.FC = () => {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
@@ -133,11 +133,7 @@ const Header: React.FC = () => {
           </div>
         </div>
 
-        {isSearchOpen && (
-          <div className="mt-4 max-w-lg">
-            <SearchBox />
-          </div>
-        )}
+        <SearchDialog isOpen={isSearchOpen} onClose={() => setIsSearchOpen(false)} />
 
         <div className="md:hidden mt-4 flex space-x-1">
           <Link
