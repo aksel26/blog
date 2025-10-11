@@ -14,6 +14,7 @@ interface CategoryData {
         category: string;
         tags: string[];
         excerpt: string;
+        thumbnail?: string;
       };
       fields: {
         slug: string;
@@ -75,24 +76,6 @@ const CategoryTemplate: React.FC<PageProps<CategoryData, CategoryPageContext>> =
   const isDevLog = category === "기술";
   const isLifeLog = category === "일상";
 
-  // For LifeLog, create varied sizes for bento grid
-  const getCardSize = (index: number): "small" | "medium" | "large" => {
-    const pattern = [
-      "large",
-      "medium",
-      "small",
-      "medium",
-      "small",
-      "large",
-      "medium",
-      "small",
-      "medium",
-      "large",
-      "small",
-      "medium",
-    ];
-    return pattern[index % pattern.length] as "small" | "medium" | "large";
-  };
 
   return (
     <Layout>
@@ -157,25 +140,79 @@ const CategoryTemplate: React.FC<PageProps<CategoryData, CategoryPageContext>> =
               ))}
             </div>
           ) : isLifeLog ? (
-            // LifeLog: Bento grid format
-            <div
-              className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4 mb-8"
-              style={{
-                gridAutoFlow: "row dense",
-              }}
-            >
-              {posts.map((post, index) => (
-                <LifeLogCard
-                  key={post.fields.slug}
-                  title={post.frontmatter.title}
-                  excerpt={post.frontmatter.excerpt}
-                  date={post.frontmatter.date}
-                  tags={post.frontmatter.tags}
-                  slug={post.fields.slug}
-                  readTime={post.timeToRead}
-                  size={getCardSize(index)}
-                />
-              ))}
+            // LifeLog: Custom layout with first row 6:4, then 3 columns
+            <div className="mb-8">
+              {posts.length > 0 && (
+                <>
+                  {/* First row: 6:4 layout */}
+                  {posts.length >= 2 ? (
+                    <div className="grid grid-cols-10 gap-4 mb-6">
+                      {/* First post - 6/10 columns */}
+                      <div className="col-span-10 md:col-span-6">
+                        <LifeLogCard
+                          key={`category-first-${posts[0].fields.slug}`}
+                          title={posts[0].frontmatter.title}
+                          excerpt={posts[0].frontmatter.excerpt}
+                          date={posts[0].frontmatter.date}
+                          tags={posts[0].frontmatter.tags}
+                          slug={posts[0].fields.slug}
+                          readTime={posts[0].timeToRead}
+                          size="large"
+                          thumbnail={posts[0].frontmatter.thumbnail}
+                        />
+                      </div>
+                      {/* Second post - 4/10 columns */}
+                      <div className="col-span-10 md:col-span-4">
+                        <LifeLogCard
+                          key={`category-second-${posts[1].fields.slug}`}
+                          title={posts[1].frontmatter.title}
+                          excerpt={posts[1].frontmatter.excerpt}
+                          date={posts[1].frontmatter.date}
+                          tags={posts[1].frontmatter.tags}
+                          slug={posts[1].fields.slug}
+                          readTime={posts[1].timeToRead}
+                          size="medium"
+                          thumbnail={posts[1].frontmatter.thumbnail}
+                        />
+                      </div>
+                    </div>
+                  ) : (
+                    /* Only one post */
+                    <div className="mb-6">
+                      <LifeLogCard
+                        key={`category-single-${posts[0].fields.slug}`}
+                        title={posts[0].frontmatter.title}
+                        excerpt={posts[0].frontmatter.excerpt}
+                        date={posts[0].frontmatter.date}
+                        tags={posts[0].frontmatter.tags}
+                        slug={posts[0].fields.slug}
+                        readTime={posts[0].timeToRead}
+                        size="large"
+                        thumbnail={posts[0].frontmatter.thumbnail}
+                      />
+                    </div>
+                  )}
+
+                  {/* Remaining posts: 3 columns grid */}
+                  {posts.length > 2 && (
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                      {posts.slice(2).map((post, index) => (
+                        <LifeLogCard
+                          key={`category-grid-${index}-${post.fields.slug}`}
+                          title={post.frontmatter.title}
+                          excerpt={post.frontmatter.excerpt}
+                          date={post.frontmatter.date}
+                          tags={post.frontmatter.tags}
+                          slug={post.fields.slug}
+                          readTime={post.timeToRead}
+                          size="medium"
+                          thumbnail={post.frontmatter.thumbnail}
+                        />
+                      ))}
+                    </div>
+                  )}
+                </>
+              )}
             </div>
           ) : (
             // Default: Grid format
@@ -235,6 +272,7 @@ export const query = graphql`
           category
           tags
           excerpt
+          thumbnail
         }
         fields {
           slug

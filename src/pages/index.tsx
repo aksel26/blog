@@ -2,6 +2,7 @@ import React from "react"
 import type { PageProps } from "gatsby"
 import { Link, graphql } from "gatsby"
 import Layout from "../components/Layout"
+import RecentActivities from "../components/RecentActivities"
 
 interface IndexPageData {
   site: {
@@ -136,25 +137,7 @@ const IndexPage: React.FC<PageProps<IndexPageData>> = ({ data }) => {
         </section>
 
         {/* Recent Activity */}
-        <section>
-          <h3 
-            className="text-2xl font-bold mb-6"
-            style={{ color: "var(--text-primary)" }}
-          >
-            최근 활동
-          </h3>
-          <div 
-            className="toss-card p-6 text-center"
-            style={{ backgroundColor: "var(--bg-secondary)" }}
-          >
-            <p 
-              className="text-sm"
-              style={{ color: "var(--text-secondary)" }}
-            >
-              새로운 포스트들이 곧 업데이트될 예정입니다. ✨
-            </p>
-          </div>
-        </section>
+        <RecentActivities />
       </div>
     </Layout>
   )
