@@ -8,9 +8,10 @@ interface DevLogCardProps {
   tags: string[];
   slug: string;
   readTime?: number;
+  thumbnail?: string;
 }
 
-const DevLogCard: React.FC<DevLogCardProps> = ({ title, excerpt, date, tags, slug, readTime }) => {
+const DevLogCard: React.FC<DevLogCardProps> = ({ title, excerpt, date, tags, slug, readTime, thumbnail }) => {
   return (
     <Link to={slug} style={{ textDecoration: "none" }}>
       <article
@@ -23,7 +24,7 @@ const DevLogCard: React.FC<DevLogCardProps> = ({ title, excerpt, date, tags, slu
         }}
       >
         <div className="flex items-start justify-between mb-3">
-          <div className="flex-1">
+          <div className={`flex-1 ${thumbnail ? 'pr-4' : ''}`}>
             <h2 className="text-lg font-semibold mb-2 leading-tight " style={{ color: "var(--text-primary)" }}>
               {title}
             </h2>
@@ -31,6 +32,18 @@ const DevLogCard: React.FC<DevLogCardProps> = ({ title, excerpt, date, tags, slu
               {excerpt}
             </p>
           </div>
+          
+          {/* Thumbnail */}
+          {thumbnail && (
+            <div className="flex-shrink-0">
+              <div 
+                className="w-20 h-20 rounded-lg bg-cover bg-center"
+                style={{
+                  backgroundImage: `url(${thumbnail})`,
+                }}
+              />
+            </div>
+          )}
         </div>
 
         <div className="flex flex-wrap gap-2 mb-4">
