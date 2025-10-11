@@ -4,6 +4,20 @@ import Layout from "../components/Layout"
 import SEO from "../components/SEO"
 import TableOfContents from "../components/TableOfContents"
 import GiscusComments from "../components/GiscusComments"
+import PostNavigation from "../components/PostNavigation"
+
+interface NavigationPost {
+  fields: {
+    slug: string
+  }
+  frontmatter: {
+    title: string
+    category: string
+    excerpt: string
+    date: string
+    thumbnail?: string
+  }
+}
 
 interface BlogPostData {
   markdownRemark: {
@@ -23,9 +37,16 @@ interface BlogPostData {
   }
 }
 
-const BlogPostTemplate: React.FC<PageProps<BlogPostData>> = ({ data }) => {
+interface BlogPostPageContext {
+  slug: string
+  previous?: NavigationPost | null
+  next?: NavigationPost | null
+}
+
+const BlogPostTemplate: React.FC<PageProps<BlogPostData, BlogPostPageContext>> = ({ data, pageContext }) => {
   const post = data.markdownRemark
   const { title, date, modified, category, tags, excerpt } = post.frontmatter
+  const { previous, next } = pageContext
 
   return (
     <Layout>
@@ -127,6 +148,9 @@ const BlogPostTemplate: React.FC<PageProps<BlogPostData>> = ({ data }) => {
             <TableOfContents content={post.html} />
           </div>
         </div>
+
+        {/* Post Navigation */}
+        <PostNavigation previous={previous} next={next} currentCategory={category} />
 
         <footer 
           className="mt-16 pt-8"

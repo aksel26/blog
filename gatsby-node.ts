@@ -38,7 +38,11 @@ export const createPages: GatsbyNode["createPages"] = async ({ graphql, actions,
             slug
           }
           frontmatter {
+            title
             category
+            excerpt
+            date
+            thumbnail
           }
         }
       }
@@ -55,12 +59,21 @@ export const createPages: GatsbyNode["createPages"] = async ({ graphql, actions,
   // Create blog post pages
   const blogPostTemplate = path.resolve("./src/templates/blog-post.tsx")
   
-  posts.forEach((post: any) => {
+  posts.forEach((post: any, index: number) => {
+    // 같은 카테고리의 포스트들만 필터링
+    const sameCategoryPosts = posts.filter((p: any) => p.frontmatter.category === post.frontmatter.category)
+    const currentIndexInCategory = sameCategoryPosts.findIndex((p: any) => p.fields.slug === post.fields.slug)
+    
+    const previous = currentIndexInCategory === sameCategoryPosts.length - 1 ? null : sameCategoryPosts[currentIndexInCategory + 1]
+    const next = currentIndexInCategory === 0 ? null : sameCategoryPosts[currentIndexInCategory - 1]
+    
     createPage({
       path: post.fields.slug,
       component: blogPostTemplate,
       context: {
         slug: post.fields.slug,
+        previous,
+        next,
       },
     })
   })
