@@ -1,6 +1,6 @@
 ---
 title: "TypeScript 5.0 주요 변경사항"
-date: "2024-03-05"
+date: "2025-08-05"
 modified: "2024-03-05"
 category: "기술"
 tags: ["TypeScript", "JavaScript"]
@@ -32,7 +32,7 @@ function logged(value: any, context: ClassDecoratorContext) {
 @logged
 class Person {
   name: string;
-  
+
   constructor(name: string) {
     this.name = name;
   }
@@ -79,7 +79,7 @@ function newWay<const T extends readonly string[]>(arr: T): T {
   return arr;
 }
 
-const fruits = ['apple', 'banana', 'cherry'] as const;
+const fruits = ["apple", "banana", "cherry"] as const;
 
 // oldWay의 반환 타입: readonly string[]
 const result1 = oldWay(fruits);
@@ -96,9 +96,9 @@ function createConfig<const T>(config: T): T {
 }
 
 const config = createConfig({
-  apiUrl: 'https://api.example.com',
+  apiUrl: "https://api.example.com",
   timeout: 5000,
-  retries: 3
+  retries: 3,
 } as const);
 
 // config의 타입이 정확히 추론됩니다:
@@ -115,10 +115,7 @@ const config = createConfig({
 
 ```json
 {
-  "extends": [
-    "@my-company/typescript-config",
-    "./tsconfig.base.json"
-  ],
+  "extends": ["@my-company/typescript-config", "./tsconfig.base.json"],
   "compilerOptions": {
     "strict": true
   }
@@ -131,12 +128,12 @@ const config = createConfig({
 
 ```typescript
 const Colors = {
-  Red: 'red',
-  Green: 'green',
-  Blue: 'blue'
+  Red: "red",
+  Green: "green",
+  Blue: "blue",
 } as const;
 
-type Color = typeof Colors[keyof typeof Colors];
+type Color = (typeof Colors)[keyof typeof Colors];
 // type Color = "red" | "green" | "blue"
 
 // 더 나은 type safety
@@ -145,8 +142,8 @@ function setColor(color: Color) {
 }
 
 setColor(Colors.Red); // ✅ OK
-setColor('red');      // ✅ OK
-setColor('yellow');   // ❌ Error
+setColor("red"); // ✅ OK
+setColor("yellow"); // ❌ Error
 ```
 
 ## 5. --verbatimModuleSyntax 플래그
@@ -166,11 +163,11 @@ setColor('yellow');   // ❌ Error
 
 ```typescript
 // 타입만 import할 때 명시적으로 표시해야 함
-import type { User } from './types';
-import { fetchUser } from './api';
+import type { User } from "./types";
+import { fetchUser } from "./api";
 
 // 잘못된 사용 (verbatimModuleSyntax: true 일 때)
-import { User } from './types'; // ❌ Error
+import { User } from "./types"; // ❌ Error
 ```
 
 ## 6. 성능 개선
@@ -209,12 +206,12 @@ TypeScript 5.0은 `package.json`의 `exports` 필드를 더 잘 지원합니다.
 
 ```typescript
 const config = {
-  apiUrl: 'https://api.example.com',
+  apiUrl: "https://api.example.com",
   timeout: 5000,
   features: {
     auth: true,
-    analytics: false
-  }
+    analytics: false,
+  },
 } satisfies Config;
 
 // config의 타입이 정확히 추론되면서도

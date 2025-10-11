@@ -1,10 +1,11 @@
 ---
 title: "제주도 3박 4일 여행 후기"
-date: "2024-03-10"
+date: "2025-10-10"
 modified: "2024-03-10"
 category: "일상"
 tags: ["여행", "제주도", "맛집"]
 excerpt: "가족과 함께한 제주도 여행에서 가본 맛집과 관광지를 소개합니다. 실제 경험을 바탕으로 한 솔직한 후기입니다."
+thumbnail: "https://fastly.picsum.photos/id/855/640/425.jpg?hmac=tCJpko0_ROMhusJdSzPhWyr_y4ccfqVePhlkpeNHnto"
 ---
 
 # 제주도 3박 4일 여행 후기
