@@ -132,6 +132,11 @@ const BlogPostTemplate: React.FC<PageProps<BlogPostData, BlogPostPageContext>> =
           </div>
         </header>
 
+        {/* Mobile TOC - appears first on mobile */}
+        <div className="lg:hidden mb-8">
+          <TableOfContents content={post.html} />
+        </div>
+
         <div className="lg:grid lg:grid-cols-4 lg:gap-8">
           <div className="lg:col-span-3">
             <div
@@ -144,7 +149,8 @@ const BlogPostTemplate: React.FC<PageProps<BlogPostData, BlogPostPageContext>> =
             />
           </div>
           
-          <div className="lg:col-span-1 mt-8 lg:mt-0">
+          {/* Desktop TOC - appears on the right on desktop */}
+          <div className="hidden lg:block lg:col-span-1">
             <TableOfContents content={post.html} />
           </div>
         </div>
