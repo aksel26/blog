@@ -19,3 +19,22 @@ import "prismjs/components/prism-yaml"
 
 // Import Prism.js plugins
 import "prismjs/plugins/line-numbers/prism-line-numbers"
+
+import { navigate } from "gatsby"
+
+// Handle client-side routing for 404 pages
+export const onRouteUpdate = ({ location }: { location: { pathname: string } }) => {
+  // In development, manually navigate to 404 page for non-existent routes
+  if (typeof window !== "undefined" && process.env.NODE_ENV === "development") {
+    const validRoutes = ["/", "/devLog", "/lifeLog", "/404"]
+    const isValidRoute = validRoutes.includes(location.pathname) || 
+                        location.pathname.startsWith("/devLog/") || 
+                        location.pathname.startsWith("/lifeLog/")
+    
+    if (!isValidRoute && location.pathname !== "/404/") {
+      setTimeout(() => {
+        navigate("/404/")
+      }, 100)
+    }
+  }
+}

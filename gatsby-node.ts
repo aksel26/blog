@@ -30,6 +30,13 @@ export const onCreateNode: GatsbyNode["onCreateNode"] = ({ node, actions, getNod
 export const createPages: GatsbyNode["createPages"] = async ({ graphql, actions, reporter }) => {
   const { createPage } = actions
 
+  // Create 404 page explicitly
+  createPage({
+    path: "/404/",
+    component: path.resolve("./src/pages/404.tsx"),
+    context: {},
+  })
+
   const result = await graphql(`
     {
       allMarkdownRemark(sort: { frontmatter: { date: DESC } }) {
