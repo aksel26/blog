@@ -12,16 +12,7 @@ interface LifeLogCardProps {
   thumbnail?: string;
 }
 
-const LifeLogCard: React.FC<LifeLogCardProps> = ({
-  title,
-  excerpt,
-  date,
-  tags,
-  slug,
-  readTime,
-  size = "medium",
-  thumbnail,
-}) => {
+const LifeLogCard: React.FC<LifeLogCardProps> = ({ title, excerpt, date, tags, slug, readTime, size = "medium", thumbnail }) => {
   const [imageError, setImageError] = useState(false);
   const [imageLoaded, setImageLoaded] = useState(false);
 
@@ -39,16 +30,13 @@ const LifeLogCard: React.FC<LifeLogCardProps> = ({
 
   const hasValidThumbnail = thumbnail && !imageError;
 
-
   return (
     <Link to={slug} style={{ textDecoration: "none" }}>
       <article
         className={`transition-all shadow-none duration-300 ${sizeClasses[size]} relative overflow-hidden rounded-lg`}
         style={{
           minHeight: cardHeight[size],
-          background: hasValidThumbnail
-            ? "transparent"
-            : `linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 100%)`,
+          background: hasValidThumbnail ? "transparent" : `linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 100%)`,
         }}
         onMouseEnter={(e) => {
           e.currentTarget.style.transform = "translateY(-4px) scale(1.02)";
@@ -61,19 +49,13 @@ const LifeLogCard: React.FC<LifeLogCardProps> = ({
         {hasValidThumbnail && (
           <>
             {/* Hidden image for loading detection */}
-            <img
-              src={thumbnail}
-              alt=""
-              className="hidden"
-              onLoad={() => setImageLoaded(true)}
-              onError={() => setImageError(true)}
-            />
+            <img src={thumbnail} alt="" className="hidden" onLoad={() => setImageLoaded(true)} onError={() => setImageError(true)} />
             <div
               className="absolute inset-0 bg-cover bg-center bg-no-repeat"
               style={{
                 backgroundImage: `url(${thumbnail})`,
                 opacity: imageLoaded ? 1 : 0,
-                transition: 'opacity 0.3s ease-in-out'
+                transition: "opacity 0.3s ease-in-out",
               }}
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent" />
@@ -81,28 +63,16 @@ const LifeLogCard: React.FC<LifeLogCardProps> = ({
         )}
 
         {/* Loading state for thumbnail */}
-        {thumbnail && !imageLoaded && !imageError && (
-          <div className="absolute inset-0 bg-gray-200 animate-pulse" />
-        )}
+        {thumbnail && !imageLoaded && !imageError && <div className="absolute inset-0 bg-gray-200 animate-pulse" />}
 
         {/* Content Overlay */}
-        <div
-          className={`relative z-10 h-full flex flex-col justify-end ${
-            hasValidThumbnail ? "p-6" : "p-6"
-          }`}
-        >
+        <div className={`absolute z-10 h-full flex flex-col justify-end ${hasValidThumbnail ? "p-6" : "p-6"}`}>
           <div>
             <h2
-              className={`font-bold mb-3 leading-tight ${
-                size === "large"
-                  ? "text-xl"
-                  : size === "medium"
-                  ? "text-lg"
-                  : "text-base"
-              }`}
-              style={{ 
+              className={`font-bold mb-3 leading-tight ${size === "large" ? "text-xl" : size === "medium" ? "text-lg" : "text-base"}`}
+              style={{
                 color: hasValidThumbnail ? "white" : "var(--text-primary)",
-                textShadow: hasValidThumbnail ? "0 2px 4px rgba(0,0,0,0.5)" : "none"
+                textShadow: hasValidThumbnail ? "0 2px 4px rgba(0,0,0,0.5)" : "none",
               }}
             >
               {title}
@@ -110,14 +80,10 @@ const LifeLogCard: React.FC<LifeLogCardProps> = ({
 
             {size !== "small" && (
               <p
-                className={`leading-relaxed mb-4 ${
-                  size === "large" ? "text-base" : "text-sm"
-                } line-clamp-3`}
+                className={`leading-relaxed mb-4 ${size === "large" ? "text-base" : "text-sm"} line-clamp-3`}
                 style={{
-                  color: hasValidThumbnail
-                    ? "rgba(255, 255, 255, 0.95)"
-                    : "var(--text-secondary)",
-                  textShadow: hasValidThumbnail ? "0 1px 2px rgba(0,0,0,0.7)" : "none"
+                  color: hasValidThumbnail ? "rgba(255, 255, 255, 0.95)" : "var(--text-secondary)",
+                  textShadow: hasValidThumbnail ? "0 1px 2px rgba(0,0,0,0.7)" : "none",
                 }}
               >
                 {excerpt}
@@ -131,9 +97,7 @@ const LifeLogCard: React.FC<LifeLogCardProps> = ({
                     key={tag}
                     className="inline-block px-3 py-1 text-xs rounded-full"
                     style={{
-                      backgroundColor: hasValidThumbnail
-                        ? "rgba(255, 255, 255, 0.2)"
-                        : "var(--accent-blue-light)",
+                      backgroundColor: hasValidThumbnail ? "rgba(255, 255, 255, 0.2)" : "var(--accent-blue-light)",
                       color: hasValidThumbnail ? "white" : "var(--accent-blue)",
                       backdropFilter: hasValidThumbnail ? "blur(10px)" : "none",
                     }}
@@ -150,10 +114,8 @@ const LifeLogCard: React.FC<LifeLogCardProps> = ({
               <time
                 className="text-xs font-medium"
                 style={{
-                  color: hasValidThumbnail
-                    ? "rgba(255, 255, 255, 0.9)"
-                    : "var(--text-tertiary)",
-                  textShadow: hasValidThumbnail ? "0 1px 2px rgba(0,0,0,0.7)" : "none"
+                  color: hasValidThumbnail ? "rgba(255, 255, 255, 0.9)" : "var(--text-tertiary)",
+                  textShadow: hasValidThumbnail ? "0 1px 2px rgba(0,0,0,0.7)" : "none",
                 }}
               >
                 {date}
@@ -162,10 +124,8 @@ const LifeLogCard: React.FC<LifeLogCardProps> = ({
                 <span
                   className="text-xs"
                   style={{
-                    color: hasValidThumbnail
-                      ? "rgba(255, 255, 255, 0.9)"
-                      : "var(--text-tertiary)",
-                    textShadow: hasValidThumbnail ? "0 1px 2px rgba(0,0,0,0.7)" : "none"
+                    color: hasValidThumbnail ? "rgba(255, 255, 255, 0.9)" : "var(--text-tertiary)",
+                    textShadow: hasValidThumbnail ? "0 1px 2px rgba(0,0,0,0.7)" : "none",
                   }}
                 >
                   {readTime}분
