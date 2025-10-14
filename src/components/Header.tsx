@@ -18,18 +18,34 @@ const Header: React.FC = () => {
         zIndex: 50,
       }}
     >
-      <nav className="container mx-auto px-6 py-4 max-w-6xl">
+      <nav className="container mx-auto px-6 py-3 max-w-6xl">
         <div className="flex justify-between items-center">
           <Link
             to="/"
-            className="text-xl font-medium"
+            className="text-xl font-medium logo-link"
             style={{
               color: "var(--text-primary)",
               textDecoration: "none",
-              letterSpacing: "-0.02em",
+              letterSpacing: "0.05em",
+              fontWeight: 500,
+              fontFamily: "Sacramento, cursive",
+              fontSize: "1.75rem",
+              padding: "0px 12px",
+            }}
+            onMouseEnter={(e) => {
+              const span = e.currentTarget.querySelector("span");
+              if (span) {
+                (span as HTMLElement).style.color = "var(--bg-primary)";
+              }
+            }}
+            onMouseLeave={(e) => {
+              const span = e.currentTarget.querySelector("span");
+              if (span) {
+                (span as HTMLElement).style.color = "var(--text-primary)";
+              }
             }}
           >
-            HMKIM
+            <span>hmkim</span>
           </Link>
 
           <div className="hidden md:flex items-center space-x-1">
@@ -104,30 +120,16 @@ const Header: React.FC = () => {
               }}
             >
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-                />
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
               </svg>
             </button>
             <DarkModeToggle />
           </div>
 
           <div className="md:hidden flex items-center space-x-2">
-            <button
-              onClick={() => setIsSearchOpen(!isSearchOpen)}
-              className="p-2 rounded-lg"
-              style={{ color: "var(--text-secondary)" }}
-            >
+            <button onClick={() => setIsSearchOpen(!isSearchOpen)} className="p-2 rounded-lg" style={{ color: "var(--text-secondary)" }}>
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-                />
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
               </svg>
             </button>
             <DarkModeToggle />

@@ -1,6 +1,8 @@
 @import "tailwindcss";
 
 /* Font imports */
+@import url("https://fonts.googleapis.com/css2?family=Sacramento&display=swap");
+
 @font-face {
   font-family: "Freesentation";
   src: url("../fonts/FreesentationVF.ttf") format("truetype-variations");
@@ -344,4 +346,38 @@ body {
 .prose :where(input[type="checkbox"]):not(:where([class~="not-prose"] *)) {
   margin-right: 0.5em;
   cursor: pointer;
+}
+
+/* Logo hover animation */
+.logo-link {
+  position: relative;
+  display: inline-block;
+  overflow: hidden;
+  z-index: 1;
+  border-radius: 8px;
+}
+
+.logo-link::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: var(--text-primary);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.3s ease-in-out;
+  z-index: -1;
+  border-radius: 8px;
+}
+
+.logo-link:hover::before {
+  transform: scaleX(1);
+}
+
+.logo-link span {
+  position: relative;
+  z-index: 1;
+  transition: color 0.3s ease-in-out;
 }
