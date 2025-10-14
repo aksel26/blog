@@ -1,11 +1,13 @@
 import type { GatsbyConfig } from "gatsby";
+import remarkGfm from "remark-gfm";
+import remarkExternalLinks from "remark-external-links";
 
 const config: GatsbyConfig = {
   siteMetadata: {
-    title: "Blog Site",
-    description: "A personal blog for tech and daily life posts",
-    author: "@blogauthor",
-    siteUrl: "https://your-blog-site.com",
+    title: "개발과 일상을 기록하는 공간",
+    description: "코드를 통해 배운 것들과 삶에서 경험한 소중한 순간들을 나누는 블로그입니다.",
+    author: "@aksel26",
+    siteUrl: "https://aksel26.netlify.app/",
   },
   plugins: [
     "gatsby-plugin-react-helmet",
@@ -28,9 +30,10 @@ const config: GatsbyConfig = {
       },
     },
     {
-      resolve: "gatsby-transformer-remark",
+      resolve: "gatsby-plugin-mdx",
       options: {
-        plugins: [
+        extensions: [".md", ".mdx"],
+        gatsbyRemarkPlugins: [
           {
             resolve: "gatsby-remark-images",
             options: {
@@ -53,42 +56,13 @@ const config: GatsbyConfig = {
               removeAccents: true,
             },
           },
-          {
-            resolve: "gatsby-remark-prismjs",
-            options: {
-              classPrefix: "language-",
-              inlineCodeMarker: null,
-              aliases: {
-                sh: "bash",
-                js: "javascript",
-                ts: "typescript",
-              },
-              showLineNumbers: true,
-              noInlineHighlight: false,
-              languageExtensions: [
-                {
-                  language: "superscript",
-                  extend: "javascript",
-                  definition: {
-                    superscript_types: /(SuperType)/,
-                  },
-                  insertBefore: {
-                    function: {
-                      superscript_keywords: /\b(?:superif|superelse)\b/,
-                    },
-                  },
-                },
-              ],
-              prompt: {
-                user: "root",
-                host: "localhost",
-                global: false,
-              },
-            },
-          },
           "gatsby-remark-copy-linked-files",
           "gatsby-remark-smartypants",
         ],
+        mdxOptions: {
+          remarkPlugins: [remarkGfm, [remarkExternalLinks, { target: false }]],
+          rehypePlugins: [],
+        },
       },
     },
     // {

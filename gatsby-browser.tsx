@@ -20,7 +20,56 @@ import "prismjs/components/prism-yaml";
 // Import Prism.js plugins
 import "prismjs/plugins/line-numbers/prism-line-numbers";
 
-import { navigate } from "gatsby";
+import React from "react";
+import { navigate, GatsbyBrowser } from "gatsby";
+import { MDXProvider } from "@mdx-js/react";
+import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
+import { vscDarkPlus } from "react-syntax-highlighter/dist/esm/styles/prism";
+
+// Custom components for MDX
+const components = {
+  code: (props: any) => {
+    const { children, className, ...rest } = props;
+
+    const match = /language-(\w+)/.exec(className || "");
+
+    if (match) {
+      // Code block with language
+      return (
+        <SyntaxHighlighter
+          style={vscDarkPlus}
+          language={match[1]}
+          PreTag="div"
+          customStyle={{
+            margin: "1.7142857em 0",
+            borderRadius: "8px",
+            fontSize: "0.875em",
+          }}
+        >
+          {String(children).replace(/\n$/, "")}
+        </SyntaxHighlighter>
+      );
+    }
+
+    // Inline code
+    return (
+      <code className={className} {...rest}>
+        {children}
+      </code>
+    );
+  },
+  pre: (props: any) => {
+    return <pre {...props} />;
+  },
+  table: (props: any) => {
+    return <table {...props} />;
+  },
+};
+
+// Wrap page element with MDXProvider
+export const wrapPageElement: GatsbyBrowser["wrapPageElement"] = ({ element }) => {
+  return <MDXProvider components={components}>{element}</MDXProvider>;
+};
 
 // Handle client-side routing for 404 pages
 export const onRouteUpdate = ({ location }: { location: { pathname: string } }) => {

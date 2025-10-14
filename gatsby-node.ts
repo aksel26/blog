@@ -4,7 +4,7 @@ import path from "path"
 export const onCreateNode: GatsbyNode["onCreateNode"] = ({ node, actions, getNode }) => {
   const { createNodeField } = actions
 
-  if (node.internal.type === "MarkdownRemark") {
+  if (node.internal.type === "Mdx") {
     const fileNode = getNode(node.parent!)
     const frontmatter = (node as any).frontmatter
     const category = frontmatter?.category?.toLowerCase() || "posts"
@@ -39,8 +39,9 @@ export const createPages: GatsbyNode["createPages"] = async ({ graphql, actions,
 
   const result = await graphql(`
     {
-      allMarkdownRemark(sort: { frontmatter: { date: DESC } }) {
+      allMdx(sort: { frontmatter: { date: DESC } }) {
         nodes {
+          id
           fields {
             slug
           }
@@ -50,6 +51,9 @@ export const createPages: GatsbyNode["createPages"] = async ({ graphql, actions,
             excerpt
             date
             thumbnail
+          }
+          internal {
+            contentFilePath
           }
         }
       }
@@ -61,24 +65,28 @@ export const createPages: GatsbyNode["createPages"] = async ({ graphql, actions,
     return
   }
 
-  const posts = (result.data as any).allMarkdownRemark.nodes
+  const posts = (result.data as any).allMdx.nodes
 
   // Create blog post pages
   const blogPostTemplate = path.resolve("./src/templates/blog-post.tsx")
-  
-  posts.forEach((post: any, index: number) => {
+
+  posts.forEach((post: any) => {
     // 같은 카테고리의 포스트들만 필터링
     const sameCategoryPosts = posts.filter((p: any) => p.frontmatter.category === post.frontmatter.category)
     const currentIndexInCategory = sameCategoryPosts.findIndex((p: any) => p.fields.slug === post.fields.slug)
-    
+
     const previous = currentIndexInCategory === sameCategoryPosts.length - 1 ? null : sameCategoryPosts[currentIndexInCategory + 1]
     const next = currentIndexInCategory === 0 ? null : sameCategoryPosts[currentIndexInCategory - 1]
-    
+
+    const componentPath = `${blogPostTemplate}?__contentFilePath=${post.internal.contentFilePath}`;
+    console.log("Creating page:", post.fields.slug, "with component:", componentPath);
+
     createPage({
       path: post.fields.slug,
-      component: blogPostTemplate,
+      component: componentPath,
       context: {
         slug: post.fields.slug,
+        id: post.id,
         previous,
         next,
       },
