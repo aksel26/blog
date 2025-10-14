@@ -5,6 +5,7 @@ import SearchDialog from "./SearchDialog";
 
 const Header: React.FC = () => {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   return (
     <header
@@ -130,34 +131,87 @@ const Header: React.FC = () => {
               </svg>
             </button>
             <DarkModeToggle />
+            <button
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              className="p-2 rounded-lg transition-all duration-200"
+              style={{ color: "var(--text-secondary)" }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.backgroundColor = "var(--bg-secondary)";
+                e.currentTarget.style.color = "var(--text-primary)";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.backgroundColor = "transparent";
+                e.currentTarget.style.color = "var(--text-secondary)";
+              }}
+            >
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                {isMobileMenuOpen ? (
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                ) : (
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                )}
+              </svg>
+            </button>
           </div>
         </div>
 
         <SearchDialog isOpen={isSearchOpen} onClose={() => setIsSearchOpen(false)} />
 
-        <div className="md:hidden mt-4 flex space-x-1">
-          <Link
-            to="/devLog"
-            className="px-3 py-2 rounded-lg text-sm font-medium"
-            style={{ color: "var(--text-secondary)", textDecoration: "none" }}
-          >
-            DevLog
-          </Link>
-          <Link
-            to="/lifeLog"
-            className="px-3 py-2 rounded-lg text-sm font-medium"
-            style={{ color: "var(--text-secondary)", textDecoration: "none" }}
-          >
-            LifeLog
-          </Link>
-          <Link
-            to="/about"
-            className="px-3 py-2 rounded-lg text-sm font-medium"
-            style={{ color: "var(--text-secondary)", textDecoration: "none" }}
-          >
-            About
-          </Link>
-        </div>
+        {/* Mobile Menu Dropdown */}
+        {isMobileMenuOpen && (
+          <div className="md:hidden mt-4 py-4 border-t" style={{ borderColor: "var(--border-color)" }}>
+            <div className="flex flex-col space-y-2">
+              <Link
+                to="/devLog"
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="px-4 py-3 rounded-lg text-sm font-medium transition-all duration-200"
+                style={{ color: "var(--text-secondary)", textDecoration: "none" }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.backgroundColor = "var(--bg-secondary)";
+                  e.currentTarget.style.color = "var(--text-primary)";
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.backgroundColor = "transparent";
+                  e.currentTarget.style.color = "var(--text-secondary)";
+                }}
+              >
+                DevLog
+              </Link>
+              <Link
+                to="/lifeLog"
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="px-4 py-3 rounded-lg text-sm font-medium transition-all duration-200"
+                style={{ color: "var(--text-secondary)", textDecoration: "none" }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.backgroundColor = "var(--bg-secondary)";
+                  e.currentTarget.style.color = "var(--text-primary)";
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.backgroundColor = "transparent";
+                  e.currentTarget.style.color = "var(--text-secondary)";
+                }}
+              >
+                LifeLog
+              </Link>
+              <Link
+                to="/about"
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="px-4 py-3 rounded-lg text-sm font-medium transition-all duration-200"
+                style={{ color: "var(--text-secondary)", textDecoration: "none" }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.backgroundColor = "var(--bg-secondary)";
+                  e.currentTarget.style.color = "var(--text-primary)";
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.backgroundColor = "transparent";
+                  e.currentTarget.style.color = "var(--text-secondary)";
+                }}
+              >
+                About
+              </Link>
+            </div>
+          </div>
+        )}
       </nav>
     </header>
   );

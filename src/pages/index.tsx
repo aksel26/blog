@@ -56,7 +56,7 @@ const IndexPage: React.FC<PageProps<IndexPageData>> = ({ data }) => {
                 e.currentTarget.style.transform = "translateY(0)";
               }}
             >
-              <img src="/devLogCard.webp" alt="devCardImage" className="absolute right-0 bottom-0 w-42 h-42 opacity-10" />
+              <img src="/devLogCard.webp" alt="devCardImage" className="absolute right-0 bottom-0 w-32 h-32 sm:w-42 sm:h-42 opacity-10" />
 
               <h2 className="text-2xl mb-4 font-bold" style={{ color: "var(--text-primary)" }}>
                 DevLog
@@ -84,7 +84,7 @@ const IndexPage: React.FC<PageProps<IndexPageData>> = ({ data }) => {
                 e.currentTarget.style.transform = "translateY(0)";
               }}
             >
-              <img src="/lifeLogCard.png" alt="devCardImage" className="absolute right-0 bottom-0 w-42 h-42 opacity-10" />
+              <img src="/lifeLogCard.png" alt="devCardImage" className="absolute right-0 bottom-0 w-32 h-32 sm:w-42 sm:h-42 opacity-10" />
               <h2 className="text-2xl mb-4 font-bold" style={{ color: "var(--text-primary)" }}>
                 LifeLog
               </h2>

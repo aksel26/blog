@@ -28,7 +28,7 @@ const SearchDialog: React.FC<SearchDialogProps> = ({ isOpen, onClose }) => {
 
   const data = useStaticQuery(graphql`
     query SearchQuery {
-      allMarkdownRemark(sort: { frontmatter: { date: DESC } }) {
+      allMdx(sort: { frontmatter: { date: DESC } }) {
         nodes {
           fields {
             slug
@@ -45,7 +45,7 @@ const SearchDialog: React.FC<SearchDialogProps> = ({ isOpen, onClose }) => {
     }
   `);
 
-  const allPosts: SearchPost[] = data.allMarkdownRemark.nodes;
+  const allPosts: SearchPost[] = data.allMdx.nodes;
 
   const filteredPosts = useMemo(() => {
     if (!query.trim()) return [];

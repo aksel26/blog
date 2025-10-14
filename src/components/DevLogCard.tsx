@@ -15,7 +15,7 @@ const DevLogCard: React.FC<DevLogCardProps> = ({ title, excerpt, date, tags, slu
   return (
     <Link to={slug} style={{ textDecoration: "none" }}>
       <article
-        className="p-6 transition-all duration-300 border-none shadow-none"
+        className="p-3 transition-all duration-300 border-none shadow-none"
         onMouseEnter={(e) => {
           e.currentTarget.style.transform = "translateY(-2px)";
         }}
@@ -24,7 +24,7 @@ const DevLogCard: React.FC<DevLogCardProps> = ({ title, excerpt, date, tags, slu
         }}
       >
         <div className="flex items-start justify-between mb-3">
-          <div className={`flex-1 ${thumbnail ? 'pr-4' : ''}`}>
+          <div className={`flex-1 ${thumbnail ? "pr-4" : ""}`}>
             <h2 className="text-lg font-semibold mb-2 leading-tight " style={{ color: "var(--text-primary)" }}>
               {title}
             </h2>
@@ -32,11 +32,11 @@ const DevLogCard: React.FC<DevLogCardProps> = ({ title, excerpt, date, tags, slu
               {excerpt}
             </p>
           </div>
-          
+
           {/* Thumbnail */}
           {thumbnail && (
             <div className="flex-shrink-0">
-              <div 
+              <div
                 className="w-20 h-20 rounded-lg bg-cover bg-center"
                 style={{
                   backgroundImage: `url(${thumbnail})`,

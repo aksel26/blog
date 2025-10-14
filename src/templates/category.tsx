@@ -6,7 +6,7 @@ import DevLogCard from "../components/DevLogCard";
 import LifeLogCard from "../components/LifeLogCard";
 
 interface CategoryData {
-  allMarkdownRemark: {
+  allMdx: {
     nodes: Array<{
       frontmatter: {
         title: string;
@@ -19,7 +19,6 @@ interface CategoryData {
       fields: {
         slug: string;
       };
-      timeToRead: number;
     }>;
   };
 }
@@ -31,7 +30,7 @@ interface CategoryPageContext {
 
 const CategoryTemplate: React.FC<PageProps<CategoryData, CategoryPageContext>> = ({ data, pageContext }) => {
   const { category, mappedCategory } = pageContext;
-  const posts = data.allMarkdownRemark.nodes;
+  const posts = data.allMdx.nodes;
 
   const categoryInfo = {
     기술: {
@@ -135,7 +134,7 @@ const CategoryTemplate: React.FC<PageProps<CategoryData, CategoryPageContext>> =
                   date={post.frontmatter.date}
                   tags={post.frontmatter.tags}
                   slug={post.fields.slug}
-                  readTime={post.timeToRead}
+                  readTime={5}
                 />
               ))}
             </div>
@@ -204,7 +203,7 @@ const CategoryTemplate: React.FC<PageProps<CategoryData, CategoryPageContext>> =
                           date={post.frontmatter.date}
                           tags={post.frontmatter.tags}
                           slug={post.fields.slug}
-                          readTime={post.timeToRead}
+                          readTime={5}
                           size="medium"
                           thumbnail={post.frontmatter.thumbnail}
                         />
@@ -225,7 +224,7 @@ const CategoryTemplate: React.FC<PageProps<CategoryData, CategoryPageContext>> =
                   date={post.frontmatter.date}
                   tags={post.frontmatter.tags}
                   slug={post.fields.slug}
-                  readTime={post.timeToRead}
+                  readTime={5}
                 />
               ))}
             </div>
@@ -264,7 +263,7 @@ export default CategoryTemplate;
 
 export const query = graphql`
   query PostsByCategory($category: String!) {
-    allMarkdownRemark(filter: { frontmatter: { category: { eq: $category } } }, sort: { frontmatter: { date: DESC } }) {
+    allMdx(filter: { frontmatter: { category: { eq: $category } } }, sort: { frontmatter: { date: DESC } }) {
       nodes {
         frontmatter {
           title
@@ -277,7 +276,6 @@ export const query = graphql`
         fields {
           slug
         }
-        timeToRead
       }
     }
   }

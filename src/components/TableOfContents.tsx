@@ -7,10 +7,10 @@ interface TOCItem {
 }
 
 interface TableOfContentsProps {
-  content: string;
+  content?: string;
 }
 
-const TableOfContents: React.FC<TableOfContentsProps> = ({ content }) => {
+const TableOfContents: React.FC<TableOfContentsProps> = ({ content = "" }) => {
   const [toc, setToc] = useState<TOCItem[]>([]);
   const [activeId, setActiveId] = useState<string>("");
 
@@ -21,9 +21,7 @@ const TableOfContents: React.FC<TableOfContentsProps> = ({ content }) => {
       const articleContent = document.querySelector(".prose, article");
       if (!articleContent) return;
 
-      const headingElements = articleContent.querySelectorAll(
-        "h1, h2, h3, h4, h5, h6"
-      );
+      const headingElements = articleContent.querySelectorAll("h1, h2, h3, h4, h5, h6");
       const tocItems: TOCItem[] = Array.from(headingElements).map((element) => {
         const level = parseInt(element.tagName.charAt(1));
         const title = element.textContent || "";
@@ -53,9 +51,7 @@ const TableOfContents: React.FC<TableOfContentsProps> = ({ content }) => {
 
   useEffect(() => {
     const handleScroll = () => {
-      const headings = toc
-        .map((item) => document.getElementById(item.id))
-        .filter(Boolean);
+      const headings = toc.map((item) => document.getElementById(item.id)).filter(Boolean);
 
       for (let i = headings.length - 1; i >= 0; i--) {
         const heading = headings[i];
@@ -95,12 +91,10 @@ const TableOfContents: React.FC<TableOfContentsProps> = ({ content }) => {
 
   return (
     <nav className="sticky top-24 bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 rounded-lg p-4 max-h-96 overflow-y-auto w-max overflow-x-hidden">
-      <h3 className="text-lg font-semibold mb-4 text-gray-900 dark:text-white">
-        목차
-      </h3>
+      <h3 className="text-lg font-semibold mb-4 text-gray-900 dark:text-white">목차</h3>
       <ul className="space-y-2">
-        {toc.map((item) => (
-          <li key={item.id}>
+        {toc.map((item, index) => (
+          <li key={index}>
             <button
               onClick={() => scrollToHeading(item.id)}
               className={`
@@ -108,11 +102,7 @@ const TableOfContents: React.FC<TableOfContentsProps> = ({ content }) => {
                 ${item.level === 1 ? "font-medium" : ""}
                 ${item.level === 2 ? "ml-4 text-sm" : ""}
                 ${item.level >= 3 ? "ml-8 text-sm" : ""}
-                ${
-                  activeId === item.id
-                    ? "text-blue-600 dark:text-blue-400"
-                    : "text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white"
-                }
+                ${activeId === item.id ? "text-blue-600 dark:text-blue-400" : "text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white"}
               `}
             >
               {item.title}

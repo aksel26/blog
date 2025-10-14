@@ -17,7 +17,7 @@ const LifeLogCard: React.FC<LifeLogCardProps> = ({ title, excerpt, date, tags, s
   const [imageLoaded, setImageLoaded] = useState(false);
 
   const sizeClasses = {
-    small: "row-span-2",
+    small: "row-span-1",
     medium: "row-span-3",
     large: "row-span-4",
   };

@@ -16,7 +16,7 @@ const SearchBox: React.FC = () => {
 
   const data = useStaticQuery(graphql`
     query SearchData {
-      allMarkdownRemark {
+      allMdx {
         nodes {
           frontmatter {
             title
@@ -32,7 +32,7 @@ const SearchBox: React.FC = () => {
     }
   `)
 
-  const posts: SearchResult[] = data.allMarkdownRemark.nodes.map((node: any) => ({
+  const posts: SearchResult[] = data.allMdx.nodes.map((node: any) => ({
     title: node.frontmatter.title,
     excerpt: node.frontmatter.excerpt,
     slug: node.fields.slug,
