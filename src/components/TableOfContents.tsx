@@ -110,7 +110,13 @@ const TableOfContents: React.FC<TableOfContentsProps> = ({ content = "", isMobil
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
           </svg>
         </button>
-        {isOpen && (
+        <div
+          className="overflow-hidden transition-all duration-300 ease-in-out"
+          style={{
+            maxHeight: isOpen ? `${toc.length * 40 + 32}px` : "0px",
+            opacity: isOpen ? 1 : 0,
+          }}
+        >
           <ul className="px-4 pb-4 space-y-2">
             {toc.map((item, index) => (
               <li key={index}>
@@ -134,7 +140,7 @@ const TableOfContents: React.FC<TableOfContentsProps> = ({ content = "", isMobil
               </li>
             ))}
           </ul>
-        )}
+        </div>
       </nav>
     );
   }
