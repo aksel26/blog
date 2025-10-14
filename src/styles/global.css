@@ -1,8 +1,6 @@
 @import "tailwindcss";
 
 /* Font imports */
-@import url("https://fonts.googleapis.com/css2?family=Sacramento&display=swap");
-
 @font-face {
   font-family: "Freesentation";
   src: url("../fonts/FreesentationVF.ttf") format("truetype-variations");

@@ -38,3 +38,25 @@ const components = {
 export const wrapPageElement: GatsbySSR["wrapPageElement"] = ({ element }) => {
   return <MDXProvider components={components}>{element}</MDXProvider>;
 };
+
+// Add Google Fonts to HTML head
+export const onRenderBody: GatsbySSR["onRenderBody"] = ({ setHeadComponents }) => {
+  setHeadComponents([
+    <link
+      key="google-fonts-preconnect"
+      rel="preconnect"
+      href="https://fonts.googleapis.com"
+    />,
+    <link
+      key="google-fonts-preconnect-gstatic"
+      rel="preconnect"
+      href="https://fonts.gstatic.com"
+      crossOrigin="anonymous"
+    />,
+    <link
+      key="google-fonts-sacramento"
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Sacramento&display=swap"
+    />,
+  ]);
+};
