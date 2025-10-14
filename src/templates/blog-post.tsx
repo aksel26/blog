@@ -163,6 +163,11 @@ const BlogPostTemplate: React.FC<PageProps<BlogPostData, BlogPostPageContext>> =
           </div>
         </header>
 
+        {/* Mobile TOC - collapsible above content */}
+        <div className="lg:hidden mb-8">
+          <TableOfContents isMobile={true} />
+        </div>
+
         <div className="lg:grid lg:grid-cols-4 lg:gap-8">
           <div className="lg:col-span-3">
             <MDXProvider components={mdxComponents}>
@@ -178,9 +183,9 @@ const BlogPostTemplate: React.FC<PageProps<BlogPostData, BlogPostPageContext>> =
             </MDXProvider>
           </div>
 
-          {/* Desktop TOC - appears on the right on desktop */}
+          {/* Desktop TOC - sticky on the right */}
           <div className="hidden lg:block lg:col-span-1">
-            <TableOfContents />
+            <TableOfContents isMobile={false} />
           </div>
         </div>
 

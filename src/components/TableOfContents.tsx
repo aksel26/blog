@@ -8,11 +8,13 @@ interface TOCItem {
 
 interface TableOfContentsProps {
   content?: string;
+  isMobile?: boolean;
 }
 
-const TableOfContents: React.FC<TableOfContentsProps> = ({ content = "" }) => {
+const TableOfContents: React.FC<TableOfContentsProps> = ({ content = "", isMobile = false }) => {
   const [toc, setToc] = useState<TOCItem[]>([]);
   const [activeId, setActiveId] = useState<string>("");
+  const [isOpen, setIsOpen] = useState<boolean>(false);
 
   useEffect(() => {
     // DOM이 렌더링된 후에 실제 헤딩 요소들을 찾아서 TOC 생성
@@ -89,6 +91,55 @@ const TableOfContents: React.FC<TableOfContentsProps> = ({ content = "" }) => {
 
   if (toc.length === 0) return null;
 
+  // 모바일용 콜랩서블 TOC
+  if (isMobile) {
+    return (
+      <nav className="mb-8 border rounded-lg" style={{ borderColor: "var(--border-color)", backgroundColor: "var(--bg-secondary)" }}>
+        <button
+          onClick={() => setIsOpen(!isOpen)}
+          className="w-full flex items-center justify-between p-4 text-left"
+          style={{ color: "var(--text-primary)" }}
+        >
+          <h3 className="text-lg font-semibold">목차</h3>
+          <svg
+            className={`w-5 h-5 transition-transform ${isOpen ? "rotate-180" : ""}`}
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+          </svg>
+        </button>
+        {isOpen && (
+          <ul className="px-4 pb-4 space-y-2">
+            {toc.map((item, index) => (
+              <li key={index}>
+                <button
+                  onClick={() => {
+                    scrollToHeading(item.id);
+                    setIsOpen(false); // 클릭 후 자동으로 닫기
+                  }}
+                  className={`
+                    block w-full text-left transition-colors duration-200
+                    ${item.level === 1 ? "font-medium" : ""}
+                    ${item.level === 2 ? "ml-4 text-sm" : ""}
+                    ${item.level >= 3 ? "ml-8 text-sm" : ""}
+                  `}
+                  style={{
+                    color: activeId === item.id ? "var(--accent-blue)" : "var(--text-secondary)",
+                  }}
+                >
+                  {item.title}
+                </button>
+              </li>
+            ))}
+          </ul>
+        )}
+      </nav>
+    );
+  }
+
+  // 데스크톱용 스티키 TOC
   return (
     <nav className="sticky top-24 bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 rounded-lg p-4 max-h-96 overflow-y-auto w-max overflow-x-hidden">
       <h3 className="text-lg font-semibold mb-4 text-gray-900 dark:text-white">목차</h3>
