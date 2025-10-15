@@ -115,6 +115,7 @@ export const Head = () => (
   <>
     <title>Blog - 개발과 일상을 기록하는 공간</title>
     <meta name="description" content="개발 과정에서 배운 것들과 일상의 소중한 순간들을 나누는 개인 블로그입니다." />
+    <meta name="google-site-verification" content="3Z0N6Zgzw95Uk6Xwd0iJX_xcWRFAPxL2iozSpiLpukM" />
   </>
 );
 
