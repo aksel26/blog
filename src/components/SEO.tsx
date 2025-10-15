@@ -60,7 +60,7 @@ const SEO: React.FC<SEOProps> = ({ title, description, keywords = [], image, art
           content: site.siteMetadata.title,
         },
         {
-          property: "google-site-verification",
+          name: "google-site-verification",
           content: "3Z0N6Zgzw95Uk6Xwd0iJX_xcWRFAPxL2iozSpiLpukM",
         },
         {
