@@ -1,24 +1,17 @@
-import React from "react"
-import { Helmet } from "react-helmet"
-import { useStaticQuery, graphql } from "gatsby"
+import React from "react";
+import { Helmet } from "react-helmet";
+import { useStaticQuery, graphql } from "gatsby";
 
 interface SEOProps {
-  title?: string
-  description?: string
-  keywords?: string[]
-  image?: string
-  article?: boolean
-  pathname?: string
+  title?: string;
+  description?: string;
+  keywords?: string[];
+  image?: string;
+  article?: boolean;
+  pathname?: string;
 }
 
-const SEO: React.FC<SEOProps> = ({
-  title,
-  description,
-  keywords = [],
-  image,
-  article = false,
-  pathname = "",
-}) => {
+const SEO: React.FC<SEOProps> = ({ title, description, keywords = [], image, article = false, pathname = "" }) => {
   const { site } = useStaticQuery(
     graphql`
       query {
@@ -32,12 +25,12 @@ const SEO: React.FC<SEOProps> = ({
         }
       }
     `
-  )
+  );
 
-  const metaDescription = description || site.siteMetadata.description
-  const metaTitle = title ? `${title} | ${site.siteMetadata.title}` : site.siteMetadata.title
-  const metaImage = image ? `${site.siteMetadata.siteUrl}${image}` : null
-  const canonical = pathname ? `${site.siteMetadata.siteUrl}${pathname}` : null
+  const metaDescription = description || site.siteMetadata.description;
+  const metaTitle = title ? `${title} | ${site.siteMetadata.title}` : site.siteMetadata.title;
+  const metaImage = image ? `${site.siteMetadata.siteUrl}${image}` : null;
+  const canonical = pathname ? `${site.siteMetadata.siteUrl}${pathname}` : null;
 
   return (
     <Helmet
@@ -67,6 +60,10 @@ const SEO: React.FC<SEOProps> = ({
           content: site.siteMetadata.title,
         },
         {
+          property: "google-site-verification",
+          content: "3Z0N6Zgzw95Uk6Xwd0iJX_xcWRFAPxL2iozSpiLpukM",
+        },
+        {
           name: "twitter:card",
           content: "summary_large_image",
         },
@@ -86,22 +83,20 @@ const SEO: React.FC<SEOProps> = ({
           name: "keywords",
           content: keyword,
         })),
-      ]
-        .concat(
-          metaImage
-            ? [
-                {
-                  property: "og:image",
-                  content: metaImage,
-                },
-                {
-                  name: "twitter:image",
-                  content: metaImage,
-                },
-              ]
-            : []
-        )
-}
+      ].concat(
+        metaImage
+          ? [
+              {
+                property: "og:image",
+                content: metaImage,
+              },
+              {
+                name: "twitter:image",
+                content: metaImage,
+              },
+            ]
+          : []
+      )}
       link={
         canonical
           ? [
@@ -113,7 +108,7 @@ const SEO: React.FC<SEOProps> = ({
           : []
       }
     />
-  )
-}
+  );
+};
 
-export default SEO
+export default SEO;
