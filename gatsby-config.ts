@@ -14,14 +14,55 @@ const config: GatsbyConfig = {
     "gatsby-plugin-image",
     "gatsby-plugin-sharp",
     "gatsby-plugin-postcss",
-    "gatsby-plugin-sitemap",
+    {
+      resolve: "gatsby-plugin-sitemap",
+      options: {
+        output: "/",
+        excludes: ["/dev-404-page", "/404", "/404.html"],
+        query: `
+          {
+            site {
+              siteMetadata {
+                siteUrl
+              }
+            }
+            allSitePage {
+              nodes {
+                path
+              }
+            }
+          }
+        `,
+        resolveSiteUrl: () => "https://aksel26.netlify.app",
+        resolvePages: ({
+          allSitePage: { nodes: allPages },
+        }: any) => {
+          return allPages.map((page: any) => {
+            return { ...page };
+          });
+        },
+        serialize: ({ path }: any) => {
+          return {
+            url: path,
+            changefreq: "weekly",
+            priority: path === "/" ? 1.0 : 0.7,
+          };
+        },
+      },
+    },
     "gatsby-transformer-sharp",
     {
       resolve: "gatsby-plugin-robots-txt",
       options: {
-        host: "https://aksel26.netlify.app/",
+        host: "https://aksel26.netlify.app",
         sitemap: "https://aksel26.netlify.app/sitemap-index.xml",
-        policy: [{ userAgent: "*", allow: "/" }],
+        policy: [
+          {
+            userAgent: "*",
+            allow: "/",
+            disallow: ["/dev-404-page/", "/404/", "/404.html"],
+          },
+        ],
       },
     },
     {
