@@ -14,7 +14,16 @@ const config: GatsbyConfig = {
     "gatsby-plugin-image",
     "gatsby-plugin-sharp",
     "gatsby-plugin-postcss",
+    "gatsby-plugin-sitemap",
     "gatsby-transformer-sharp",
+    {
+      resolve: "gatsby-plugin-robots-txt",
+      options: {
+        host: "https://aksel26.netlify.app/",
+        sitemap: "https://aksel26.netlify.app/sitemap-index.xml",
+        policy: [{ userAgent: "*", allow: "/" }],
+      },
+    },
     {
       resolve: "gatsby-source-filesystem",
       options: {
