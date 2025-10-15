@@ -29,8 +29,16 @@ const SEO: React.FC<SEOProps> = ({ title, description, keywords = [], image, art
 
   const metaDescription = description || site.siteMetadata.description;
   const metaTitle = title ? `${title} | ${site.siteMetadata.title}` : site.siteMetadata.title;
-  const metaImage = image ? `${site.siteMetadata.siteUrl}${image}` : null;
-  const canonical = pathname ? `${site.siteMetadata.siteUrl}${pathname}` : null;
+
+  // 이미지 URL 처리: 외부 URL이면 그대로, 내부 경로면 siteUrl 추가, 없으면 기본 이미지
+  const metaImage = image
+    ? (image.startsWith('http://') || image.startsWith('https://')
+        ? image
+        : `${site.siteMetadata.siteUrl}${image}`)
+    : `${site.siteMetadata.siteUrl}/og-default.png`;
+
+  const canonical = pathname ? `${site.siteMetadata.siteUrl}${pathname}` : site.siteMetadata.siteUrl;
+  const url = pathname ? `${site.siteMetadata.siteUrl}${pathname}` : site.siteMetadata.siteUrl;
 
   return (
     <Helmet
@@ -60,6 +68,14 @@ const SEO: React.FC<SEOProps> = ({ title, description, keywords = [], image, art
           content: site.siteMetadata.title,
         },
         {
+          property: "og:url",
+          content: url,
+        },
+        {
+          property: "og:locale",
+          content: "ko_KR",
+        },
+        {
           name: "google-site-verification",
           content: "3Z0N6Zgzw95Uk6Xwd0iJX_xcWRFAPxL2iozSpiLpukM",
         },
@@ -79,24 +95,27 @@ const SEO: React.FC<SEOProps> = ({ title, description, keywords = [], image, art
           name: "twitter:description",
           content: metaDescription,
         },
+        {
+          property: "og:image",
+          content: metaImage,
+        },
+        {
+          property: "og:image:width",
+          content: "1200",
+        },
+        {
+          property: "og:image:height",
+          content: "630",
+        },
+        {
+          name: "twitter:image",
+          content: metaImage,
+        },
         ...keywords.map((keyword) => ({
           name: "keywords",
           content: keyword,
         })),
-      ].concat(
-        metaImage
-          ? [
-              {
-                property: "og:image",
-                content: metaImage,
-              },
-              {
-                name: "twitter:image",
-                content: metaImage,
-              },
-            ]
-          : []
-      )}
+      ]}
       link={
         canonical
           ? [
