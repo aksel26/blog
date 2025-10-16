@@ -14,7 +14,9 @@ interface CategoryData {
         category: string;
         tags: string[];
         excerpt: string;
-        thumbnail?: string;
+        thumbnail?: {
+          publicURL: string;
+        };
       };
       fields: {
         slug: string;
@@ -50,7 +52,7 @@ const CategoryTemplate: React.FC<PageProps<CategoryData, CategoryPageContext>> =
 
     // thumbnailUrl이 없고 frontmatter에 thumbnail이 있는 경우
     if (!thumbnailUrl && post.frontmatter.thumbnail) {
-      thumbnailUrl = post.frontmatter.thumbnail;
+      thumbnailUrl = post.frontmatter.thumbnail.publicURL;
     }
 
     return {
@@ -301,7 +303,9 @@ export const query = graphql`
           category
           tags
           excerpt
-          thumbnail
+          thumbnail {
+            publicURL
+          }
         }
         fields {
           slug

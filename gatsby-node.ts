@@ -73,7 +73,9 @@ export const createPages: GatsbyNode["createPages"] = async ({ graphql, actions,
             category
             excerpt
             date
-            thumbnail
+            thumbnail {
+              publicURL
+            }
           }
           internal {
             contentFilePath
@@ -102,8 +104,22 @@ export const createPages: GatsbyNode["createPages"] = async ({ graphql, actions,
     const previousPost = currentIndexInCategory === sameCategoryPosts.length - 1 ? null : sameCategoryPosts[currentIndexInCategory + 1]
     const nextPost = currentIndexInCategory === 0 ? null : sameCategoryPosts[currentIndexInCategory - 1]
 
-    const previous = previousPost || null
-    const next = nextPost || null
+    // thumbnail을 객체에서 문자열로 변환
+    const previous = previousPost ? {
+      ...previousPost,
+      frontmatter: {
+        ...previousPost.frontmatter,
+        thumbnail: previousPost.frontmatter.thumbnail?.publicURL || null
+      }
+    } : null
+
+    const next = nextPost ? {
+      ...nextPost,
+      frontmatter: {
+        ...nextPost.frontmatter,
+        thumbnail: nextPost.frontmatter.thumbnail?.publicURL || null
+      }
+    } : null
 
     // 카테고리에 따라 다른 템플릿 사용
     const template = post.frontmatter.category === "일상" ? lifeLogPostTemplate : blogPostTemplate

@@ -63,7 +63,9 @@ interface BlogPostData {
       category: string;
       tags: string[];
       excerpt: string;
-      thumbnail?: string;
+      thumbnail?: {
+        publicURL: string;
+      };
     };
     fields: {
       slug: string;
@@ -93,7 +95,7 @@ const BlogPostTemplate: React.FC<PageProps<BlogPostData, BlogPostPageContext>> =
 
   return (
     <Layout>
-      <SEO title={title} description={excerpt} keywords={tags} image={thumbnail} article={true} pathname={post.fields.slug} />
+      <SEO title={title} description={excerpt} keywords={tags} image={thumbnail?.publicURL} article={true} pathname={post.fields.slug} />
 
       <article className="max-w-4xl mx-auto">
         <header className="mb-12">
@@ -225,7 +227,9 @@ export const query = graphql`
         category
         tags
         excerpt
-        thumbnail
+        thumbnail {
+          publicURL
+        }
       }
       fields {
         slug

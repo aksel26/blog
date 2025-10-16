@@ -10,7 +10,9 @@ interface Post {
     category: string;
     tags: string[];
     excerpt: string;
-    thumbnail?: string;
+    thumbnail?: {
+      publicURL: string;
+    };
   };
   fields: {
     slug: string;
@@ -38,7 +40,9 @@ const RecentActivities: React.FC = () => {
             category
             tags
             excerpt
-            thumbnail
+            thumbnail {
+              publicURL
+            }
           }
           fields {
             slug
@@ -161,7 +165,7 @@ const RecentActivities: React.FC = () => {
                   tags={post.frontmatter.tags}
                   slug={post.fields.slug}
                   readTime={5}
-                  thumbnail={post.frontmatter.thumbnail}
+                  thumbnail={post.frontmatter.thumbnail?.publicURL}
                 />
               ))}
             </div>
@@ -177,7 +181,7 @@ const RecentActivities: React.FC = () => {
                   tags={post.frontmatter.tags}
                   slug={post.fields.slug}
                   readTime={5}
-                  thumbnail={post.frontmatter.thumbnail}
+                  thumbnail={post.frontmatter.thumbnail?.publicURL}
                   size="medium"
                 />
               ))}
@@ -194,7 +198,7 @@ const RecentActivities: React.FC = () => {
                   tags={post.frontmatter.tags}
                   slug={post.fields.slug}
                   readTime={5}
-                  thumbnail={post.frontmatter.thumbnail}
+                  thumbnail={post.frontmatter.thumbnail?.publicURL}
                 />
               ))}
             </div>
