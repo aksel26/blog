@@ -50,7 +50,25 @@ const CategoryTemplate: React.FC<PageProps<CategoryData, CategoryPageContext>> =
 
     // thumbnailUrl이 없고 frontmatter에 thumbnail이 있는 경우
     if (!thumbnailUrl && post.frontmatter.thumbnail) {
-      thumbnailUrl = post.frontmatter.thumbnail;
+      const thumbnail = post.frontmatter.thumbnail;
+
+      // 외부 URL인 경우 그대로 사용
+      if (thumbnail.startsWith('http://') || thumbnail.startsWith('https://')) {
+        thumbnailUrl = thumbnail;
+      } else {
+        // 상대 경로인 경우 allFile에서 매칭
+        const postDirectory = post.parent?.relativeDirectory;
+        if (postDirectory) {
+          const thumbnailFileName = thumbnail.replace('./', '');
+          const matchedFile = data.allFile.nodes.find(file =>
+            file.relativeDirectory === postDirectory &&
+            file.relativePath.endsWith(thumbnailFileName)
+          );
+          if (matchedFile) {
+            thumbnailUrl = matchedFile.publicURL;
+          }
+        }
+      }
     }
 
     return {
