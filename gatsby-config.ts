@@ -120,18 +120,18 @@ const config: GatsbyConfig = {
         trackingIds: ["G-5BW8NGZEQK"],
       },
     },
-    // {
-    //   resolve: "gatsby-plugin-manifest",
-    //   options: {
-    //     name: "Blog Site",
-    //     short_name: "Blog",
-    //     start_url: "/",
-    //     background_color: "#ffffff",
-    //     theme_color: "#000000",
-    //     display: "minimal-ui",
-    //     icon: "src/images/icon.png", // Add your icon file here
-    //   },
-    // },
+    {
+      resolve: "gatsby-plugin-manifest",
+      options: {
+        name: "개발과 일상을 기록하는 공간",
+        short_name: "HMKIM-Blog",
+        start_url: "/",
+        background_color: "#ffffff",
+        theme_color: "#ffffff",
+        display: "minimal-ui",
+        icon: "src/images/favicon-32x32.png", // Add your icon file here
+      },
+    },
   ],
 };
 

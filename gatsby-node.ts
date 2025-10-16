@@ -1,6 +1,18 @@
 import type { GatsbyNode } from "gatsby"
 import path from "path"
 
+export const createSchemaCustomization: GatsbyNode["createSchemaCustomization"] = ({ actions }) => {
+  const { createTypes } = actions
+
+  const typeDefs = `
+    type MdxFrontmatter {
+      thumbnail: String
+    }
+  `
+
+  createTypes(typeDefs)
+}
+
 export const onCreateNode: GatsbyNode["onCreateNode"] = ({ node, actions, getNode }) => {
   const { createNodeField } = actions
 
