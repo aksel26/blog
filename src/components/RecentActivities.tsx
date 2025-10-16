@@ -38,9 +38,7 @@ const RecentActivities: React.FC = () => {
             category
             tags
             excerpt
-            thumbnail {
-              publicURL
-            }
+            thumbnail
           }
           fields {
             slug
