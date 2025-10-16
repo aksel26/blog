@@ -34,9 +34,7 @@ const config: GatsbyConfig = {
           }
         `,
         resolveSiteUrl: () => "https://aksel26.netlify.app",
-        resolvePages: ({
-          allSitePage: { nodes: allPages },
-        }: any) => {
+        resolvePages: ({ allSitePage: { nodes: allPages } }: any) => {
           return allPages.map((page: any) => {
             return { ...page };
           });
@@ -113,6 +111,13 @@ const config: GatsbyConfig = {
           remarkPlugins: [remarkGfm, [remarkExternalLinks, { target: false }]],
           rehypePlugins: [],
         },
+      },
+    },
+    {
+      resolve: "gatsby-plugin-google-gtag",
+      options: {
+        // "2.1. GA 에 프로젝트 추가" 에서 마지막에 얻은 아이디를 넣자.
+        trackingIds: ["G-5BW8NGZEQK"],
       },
     },
     // {
