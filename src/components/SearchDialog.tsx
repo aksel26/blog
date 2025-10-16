@@ -11,9 +11,7 @@ interface SearchPost {
     category: string;
     excerpt: string;
     date: string;
-    thumbnail?: {
-      publicURL: string;
-    };
+    thumbnail?: string;
   };
 }
 
@@ -40,9 +38,7 @@ const SearchDialog: React.FC<SearchDialogProps> = ({ isOpen, onClose }) => {
             category
             excerpt
             date(formatString: "YYYY년 MM월 DD일")
-            thumbnail {
-              publicURL
-            }
+            thumbnail
           }
         }
       }
@@ -226,11 +222,11 @@ const SearchDialog: React.FC<SearchDialogProps> = ({ isOpen, onClose }) => {
                       >
                         <div className="flex items-start space-x-4">
                           {/* Thumbnail */}
-                          {post.frontmatter.thumbnail?.publicURL && (
+                          {post.frontmatter.thumbnail && (
                             <div
                               className="w-12 h-12 rounded-md bg-cover bg-center flex-shrink-0"
                               style={{
-                                backgroundImage: `url(${post.frontmatter.thumbnail.publicURL})`,
+                                backgroundImage: `url(${post.frontmatter.thumbnail})`,
                               }}
                             />
                           )}

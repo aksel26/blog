@@ -32,9 +32,7 @@ interface BlogPostData {
       category: string;
       tags: string[];
       excerpt: string;
-      thumbnail?: {
-        publicURL: string;
-      };
+      thumbnail?: string;
     };
     fields: {
       slug: string;
@@ -114,7 +112,7 @@ const LifeLogPostTemplate: React.FC<PageProps<BlogPostData, BlogPostPageContext>
 
   return (
     <Layout>
-      <SEO title={title} description={excerpt} keywords={tags} image={thumbnail?.publicURL} article={true} pathname={post.fields.slug} />
+      <SEO title={title} description={excerpt} keywords={tags} image={thumbnail} article={true} pathname={post.fields.slug} />
 
       <div className="max-w-8xl mx-auto">
         {/* 헤더 */}
@@ -225,9 +223,7 @@ export const query = graphql`
         category
         tags
         excerpt
-        thumbnail {
-          publicURL
-        }
+        thumbnail
       }
       fields {
         slug
