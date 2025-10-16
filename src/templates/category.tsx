@@ -14,11 +14,25 @@ interface CategoryData {
         category: string;
         tags: string[];
         excerpt: string;
-        thumbnail?: string;
+        thumbnail?: {
+          publicURL: string;
+        };
       };
       fields: {
         slug: string;
+        thumbnailUrl?: string;
       };
+      parent?: {
+        relativeDirectory?: string;
+      };
+    }>;
+  };
+  allFile: {
+    nodes: Array<{
+      publicURL: string;
+      relativePath: string;
+      relativeDirectory: string;
+      name: string;
     }>;
   };
 }
@@ -30,7 +44,26 @@ interface CategoryPageContext {
 
 const CategoryTemplate: React.FC<PageProps<CategoryData, CategoryPageContext>> = ({ data, pageContext }) => {
   const { category, mappedCategory } = pageContext;
-  const posts = data.allMdx.nodes;
+  const rawPosts = data.allMdx.nodes;
+
+  // 각 포스트의 thumbnail URL을 계산
+  const posts = rawPosts.map(post => {
+    let thumbnailUrl = post.fields.thumbnailUrl;
+
+    // thumbnailUrl이 없고 frontmatter에 thumbnail이 있는 경우
+    if (!thumbnailUrl && post.frontmatter.thumbnail) {
+      // thumbnail은 이제 { publicURL: string } 형태
+      thumbnailUrl = post.frontmatter.thumbnail.publicURL;
+    }
+
+    return {
+      ...post,
+      fields: {
+        ...post.fields,
+        thumbnailUrl
+      }
+    };
+  });
 
   const categoryInfo = {
     기술: {
@@ -155,9 +188,9 @@ const CategoryTemplate: React.FC<PageProps<CategoryData, CategoryPageContext>> =
                           date={posts[0].frontmatter.date}
                           tags={posts[0].frontmatter.tags}
                           slug={posts[0].fields.slug}
-                          readTime={posts[0].timeToRead}
+                          readTime={5}
                           size="large"
-                          thumbnail={posts[0].frontmatter.thumbnail}
+                          thumbnail={posts[0].fields.thumbnailUrl}
                         />
                       </div>
                       {/* Second post - 4/10 columns */}
@@ -169,9 +202,9 @@ const CategoryTemplate: React.FC<PageProps<CategoryData, CategoryPageContext>> =
                           date={posts[1].frontmatter.date}
                           tags={posts[1].frontmatter.tags}
                           slug={posts[1].fields.slug}
-                          readTime={posts[1].timeToRead}
+                          readTime={5}
                           size="medium"
-                          thumbnail={posts[1].frontmatter.thumbnail}
+                          thumbnail={posts[1].fields.thumbnailUrl}
                         />
                       </div>
                     </div>
@@ -185,9 +218,9 @@ const CategoryTemplate: React.FC<PageProps<CategoryData, CategoryPageContext>> =
                         date={posts[0].frontmatter.date}
                         tags={posts[0].frontmatter.tags}
                         slug={posts[0].fields.slug}
-                        readTime={posts[0].timeToRead}
+                        readTime={5}
                         size="large"
-                        thumbnail={posts[0].frontmatter.thumbnail}
+                        thumbnail={posts[0].fields.thumbnailUrl}
                       />
                     </div>
                   )}
@@ -205,7 +238,7 @@ const CategoryTemplate: React.FC<PageProps<CategoryData, CategoryPageContext>> =
                           slug={post.fields.slug}
                           readTime={5}
                           size="medium"
-                          thumbnail={post.frontmatter.thumbnail}
+                          thumbnail={post.fields.thumbnailUrl}
                         />
                       ))}
                     </div>
@@ -271,11 +304,35 @@ export const query = graphql`
           category
           tags
           excerpt
-          thumbnail
+          thumbnail {
+            publicURL
+          }
         }
         fields {
           slug
+          thumbnailUrl
         }
+        parent {
+          ... on File {
+            relativeDirectory
+            childrenImageSharp {
+              gatsbyImageData(width: 800)
+            }
+          }
+        }
+      }
+    }
+    allFile(
+      filter: {
+        extension: { regex: "/(jpg|jpeg|png|gif|webp)/" }
+        sourceInstanceName: { eq: "posts" }
+      }
+    ) {
+      nodes {
+        publicURL
+        relativePath
+        relativeDirectory
+        name
       }
     }
   }

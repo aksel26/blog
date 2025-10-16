@@ -31,7 +31,7 @@ const SEO: React.FC<SEOProps> = ({ title, description, keywords = [], image, art
   const metaTitle = title ? `${title} | ${site.siteMetadata.title}` : site.siteMetadata.title;
 
   // 이미지 URL 처리: 외부 URL이면 그대로, 내부 경로면 siteUrl 추가, 없으면 기본 이미지
-  const metaImage = image
+  const metaImage = image && typeof image === 'string'
     ? (image.startsWith('http://') || image.startsWith('https://')
         ? image
         : `${site.siteMetadata.siteUrl}${image}`)

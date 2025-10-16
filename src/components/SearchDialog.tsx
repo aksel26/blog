@@ -38,7 +38,9 @@ const SearchDialog: React.FC<SearchDialogProps> = ({ isOpen, onClose }) => {
             category
             excerpt
             date(formatString: "YYYY년 MM월 DD일")
-            thumbnail
+            thumbnail {
+              publicURL
+            }
           }
         }
       }

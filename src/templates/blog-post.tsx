@@ -225,7 +225,9 @@ export const query = graphql`
         category
         tags
         excerpt
-        thumbnail
+        thumbnail {
+          publicURL
+        }
       }
       fields {
         slug
