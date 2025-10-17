@@ -51,6 +51,7 @@ interface BlogPostData {
       relativePath: string;
       relativeDirectory: string;
       name: string;
+      extension: string;
     }>;
   };
 }
@@ -69,8 +70,13 @@ const LifeLogPostTemplate: React.FC<PageProps<BlogPostData, BlogPostPageContext>
   // 현재 포스트의 디렉토리를 가져옵니다
   const postDirectory = post.parent?.relativeDirectory || "";
 
-  // 현재 포스트 디렉토리의 이미지만 필터링
-  let galleryImages = data.allFile.nodes.filter((file) => file.relativeDirectory === postDirectory).map((file) => file.publicURL);
+  // 현재 포스트 디렉토리의 이미지 및 비디오 파일만 필터링
+  let galleryMedia = data.allFile.nodes
+    .filter((file) => file.relativeDirectory === postDirectory)
+    .map((file) => ({
+      url: file.publicURL,
+      type: ["mp4", "mov", "avi"].includes(file.extension.toLowerCase()) ? "video" : "image",
+    }));
 
   // thumbnail은 이제 { publicURL: string } 형태이므로 처리 불필요
   // 모든 이미지는 이미 galleryImages에 포함됨
@@ -79,6 +85,10 @@ const LifeLogPostTemplate: React.FC<PageProps<BlogPostData, BlogPostPageContext>
   const mdxComponents = {
     img: () => {
       // 이미지를 본문에는 표시하지 않음 (갤러리에만 표시)
+      return null;
+    },
+    video: () => {
+      // 비디오를 본문에는 표시하지 않음 (갤러리에만 표시)
       return null;
     },
     code: (props: any) => {
@@ -165,7 +175,7 @@ const LifeLogPostTemplate: React.FC<PageProps<BlogPostData, BlogPostPageContext>
         <div className="grid grid-cols-1 lg:grid-cols-10 gap-8">
           {/* 좌측: 갤러리 (60%) */}
           <div className="lg:col-span-6">
-            <GalleryWall images={galleryImages} />
+            <GalleryWall media={galleryMedia} />
           </div>
 
           {/* 우측: 컨텐츠 (40%) */}
@@ -236,12 +246,13 @@ export const query = graphql`
         }
       }
     }
-    allFile(filter: { extension: { regex: "/(jpg|jpeg|png|gif|webp)/" }, sourceInstanceName: { eq: "posts" } }) {
+    allFile(filter: { extension: { regex: "/(jpg|jpeg|png|gif|webp|mp4|mov|avi)/" }, sourceInstanceName: { eq: "posts" } }) {
       nodes {
         publicURL
         relativePath
         relativeDirectory
         name
+        extension
       }
     }
   }

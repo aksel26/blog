@@ -31,6 +31,7 @@ interface CategoryData {
       relativePath: string;
       relativeDirectory: string;
       name: string;
+      extension: string;
     }>;
   };
 }
@@ -337,7 +338,7 @@ export const query = graphql`
     }
     allFile(
       filter: {
-        extension: { regex: "/(jpg|jpeg|png|gif|webp)/" }
+        extension: { regex: "/(jpg|jpeg|png|gif|webp|mp4|mov|avi)/" }
         sourceInstanceName: { eq: "posts" }
       }
     ) {
@@ -346,6 +347,7 @@ export const query = graphql`
         relativePath
         relativeDirectory
         name
+        extension
       }
     }
   }

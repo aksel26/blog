@@ -29,6 +29,7 @@ const LifeLogCard: React.FC<LifeLogCardProps> = ({ title, excerpt, date, tags, s
   };
 
   const hasValidThumbnail = thumbnail && !imageError;
+  const isVideo = thumbnail && (thumbnail.endsWith('.mp4') || thumbnail.endsWith('.mov') || thumbnail.endsWith('.avi'));
 
   return (
     <Link to={slug} style={{ textDecoration: "none" }}>
@@ -48,17 +49,39 @@ const LifeLogCard: React.FC<LifeLogCardProps> = ({ title, excerpt, date, tags, s
         {/* Thumbnail Background */}
         {hasValidThumbnail && (
           <>
-            {/* Hidden image for loading detection */}
-            <img src={thumbnail} alt="" className="hidden" onLoad={() => setImageLoaded(true)} onError={() => setImageError(true)} />
-            <div
-              className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-              style={{
-                backgroundImage: `url(${thumbnail})`,
-                opacity: imageLoaded ? 1 : 0,
-                transition: "opacity 0.3s ease-in-out",
-              }}
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent" />
+            {isVideo ? (
+              <>
+                <video
+                  src={thumbnail}
+                  className="absolute inset-0 w-full h-full object-cover"
+                  autoPlay
+                  loop
+                  muted
+                  playsInline
+                  onLoadedData={() => setImageLoaded(true)}
+                  onError={() => setImageError(true)}
+                  style={{
+                    opacity: imageLoaded ? 1 : 0,
+                    transition: "opacity 0.3s ease-in-out",
+                  }}
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent" />
+              </>
+            ) : (
+              <>
+                {/* Hidden image for loading detection */}
+                <img src={thumbnail} alt="" className="hidden" onLoad={() => setImageLoaded(true)} onError={() => setImageError(true)} />
+                <div
+                  className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+                  style={{
+                    backgroundImage: `url(${thumbnail})`,
+                    opacity: imageLoaded ? 1 : 0,
+                    transition: "opacity 0.3s ease-in-out",
+                  }}
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent" />
+              </>
+            )}
           </>
         )}
 
