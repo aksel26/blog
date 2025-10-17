@@ -70,9 +70,7 @@ const LifeLogPostTemplate: React.FC<PageProps<BlogPostData, BlogPostPageContext>
   const postDirectory = post.parent?.relativeDirectory || "";
 
   // 현재 포스트 디렉토리의 이미지만 필터링
-  let galleryImages = data.allFile.nodes
-    .filter((file) => file.relativeDirectory === postDirectory)
-    .map((file) => file.publicURL);
+  let galleryImages = data.allFile.nodes.filter((file) => file.relativeDirectory === postDirectory).map((file) => file.publicURL);
 
   // thumbnail은 이제 { publicURL: string } 형태이므로 처리 불필요
   // 모든 이미지는 이미 galleryImages에 포함됨
@@ -192,7 +190,7 @@ const LifeLogPostTemplate: React.FC<PageProps<BlogPostData, BlogPostPageContext>
         <PostNavigation previous={previous} next={next} currentCategory={category} />
 
         <footer className="mt-16 pt-8" style={{ borderTop: "1px solid var(--border-color)" }}>
-          <div className="toss-card p-8" style={{ backgroundColor: "var(--bg-secondary)" }}>
+          <div className=" p-8">
             <div className="text-center mb-8">
               <h3 className="text-xl font-bold mb-3" style={{ color: "var(--text-primary)" }}>
                 이 글이 도움이 되셨나요? 💭
@@ -202,7 +200,7 @@ const LifeLogPostTemplate: React.FC<PageProps<BlogPostData, BlogPostPageContext>
               </p>
             </div>
 
-            <GiscusComments repo="your-username/your-repo" repoId="your-repo-id" category="General" categoryId="your-category-id" />
+            <GiscusComments repo="aksel26/blog" repoId="R_kgDOP_11hQ" category="comments" categoryId="DIC_kwDOP_11hc4CwvVR" />
           </div>
         </footer>
       </div>
