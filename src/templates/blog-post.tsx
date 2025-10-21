@@ -59,7 +59,9 @@ interface BlogPostData {
     frontmatter: {
       title: string;
       date: string;
+      dateISO: string;
       modified?: string;
+      modifiedISO?: string;
       category: string;
       tags: string[];
       excerpt: string;
@@ -88,12 +90,22 @@ interface BlogPostPageContext {
 
 const BlogPostTemplate: React.FC<PageProps<BlogPostData, BlogPostPageContext>> = ({ data, pageContext, children }) => {
   const post = data.mdx;
-  const { title, date, modified, category, tags, excerpt, thumbnail } = post.frontmatter;
+  const { title, date, dateISO, modified, modifiedISO, category, tags, excerpt, thumbnail } = post.frontmatter;
   const { previous, next } = pageContext;
 
   return (
     <Layout>
-      <SEO title={title} description={excerpt} keywords={tags} image={thumbnail} article={true} pathname={post.fields.slug} />
+      <SEO
+        title={title}
+        description={excerpt}
+        keywords={tags}
+        image={thumbnail}
+        article={true}
+        pathname={post.fields.slug}
+        datePublished={dateISO}
+        dateModified={modifiedISO}
+        author="HMKIM"
+      />
 
       <article className="max-w-4xl mx-auto">
         <header className="mb-12">
@@ -221,7 +233,9 @@ export const query = graphql`
       frontmatter {
         title
         date(formatString: "YYYY년 MM월 DD일")
+        dateISO: date
         modified(formatString: "YYYY년 MM월 DD일")
+        modifiedISO: modified
         category
         tags
         excerpt
