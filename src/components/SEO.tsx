@@ -9,9 +9,22 @@ interface SEOProps {
   image?: string;
   article?: boolean;
   pathname?: string;
+  datePublished?: string;
+  dateModified?: string;
+  author?: string;
 }
 
-const SEO: React.FC<SEOProps> = ({ title, description, keywords = [], image, article = false, pathname = "" }) => {
+const SEO: React.FC<SEOProps> = ({
+  title,
+  description,
+  keywords = [],
+  image,
+  article = false,
+  pathname = "",
+  datePublished,
+  dateModified,
+  author
+}) => {
   const { site } = useStaticQuery(
     graphql`
       query {
@@ -39,6 +52,37 @@ const SEO: React.FC<SEOProps> = ({ title, description, keywords = [], image, art
 
   const canonical = pathname ? `${site.siteMetadata.siteUrl}${pathname}` : site.siteMetadata.siteUrl;
   const url = pathname ? `${site.siteMetadata.siteUrl}${pathname}` : site.siteMetadata.siteUrl;
+
+  // JSON-LD structured data for BlogPosting
+  const structuredData = article && datePublished ? {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "headline": title || site.siteMetadata.title,
+    "description": metaDescription,
+    "image": metaImage,
+    "datePublished": datePublished,
+    "dateModified": dateModified || datePublished,
+    "author": {
+      "@type": "Person",
+      "name": author || site.siteMetadata.author,
+      "url": site.siteMetadata.siteUrl
+    },
+    "publisher": {
+      "@type": "Organization",
+      "name": site.siteMetadata.title,
+      "logo": {
+        "@type": "ImageObject",
+        "url": `${site.siteMetadata.siteUrl}/og-default.png`
+      }
+    },
+    "mainEntityOfPage": {
+      "@type": "WebPage",
+      "@id": url
+    },
+    "keywords": keywords.join(", "),
+    "articleSection": keywords[0] || "기술",
+    "inLanguage": "ko-KR"
+  } : null;
 
   return (
     <Helmet
@@ -115,7 +159,38 @@ const SEO: React.FC<SEOProps> = ({ title, description, keywords = [], image, art
           name: "keywords",
           content: keyword,
         })),
+        // Article-specific meta tags
+        ...(article && datePublished
+          ? [
+              {
+                property: "article:published_time",
+                content: datePublished,
+              },
+              {
+                property: "article:modified_time",
+                content: dateModified || datePublished,
+              },
+              {
+                property: "article:author",
+                content: author || site.siteMetadata.author,
+              },
+              ...keywords.map((tag) => ({
+                property: "article:tag",
+                content: tag,
+              })),
+            ]
+          : []),
       ]}
+      script={
+        structuredData
+          ? [
+              {
+                type: "application/ld+json",
+                innerHTML: JSON.stringify(structuredData),
+              },
+            ]
+          : []
+      }
       link={
         canonical
           ? [
