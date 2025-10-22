@@ -7,14 +7,15 @@ export const createSchemaCustomization: GatsbyNode["createSchemaCustomization"] 
   const typeDefs = `
     type MdxFrontmatter {
       thumbnail: String
+      thumbnailFile: File @link(by: "id")
     }
   `
 
   createTypes(typeDefs)
 }
 
-export const onCreateNode: GatsbyNode["onCreateNode"] = ({ node, actions, getNode }) => {
-  const { createNodeField } = actions
+export const onCreateNode: GatsbyNode["onCreateNode"] = ({ node, actions, getNode, getNodesByType }) => {
+  const { createNodeField, createParentChildLink } = actions
 
   if (node.internal.type === "Mdx") {
     const fileNode = getNode(node.parent!)
@@ -37,26 +38,24 @@ export const onCreateNode: GatsbyNode["onCreateNode"] = ({ node, actions, getNod
       value: slug,
     })
 
-    // thumbnail URL 처리
-    if (frontmatter?.thumbnail) {
-      const thumbnail = frontmatter.thumbnail
-      // 외부 URL인 경우 그대로 사용
-      if (thumbnail.startsWith('http://') || thumbnail.startsWith('https://')) {
-        createNodeField({
-          node,
-          name: "thumbnailUrl",
-          value: thumbnail,
-        })
-      } else {
-        // 상대 경로인 경우 publicURL로 변환
-        // ./thumbnail.webp -> /static/thumbnail-xxx.webp 형태로 변환됨
-        const directory = path.dirname((fileNode as any)?.relativePath || "")
-        const thumbnailPath = path.join(directory, thumbnail.replace('./', ''))
-        createNodeField({
-          node,
-          name: "thumbnailPath",
-          value: thumbnailPath,
-        })
+    // thumbnail 파일 처리
+    if (frontmatter?.thumbnail && !frontmatter.thumbnail.startsWith('http')) {
+      const directory = path.dirname((fileNode as any)?.relativePath || "")
+      const thumbnailFileName = frontmatter.thumbnail.replace('./', '')
+      const thumbnailRelativePath = path.join(directory, thumbnailFileName)
+
+      // File 노드 찾기
+      const allFileNodes = getNodesByType('File')
+      const thumbnailFileNode = allFileNodes.find((f: any) =>
+        f.sourceInstanceName === 'posts' && f.relativePath === thumbnailRelativePath
+      )
+
+      if (thumbnailFileNode) {
+        // frontmatter에 File ID 설정
+        if (!node.frontmatter) {
+          (node as any).frontmatter = {}
+        }
+        (node as any).frontmatter.thumbnailFile = thumbnailFileNode.id
       }
     }
   }

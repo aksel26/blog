@@ -11,9 +11,16 @@ interface Post {
     tags: string[];
     excerpt: string;
     thumbnail?: string;
+    thumbnailFile?: {
+      publicURL: string;
+    };
   };
   fields: {
     slug: string;
+  };
+  parent?: {
+    relativePath?: string;
+    relativeDirectory?: string;
   };
   timeToRead: number;
 }
@@ -22,11 +29,48 @@ interface RecentActivitiesData {
   allMdx: {
     nodes: Post[];
   };
+  allFile: {
+    nodes: Array<{
+      publicURL: string;
+      relativePath: string;
+      relativeDirectory: string;
+    }>;
+  };
 }
 
 const RecentActivities: React.FC = () => {
   const [activeTab, setActiveTab] = useState<"all" | "devLog" | "lifeLog">("all");
   const [visibleMonths, setVisibleMonths] = useState(3);
+
+  // Helper function to get thumbnail URL
+  const getThumbnailUrl = (post: Post, allFiles: RecentActivitiesData['allFile']['nodes']) => {
+    const { thumbnail, thumbnailFile } = post.frontmatter;
+
+    // 이미 thumbnailFile이 있으면 사용
+    if (thumbnailFile?.publicURL) {
+      return thumbnailFile.publicURL;
+    }
+
+    // 외부 URL이면 그대로 사용
+    if (thumbnail && (thumbnail.startsWith('http://') || thumbnail.startsWith('https://'))) {
+      return thumbnail;
+    }
+
+    // 상대 경로인 경우 매칭
+    if (thumbnail && post.parent && post.parent.relativeDirectory) {
+      const thumbnailFileName = thumbnail.replace('./', '');
+      const matchedFile = allFiles.find(file =>
+        file.relativeDirectory === post.parent!.relativeDirectory &&
+        file.relativePath.endsWith(thumbnailFileName)
+      );
+
+      if (matchedFile) {
+        return matchedFile.publicURL;
+      }
+    }
+
+    return thumbnail;
+  };
 
   const data = useStaticQuery<RecentActivitiesData>(graphql`
     query RecentActivitiesQuery {
@@ -39,10 +83,26 @@ const RecentActivities: React.FC = () => {
             tags
             excerpt
             thumbnail
+            thumbnailFile {
+              publicURL
+            }
           }
           fields {
             slug
           }
+          parent {
+            ... on File {
+              relativePath
+              relativeDirectory
+            }
+          }
+        }
+      }
+      allFile(filter: { sourceInstanceName: { eq: "posts" } }) {
+        nodes {
+          publicURL
+          relativePath
+          relativeDirectory
         }
       }
     }
@@ -56,6 +116,7 @@ const RecentActivities: React.FC = () => {
       const postDate = new Date(post.frontmatter.date);
       return postDate >= cutoffDate;
     });
+    console.log("🔍 ~ useMemo() callback ~ src/components/RecentActivities.tsx:55 ~ posts:", posts);
 
     if (activeTab === "devLog") {
       posts = posts.filter((post) => post.frontmatter.category === "기술");
@@ -161,7 +222,7 @@ const RecentActivities: React.FC = () => {
                   tags={post.frontmatter.tags}
                   slug={post.fields.slug}
                   readTime={5}
-                  thumbnail={post.frontmatter.thumbnail}
+                  thumbnail={getThumbnailUrl(post, data.allFile.nodes)}
                 />
               ))}
             </div>
@@ -177,7 +238,7 @@ const RecentActivities: React.FC = () => {
                   tags={post.frontmatter.tags}
                   slug={post.fields.slug}
                   readTime={5}
-                  thumbnail={post.frontmatter.thumbnail}
+                  thumbnail={getThumbnailUrl(post, data.allFile.nodes)}
                   size="medium"
                 />
               ))}
@@ -194,7 +255,7 @@ const RecentActivities: React.FC = () => {
                   tags={post.frontmatter.tags}
                   slug={post.fields.slug}
                   readTime={5}
-                  thumbnail={post.frontmatter.thumbnail}
+                  thumbnail={getThumbnailUrl(post, data.allFile.nodes)}
                 />
               ))}
             </div>

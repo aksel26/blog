@@ -15,12 +15,15 @@ interface CategoryData {
         tags: string[];
         excerpt: string;
         thumbnail?: string;
+        thumbnailFile?: {
+          publicURL: string;
+        };
       };
       fields: {
         slug: string;
-        thumbnailUrl?: string;
       };
       parent?: {
+        relativePath?: string;
         relativeDirectory?: string;
       };
     }>;
@@ -30,8 +33,6 @@ interface CategoryData {
       publicURL: string;
       relativePath: string;
       relativeDirectory: string;
-      name: string;
-      extension: string;
     }>;
   };
 }
@@ -43,43 +44,37 @@ interface CategoryPageContext {
 
 const CategoryTemplate: React.FC<PageProps<CategoryData, CategoryPageContext>> = ({ data, pageContext }) => {
   const { category, mappedCategory } = pageContext;
-  const rawPosts = data.allMdx.nodes;
+  const posts = data.allMdx.nodes;
 
-  // 각 포스트의 thumbnail URL을 계산
-  const posts = rawPosts.map(post => {
-    let thumbnailUrl = post.fields.thumbnailUrl;
+  // Helper function to get thumbnail URL
+  const getThumbnailUrl = (post: CategoryData['allMdx']['nodes'][0]) => {
+    const { thumbnail, thumbnailFile } = post.frontmatter;
 
-    // thumbnailUrl이 없고 frontmatter에 thumbnail이 있는 경우
-    if (!thumbnailUrl && post.frontmatter.thumbnail) {
-      const thumbnail = post.frontmatter.thumbnail;
+    // 이미 thumbnailFile이 있으면 사용
+    if (thumbnailFile?.publicURL) {
+      return thumbnailFile.publicURL;
+    }
 
-      // 외부 URL인 경우 그대로 사용
-      if (thumbnail.startsWith('http://') || thumbnail.startsWith('https://')) {
-        thumbnailUrl = thumbnail;
-      } else {
-        // 상대 경로인 경우 allFile에서 매칭
-        const postDirectory = post.parent?.relativeDirectory;
-        if (postDirectory) {
-          const thumbnailFileName = thumbnail.replace('./', '');
-          const matchedFile = data.allFile.nodes.find(file =>
-            file.relativeDirectory === postDirectory &&
-            file.relativePath.endsWith(thumbnailFileName)
-          );
-          if (matchedFile) {
-            thumbnailUrl = matchedFile.publicURL;
-          }
-        }
+    // 외부 URL이면 그대로 사용
+    if (thumbnail && (thumbnail.startsWith('http://') || thumbnail.startsWith('https://'))) {
+      return thumbnail;
+    }
+
+    // 상대 경로인 경우 매칭
+    if (thumbnail && post.parent && post.parent.relativeDirectory) {
+      const thumbnailFileName = thumbnail.replace('./', '');
+      const matchedFile = data.allFile.nodes.find(file =>
+        file.relativeDirectory === post.parent!.relativeDirectory &&
+        file.relativePath.endsWith(thumbnailFileName)
+      );
+
+      if (matchedFile) {
+        return matchedFile.publicURL;
       }
     }
 
-    return {
-      ...post,
-      fields: {
-        ...post.fields,
-        thumbnailUrl
-      }
-    };
-  });
+    return thumbnail;
+  };
 
   const categoryInfo = {
     기술: {
@@ -206,7 +201,7 @@ const CategoryTemplate: React.FC<PageProps<CategoryData, CategoryPageContext>> =
                           slug={posts[0].fields.slug}
                           readTime={5}
                           size="large"
-                          thumbnail={posts[0].fields.thumbnailUrl}
+                          thumbnail={getThumbnailUrl(posts[0])}
                         />
                       </div>
                       {/* Second post - 4/10 columns */}
@@ -220,7 +215,7 @@ const CategoryTemplate: React.FC<PageProps<CategoryData, CategoryPageContext>> =
                           slug={posts[1].fields.slug}
                           readTime={5}
                           size="medium"
-                          thumbnail={posts[1].fields.thumbnailUrl}
+                          thumbnail={getThumbnailUrl(posts[1])}
                         />
                       </div>
                     </div>
@@ -236,7 +231,7 @@ const CategoryTemplate: React.FC<PageProps<CategoryData, CategoryPageContext>> =
                         slug={posts[0].fields.slug}
                         readTime={5}
                         size="large"
-                        thumbnail={posts[0].fields.thumbnailUrl}
+                        thumbnail={getThumbnailUrl(posts[0])}
                       />
                     </div>
                   )}
@@ -254,7 +249,7 @@ const CategoryTemplate: React.FC<PageProps<CategoryData, CategoryPageContext>> =
                           slug={post.fields.slug}
                           readTime={5}
                           size="medium"
-                          thumbnail={post.fields.thumbnailUrl}
+                          thumbnail={getThumbnailUrl(post)}
                         />
                       ))}
                     </div>
@@ -321,33 +316,26 @@ export const query = graphql`
           tags
           excerpt
           thumbnail
+          thumbnailFile {
+            publicURL
+          }
         }
         fields {
           slug
-          thumbnailUrl
         }
         parent {
           ... on File {
+            relativePath
             relativeDirectory
-            childrenImageSharp {
-              gatsbyImageData(width: 800)
-            }
           }
         }
       }
     }
-    allFile(
-      filter: {
-        extension: { regex: "/(jpg|jpeg|png|gif|webp|mp4|mov|avi)/" }
-        sourceInstanceName: { eq: "posts" }
-      }
-    ) {
+    allFile(filter: { sourceInstanceName: { eq: "posts" } }) {
       nodes {
         publicURL
         relativePath
         relativeDirectory
-        name
-        extension
       }
     }
   }
