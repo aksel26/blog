@@ -144,9 +144,9 @@ export const createPages: GatsbyNode["createPages"] = async ({ graphql, actions,
         "기술": "devLog",
         "일상": "lifeLog"
       }
-      
+
       const mappedCategory = categoryMap[category] || category.toLowerCase()
-      
+
       createPage({
         path: `/${mappedCategory}`,
         component: categoryTemplate,
@@ -156,5 +156,27 @@ export const createPages: GatsbyNode["createPages"] = async ({ graphql, actions,
         },
       })
     }
+  })
+
+  // Create tag pages
+  const tagTemplate = path.resolve("./src/templates/tag.tsx")
+  const tags = new Set<string>()
+
+  posts.forEach((post: any) => {
+    if (post.frontmatter.tags) {
+      post.frontmatter.tags.forEach((tag: string) => {
+        tags.add(tag)
+      })
+    }
+  })
+
+  Array.from(tags).forEach((tag) => {
+    createPage({
+      path: `/tag/${tag.toLowerCase().replace(/\s+/g, '-')}`,
+      component: tagTemplate,
+      context: {
+        tag,
+      },
+    })
   })
 }
