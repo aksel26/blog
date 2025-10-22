@@ -7,7 +7,10 @@ import GalleryWall from "../components/GalleryWall";
 import GiscusComments from "../components/GiscusComments";
 import Layout from "../components/Layout";
 import PostNavigation from "../components/PostNavigation";
+import RelatedPosts from "../components/RelatedPosts";
 import SEO from "../components/SEO";
+import SocialShare from "../components/SocialShare";
+import ViewCount from "../components/ViewCount";
 
 interface NavigationPost {
   fields: {
@@ -56,6 +59,20 @@ interface BlogPostData {
       extension: string;
     }>;
   };
+  allMdx: {
+    nodes: Array<{
+      fields: {
+        slug: string;
+      };
+      frontmatter: {
+        title: string;
+        date: string;
+        excerpt: string;
+        category: string;
+        tags: string[];
+      };
+    }>;
+  };
 }
 
 interface BlogPostPageContext {
@@ -77,7 +94,7 @@ const LifeLogPostTemplate: React.FC<PageProps<BlogPostData, BlogPostPageContext>
     .filter((file) => file.relativeDirectory === postDirectory)
     .map((file) => ({
       url: file.publicURL,
-      type: ["mp4", "mov", "avi"].includes(file.extension.toLowerCase()) ? "video" : "image",
+      type: (["mp4", "mov", "avi"].includes(file.extension.toLowerCase()) ? "video" : "image") as "image" | "video",
     }));
 
   // thumbnail은 이제 { publicURL: string } 형태이므로 처리 불필요
@@ -167,6 +184,10 @@ const LifeLogPostTemplate: React.FC<PageProps<BlogPostData, BlogPostPageContext>
             {title}
           </h1>
 
+          <div className="flex items-center gap-6 text-sm mb-6">
+            <ViewCount slug={post.fields.slug} />
+          </div>
+
           <div className="flex flex-wrap gap-2">
             {tags.map((tag) => (
               <span
@@ -207,6 +228,24 @@ const LifeLogPostTemplate: React.FC<PageProps<BlogPostData, BlogPostPageContext>
             </div>
           </article>
         </div>
+
+        {/* Social Share Buttons */}
+        <div className="mt-12 pt-8" style={{ borderTop: "1px solid var(--border-color)" }}>
+          <SocialShare
+            url={`https://aksel26.netlify.app${post.fields.slug}`}
+            title={title}
+            description={excerpt}
+            className="mb-8"
+          />
+        </div>
+
+        {/* Related Posts */}
+        <RelatedPosts
+          currentPostSlug={post.fields.slug}
+          currentTags={tags}
+          allPosts={data.allMdx.nodes}
+          maxPosts={3}
+        />
 
         {/* Post Navigation */}
         <PostNavigation previous={previous} next={next} currentCategory={category} />
@@ -267,6 +306,23 @@ export const query = graphql`
         relativeDirectory
         name
         extension
+      }
+    }
+    allMdx(
+      sort: { frontmatter: { date: DESC } }
+      limit: 100
+    ) {
+      nodes {
+        fields {
+          slug
+        }
+        frontmatter {
+          title
+          date(formatString: "YYYY년 MM월 DD일")
+          excerpt
+          category
+          tags
+        }
       }
     }
   }
