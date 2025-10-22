@@ -8,6 +8,9 @@ const config: GatsbyConfig = {
     description: "코드를 통해 배운 것들과 삶에서 경험한 소중한 순간들을 나누는 블로그입니다.",
     author: "@aksel26",
     siteUrl: "https://aksel26.netlify.app/",
+    keywords: ["개발 블로그", "프론트엔드 개발", "React", "TypeScript", "웹 개발", "기술 블로그", "일상 블로그", "개발자"],
+    locale: "ko_KR",
+    type: "website",
   },
   plugins: [
     "gatsby-plugin-react-helmet",
@@ -18,7 +21,7 @@ const config: GatsbyConfig = {
       resolve: "gatsby-plugin-sitemap",
       options: {
         output: "/",
-        excludes: ["/dev-404-page", "/404", "/404.html"],
+        excludes: ["/dev-404-page", "/404", "/404.html", "/tag/*"],
         query: `
           {
             site {
@@ -31,19 +34,55 @@ const config: GatsbyConfig = {
                 path
               }
             }
+            allMdx {
+              nodes {
+                fields {
+                  slug
+                }
+                frontmatter {
+                  date
+                  modified
+                }
+              }
+            }
           }
         `,
         resolveSiteUrl: () => "https://aksel26.netlify.app",
-        resolvePages: ({ allSitePage: { nodes: allPages } }: any) => {
+        resolvePages: ({ allSitePage: { nodes: allPages }, allMdx: { nodes: allPosts } }: any) => {
+          const postMap = allPosts.reduce((acc: any, post: any) => {
+            acc[post.fields.slug] = post;
+            return acc;
+          }, {});
+
           return allPages.map((page: any) => {
-            return { ...page };
+            const post = postMap[page.path];
+            return {
+              ...page,
+              lastmod: post?.frontmatter?.modified || post?.frontmatter?.date,
+            };
           });
         },
-        serialize: ({ path }: any) => {
+        serialize: ({ path, lastmod }: any) => {
+          // 경로별 우선순위 설정
+          let priority = 0.5;
+          let changefreq = "monthly";
+
+          if (path === "/") {
+            priority = 1.0;
+            changefreq = "daily";
+          } else if (path.startsWith("/devlog/") || path.startsWith("/lifelog/")) {
+            priority = 0.8;
+            changefreq = "weekly";
+          } else if (path === "/about/") {
+            priority = 0.6;
+            changefreq = "monthly";
+          }
+
           return {
             url: path,
-            changefreq: "weekly",
-            priority: path === "/" ? 1.0 : 0.7,
+            changefreq,
+            priority,
+            lastmod: lastmod || new Date().toISOString(),
           };
         },
       },
