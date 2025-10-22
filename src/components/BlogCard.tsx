@@ -10,6 +10,7 @@ interface BlogCardProps {
   slug: string
   readTime?: number
   viewCount?: number
+  thumbnail?: string
 }
 
 const BlogCard: React.FC<BlogCardProps> = ({
