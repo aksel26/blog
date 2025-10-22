@@ -2,7 +2,7 @@
 title: "조합/순열 완벽 정리 - 코딩테스트 필수 템플릿"
 date: "2025-10-21"
 modified: "2025-10-21"
-category: "개발"
+category: "기술"
 tags: ["알고리즘", "코딩테스트", "JavaScript", "순열", "조합"]
 excerpt: "코딩테스트에서 자주 출제되는 조합과 순열 문제를 완벽하게 정리했습니다. JavaScript 구현 코드와 실전 예제를 통해 쉽게 이해할 수 있습니다."
 ---
@@ -29,6 +29,7 @@ excerpt: "코딩테스트에서 자주 출제되는 조합과 순열 문제를 �
 **공식:** `nPr = n! / (n-r)!`
 
 **언제 사용?**
+
 - 비밀번호 경우의 수 (예: 1,2,3,4로 만들 수 있는 3자리 비밀번호)
 - 달리기 시합 순위 (1등, 2등, 3등이 누가 될지)
 - 좌석 배치 (A, B, C가 앉을 수 있는 3개 좌석 배치)
@@ -55,6 +56,7 @@ getPermutations([1, 2, 3], 2);
 ```
 
 **동작 원리:**
+
 1. 배열의 각 요소를 고정(fixed)
 2. 나머지 요소들로 재귀 호출
 3. 고정된 요소와 재귀 결과를 합침
@@ -68,6 +70,7 @@ getPermutations([1, 2, 3], 2);
 **공식:** `nCr = n! / (r! × (n-r)!)`
 
 **언제 사용?**
+
 - 로또 번호 선택 (45개 중 6개 선택)
 - 팀 구성 (10명 중 5명을 뽑아 팀 구성)
 - 메뉴 조합 (A, B, C, D 중 2가지 선택)
@@ -94,6 +97,7 @@ getCombinations([1, 2, 3], 2);
 ```
 
 **순열과의 차이:**
+
 - 순열: `rest = [...arr.slice(0, idx), ...arr.slice(idx + 1)]` → 앞뒤 모두 포함
 - 조합: `rest = arr.slice(idx + 1)` → 뒤쪽만 포함 (순서 무시)
 
@@ -106,6 +110,7 @@ getCombinations([1, 2, 3], 2);
 **공식:** `n^r`
 
 **언제 사용?**
+
 - 주사위를 3번 던질 때 나올 수 있는 경우의 수
 - 중복이 허용되는 비밀번호 (0~9를 사용한 4자리 비밀번호 = 10^4)
 - 동전을 5번 던질 때의 경우의 수 (2^5 = 32)
@@ -131,7 +136,7 @@ getPermutationsWithRepetition([1, 2], 2);
 // 결과: 4가지 (2^2 = 4)
 
 // 실전 예시: 주사위 2번 던지기
-getPermutationsWithRepetition([1,2,3,4,5,6], 2);
+getPermutationsWithRepetition([1, 2, 3, 4, 5, 6], 2);
 // 결과: 36가지 (6^2 = 36)
 ```
 
@@ -144,6 +149,7 @@ getPermutationsWithRepetition([1,2,3,4,5,6], 2);
 **공식:** `H(n,r) = C(n+r-1, r)`
 
 **언제 사용?**
+
 - 아이스크림 3개 고르기 (같은 맛 중복 가능)
 - 과일 5개 담기 (사과, 바나나, 오렌지 중복 허용)
 - 동전 개수 세기 (100원 2개, 500원 1개 등)
@@ -170,12 +176,13 @@ getCombinationsWithRepetition([1, 2], 2);
 // 결과: 3가지 (H(2,2) = C(3,2) = 3)
 
 // 실전 예시: 아이스크림 2개 고르기 (딸기, 초코, 바닐라)
-getCombinationsWithRepetition(['딸기', '초코', '바닐라'], 2);
+getCombinationsWithRepetition(["딸기", "초코", "바닐라"], 2);
 // [['딸기','딸기'], ['딸기','초코'], ['딸기','바닐라'],
 //  ['초코','초코'], ['초코','바닐라'], ['바닐라','바닐라']]
 ```
 
 **조합과의 차이:**
+
 - 조합: `rest = arr.slice(idx + 1)` → 자기 자신 제외
 - 중복조합: `rest = arr.slice(idx)` → 자기 자신 포함
 
@@ -321,6 +328,7 @@ solution([1, 2, 3, 4, 5]); // [1]
 - **중복순열**: O(n^r)
 
 **⚠️ 위험 신호:**
+
 - n > 10일 때는 순열/조합 사용 시 시간 초과 가능
 - 이런 경우 백트래킹, DP, 그리디 등 다른 접근 필요
 
@@ -333,7 +341,7 @@ solution([1, 2, 3, 4, 5]); // [1]
 function getPermutationCount(n, r) {
   let result = 1;
   for (let i = 0; i < r; i++) {
-    result *= (n - i);
+    result *= n - i;
   }
   return result;
 }
@@ -342,8 +350,8 @@ function getCombinationCount(n, r) {
   if (r > n - r) r = n - r; // 최적화
   let result = 1;
   for (let i = 0; i < r; i++) {
-    result *= (n - i);
-    result /= (i + 1);
+    result *= n - i;
+    result /= i + 1;
   }
   return result;
 }
@@ -361,7 +369,7 @@ function getUniquePermutations(arr, r) {
 }
 
 // 예: [1,1,2]의 2개 순열
-getUniquePermutations([1,1,2], 2);
+getUniquePermutations([1, 1, 2], 2);
 // [[1,1], [1,2], [2,1]] (중복 제거됨)
 ```
 
@@ -386,9 +394,14 @@ getUniquePermutations([1,1,2], 2);
 ```jsx
 // 숫자 키패드 매핑
 const keypad = {
-  '2': 'abc', '3': 'def', '4': 'ghi',
-  '5': 'jkl', '6': 'mno', '7': 'pqrs',
-  '8': 'tuv', '9': 'wxyz'
+  2: "abc",
+  3: "def",
+  4: "ghi",
+  5: "jkl",
+  6: "mno",
+  7: "pqrs",
+  8: "tuv",
+  9: "wxyz",
 };
 
 function letterCombinations(digits) {
@@ -408,7 +421,7 @@ function letterCombinations(digits) {
     }
   }
 
-  backtrack(0, '');
+  backtrack(0, "");
   return result;
 }
 
@@ -423,22 +436,24 @@ n×n 체스판에 n개의 퀸을 배치하는 문제
 ```jsx
 function solveNQueens(n) {
   const result = [];
-  const board = Array(n).fill().map(() => Array(n).fill('.'));
+  const board = Array(n)
+    .fill()
+    .map(() => Array(n).fill("."));
 
   function isValid(row, col) {
     // 같은 열 체크
     for (let i = 0; i < row; i++) {
-      if (board[i][col] === 'Q') return false;
+      if (board[i][col] === "Q") return false;
     }
 
     // 왼쪽 대각선 체크
     for (let i = row - 1, j = col - 1; i >= 0 && j >= 0; i--, j--) {
-      if (board[i][j] === 'Q') return false;
+      if (board[i][j] === "Q") return false;
     }
 
     // 오른쪽 대각선 체크
     for (let i = row - 1, j = col + 1; i >= 0 && j < n; i--, j++) {
-      if (board[i][j] === 'Q') return false;
+      if (board[i][j] === "Q") return false;
     }
 
     return true;
@@ -446,15 +461,15 @@ function solveNQueens(n) {
 
   function backtrack(row) {
     if (row === n) {
-      result.push(board.map(r => r.join('')));
+      result.push(board.map((r) => r.join("")));
       return;
     }
 
     for (let col = 0; col < n; col++) {
       if (isValid(row, col)) {
-        board[row][col] = 'Q';
+        board[row][col] = "Q";
         backtrack(row + 1);
-        board[row][col] = '.'; // 백트래킹
+        board[row][col] = "."; // 백트래킹
       }
     }
   }
@@ -475,6 +490,7 @@ solveNQueens(4);
 순열과 조합은 코딩테스트의 기본이자 핵심입니다. 각 함수의 차이점을 정확히 이해하고, 문제에 맞게 선택하는 연습이 필요합니다.
 
 **핵심 기억하기:**
+
 - **순서 중요 + 중복 X** = 순열
 - **순서 무관 + 중복 X** = 조합
 - **순서 중요 + 중복 O** = 중복순열
