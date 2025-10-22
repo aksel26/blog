@@ -85,13 +85,18 @@ const config: GatsbyConfig = {
           {
             resolve: "gatsby-remark-images",
             options: {
-              maxWidth: 800,
-              quality: 85,
+              maxWidth: 1200,
+              quality: 90,
               withWebp: true,
+              withAvif: true,
               loading: "lazy",
               linkImagesToOriginal: false,
               backgroundColor: "transparent",
               disableBgImageOnAlpha: true,
+              showCaptions: true,
+              markdownCaptions: false,
+              tracedSVG: false,
+              srcSetBreakpoints: [320, 640, 960, 1280, 1920],
             },
           },
           {
@@ -130,6 +135,147 @@ const config: GatsbyConfig = {
         theme_color: "#ffffff",
         display: "minimal-ui",
         icon: "src/images/favicon.png", // Add your icon file here
+      },
+    },
+    {
+      resolve: "gatsby-plugin-feed",
+      options: {
+        query: `
+          {
+            site {
+              siteMetadata {
+                title
+                description
+                siteUrl
+                site_url: siteUrl
+              }
+            }
+          }
+        `,
+        feeds: [
+          {
+            serialize: ({ query: { site, allMdx } }: any) => {
+              return allMdx.nodes.map((node: any) => {
+                return Object.assign({}, node.frontmatter, {
+                  description: node.frontmatter.excerpt || node.excerpt,
+                  date: node.frontmatter.date,
+                  url: site.siteMetadata.siteUrl + node.fields.slug,
+                  guid: site.siteMetadata.siteUrl + node.fields.slug,
+                  custom_elements: [
+                    { "content:encoded": node.html },
+                    { "dc:creator": site.siteMetadata.author || "HMKIM" },
+                  ],
+                });
+              });
+            },
+            query: `
+              {
+                allMdx(
+                  sort: {frontmatter: {date: DESC}}
+                  filter: {frontmatter: {category: {eq: "기술"}}}
+                ) {
+                  nodes {
+                    excerpt
+                    html
+                    fields {
+                      slug
+                    }
+                    frontmatter {
+                      title
+                      date
+                      excerpt
+                      category
+                    }
+                  }
+                }
+              }
+            `,
+            output: "/rss-devlog.xml",
+            title: "DevLog - 개발과 일상을 기록하는 공간",
+            description: "개발 과정에서 배운 기술과 문제 해결 과정을 공유합니다.",
+          },
+          {
+            serialize: ({ query: { site, allMdx } }: any) => {
+              return allMdx.nodes.map((node: any) => {
+                return Object.assign({}, node.frontmatter, {
+                  description: node.frontmatter.excerpt || node.excerpt,
+                  date: node.frontmatter.date,
+                  url: site.siteMetadata.siteUrl + node.fields.slug,
+                  guid: site.siteMetadata.siteUrl + node.fields.slug,
+                  custom_elements: [
+                    { "content:encoded": node.html },
+                    { "dc:creator": site.siteMetadata.author || "HMKIM" },
+                  ],
+                });
+              });
+            },
+            query: `
+              {
+                allMdx(
+                  sort: {frontmatter: {date: DESC}}
+                  filter: {frontmatter: {category: {eq: "일상"}}}
+                ) {
+                  nodes {
+                    excerpt
+                    html
+                    fields {
+                      slug
+                    }
+                    frontmatter {
+                      title
+                      date
+                      excerpt
+                      category
+                    }
+                  }
+                }
+              }
+            `,
+            output: "/rss-lifelog.xml",
+            title: "LifeLog - 개발과 일상을 기록하는 공간",
+            description: "일상에서 발견한 소중한 순간들과 여행 경험을 공유합니다.",
+          },
+          {
+            serialize: ({ query: { site, allMdx } }: any) => {
+              return allMdx.nodes.map((node: any) => {
+                return Object.assign({}, node.frontmatter, {
+                  description: node.frontmatter.excerpt || node.excerpt,
+                  date: node.frontmatter.date,
+                  url: site.siteMetadata.siteUrl + node.fields.slug,
+                  guid: site.siteMetadata.siteUrl + node.fields.slug,
+                  custom_elements: [
+                    { "content:encoded": node.html },
+                    { "dc:creator": site.siteMetadata.author || "HMKIM" },
+                  ],
+                });
+              });
+            },
+            query: `
+              {
+                allMdx(
+                  sort: {frontmatter: {date: DESC}}
+                ) {
+                  nodes {
+                    excerpt
+                    html
+                    fields {
+                      slug
+                    }
+                    frontmatter {
+                      title
+                      date
+                      excerpt
+                      category
+                    }
+                  }
+                }
+              }
+            `,
+            output: "/rss.xml",
+            title: "개발과 일상을 기록하는 공간 - 전체 RSS Feed",
+            description: "코드를 통해 배운 것들과 삶에서 경험한 소중한 순간들을 나누는 블로그입니다.",
+          },
+        ],
       },
     },
   ],
