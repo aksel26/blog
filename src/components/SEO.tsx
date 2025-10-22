@@ -53,36 +53,89 @@ const SEO: React.FC<SEOProps> = ({
   const canonical = pathname ? `${site.siteMetadata.siteUrl}${pathname}` : site.siteMetadata.siteUrl;
   const url = pathname ? `${site.siteMetadata.siteUrl}${pathname}` : site.siteMetadata.siteUrl;
 
-  // JSON-LD structured data for BlogPosting
-  const structuredData = article && datePublished ? {
+  // JSON-LD structured data
+  const getStructuredData = () => {
+    if (article && datePublished) {
+      // BlogPosting Schema for articles
+      return {
+        "@context": "https://schema.org",
+        "@type": "BlogPosting",
+        "headline": title || site.siteMetadata.title,
+        "description": metaDescription,
+        "image": {
+          "@type": "ImageObject",
+          "url": metaImage,
+          "width": 1200,
+          "height": 630
+        },
+        "datePublished": datePublished,
+        "dateModified": dateModified || datePublished,
+        "author": {
+          "@type": "Person",
+          "name": author || site.siteMetadata.author,
+          "url": site.siteMetadata.siteUrl
+        },
+        "publisher": {
+          "@type": "Organization",
+          "name": site.siteMetadata.title,
+          "logo": {
+            "@type": "ImageObject",
+            "url": `${site.siteMetadata.siteUrl}/og-default.png`,
+            "width": 600,
+            "height": 60
+          }
+        },
+        "mainEntityOfPage": {
+          "@type": "WebPage",
+          "@id": url
+        },
+        "keywords": keywords.join(", "),
+        "articleSection": keywords[0] || "기술",
+        "inLanguage": "ko-KR",
+        "isAccessibleForFree": true,
+      };
+    } else {
+      // Website Schema for homepage
+      return {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "name": site.siteMetadata.title,
+        "description": metaDescription,
+        "url": site.siteMetadata.siteUrl,
+        "potentialAction": {
+          "@type": "SearchAction",
+          "target": {
+            "@type": "EntryPoint",
+            "urlTemplate": `${site.siteMetadata.siteUrl}/search?q={search_term_string}`
+          },
+          "query-input": "required name=search_term_string"
+        },
+        "inLanguage": "ko-KR"
+      };
+    }
+  };
+
+  // BreadcrumbList Schema
+  const breadcrumbSchema = pathname && pathname !== "/" ? {
     "@context": "https://schema.org",
-    "@type": "BlogPosting",
-    "headline": title || site.siteMetadata.title,
-    "description": metaDescription,
-    "image": metaImage,
-    "datePublished": datePublished,
-    "dateModified": dateModified || datePublished,
-    "author": {
-      "@type": "Person",
-      "name": author || site.siteMetadata.author,
-      "url": site.siteMetadata.siteUrl
-    },
-    "publisher": {
-      "@type": "Organization",
-      "name": site.siteMetadata.title,
-      "logo": {
-        "@type": "ImageObject",
-        "url": `${site.siteMetadata.siteUrl}/og-default.png`
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "홈",
+        "item": site.siteMetadata.siteUrl
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": title || "페이지",
+        "item": url
       }
-    },
-    "mainEntityOfPage": {
-      "@type": "WebPage",
-      "@id": url
-    },
-    "keywords": keywords.join(", "),
-    "articleSection": keywords[0] || "기술",
-    "inLanguage": "ko-KR"
+    ]
   } : null;
+
+  const structuredData = getStructuredData();
 
   return (
     <Helmet
@@ -181,16 +234,24 @@ const SEO: React.FC<SEOProps> = ({
             ]
           : []),
       ]}
-      script={
-        structuredData
+      script={[
+        ...(structuredData
           ? [
               {
                 type: "application/ld+json",
                 innerHTML: JSON.stringify(structuredData),
               },
             ]
-          : []
-      }
+          : []),
+        ...(breadcrumbSchema
+          ? [
+              {
+                type: "application/ld+json",
+                innerHTML: JSON.stringify(breadcrumbSchema),
+              },
+            ]
+          : []),
+      ]}
       link={
         canonical
           ? [
