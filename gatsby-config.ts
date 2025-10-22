@@ -162,7 +162,7 @@ const config: GatsbyConfig = {
                   url: site.siteMetadata.siteUrl + node.fields.slug,
                   guid: site.siteMetadata.siteUrl + node.fields.slug,
                   custom_elements: [
-                    { "content:encoded": node.html },
+                    { "content:encoded": node.excerpt },
                     { "dc:creator": site.siteMetadata.author || "HMKIM" },
                   ],
                 });
@@ -176,7 +176,6 @@ const config: GatsbyConfig = {
                 ) {
                   nodes {
                     excerpt
-                    html
                     fields {
                       slug
                     }
@@ -203,7 +202,7 @@ const config: GatsbyConfig = {
                   url: site.siteMetadata.siteUrl + node.fields.slug,
                   guid: site.siteMetadata.siteUrl + node.fields.slug,
                   custom_elements: [
-                    { "content:encoded": node.html },
+                    { "content:encoded": node.excerpt },
                     { "dc:creator": site.siteMetadata.author || "HMKIM" },
                   ],
                 });
@@ -217,7 +216,6 @@ const config: GatsbyConfig = {
                 ) {
                   nodes {
                     excerpt
-                    html
                     fields {
                       slug
                     }
@@ -244,7 +242,7 @@ const config: GatsbyConfig = {
                   url: site.siteMetadata.siteUrl + node.fields.slug,
                   guid: site.siteMetadata.siteUrl + node.fields.slug,
                   custom_elements: [
-                    { "content:encoded": node.html },
+                    { "content:encoded": node.excerpt },
                     { "dc:creator": site.siteMetadata.author || "HMKIM" },
                   ],
                 });
@@ -257,7 +255,6 @@ const config: GatsbyConfig = {
                 ) {
                   nodes {
                     excerpt
-                    html
                     fields {
                       slug
                     }
