@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Link } from "gatsby";
+import { motion, AnimatePresence } from "framer-motion";
 import DarkModeToggle from "./DarkModeToggle";
 import SearchDialog from "./SearchDialog";
 
@@ -160,60 +161,74 @@ const Header: React.FC = () => {
         <SearchDialog isOpen={isSearchOpen} onClose={() => setIsSearchOpen(false)} />
 
         {/* Mobile Menu Dropdown */}
-        {isMobileMenuOpen && (
-          <div className="md:hidden mt-4 py-4 border-t" style={{ borderColor: "var(--border-color)" }}>
-            <div className="flex flex-col space-y-2">
-              <Link
-                to="/devLog"
-                onClick={() => setIsMobileMenuOpen(false)}
-                className="px-4 py-3 rounded-lg text-sm font-medium transition-all duration-200"
-                style={{ color: "var(--text-secondary)", textDecoration: "none" }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.backgroundColor = "var(--bg-secondary)";
-                  e.currentTarget.style.color = "var(--text-primary)";
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.backgroundColor = "transparent";
-                  e.currentTarget.style.color = "var(--text-secondary)";
-                }}
+        <AnimatePresence>
+          {isMobileMenuOpen && (
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: "auto" }}
+              exit={{ opacity: 0, height: 0 }}
+              transition={{ duration: 0.3, ease: "easeInOut" }}
+              className="md:hidden mt-4 py-4 border-t overflow-hidden"
+              style={{ borderColor: "var(--border-color)" }}
+            >
+              <motion.div
+                initial={{ y: -20 }}
+                animate={{ y: 0 }}
+                transition={{ duration: 0.3, ease: "easeOut" }}
+                className="flex flex-col space-y-2"
               >
-                DevLog
-              </Link>
-              <Link
-                to="/lifeLog"
-                onClick={() => setIsMobileMenuOpen(false)}
-                className="px-4 py-3 rounded-lg text-sm font-medium transition-all duration-200"
-                style={{ color: "var(--text-secondary)", textDecoration: "none" }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.backgroundColor = "var(--bg-secondary)";
-                  e.currentTarget.style.color = "var(--text-primary)";
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.backgroundColor = "transparent";
-                  e.currentTarget.style.color = "var(--text-secondary)";
-                }}
-              >
-                LifeLog
-              </Link>
-              <Link
-                to="/about"
-                onClick={() => setIsMobileMenuOpen(false)}
-                className="px-4 py-3 rounded-lg text-sm font-medium transition-all duration-200"
-                style={{ color: "var(--text-secondary)", textDecoration: "none" }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.backgroundColor = "var(--bg-secondary)";
-                  e.currentTarget.style.color = "var(--text-primary)";
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.backgroundColor = "transparent";
-                  e.currentTarget.style.color = "var(--text-secondary)";
-                }}
-              >
-                About
-              </Link>
-            </div>
-          </div>
-        )}
+                <Link
+                  to="/devLog"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className="px-4 py-3 rounded-lg text-sm font-medium transition-all duration-200"
+                  style={{ color: "var(--text-secondary)", textDecoration: "none" }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.backgroundColor = "var(--bg-secondary)";
+                    e.currentTarget.style.color = "var(--text-primary)";
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.backgroundColor = "transparent";
+                    e.currentTarget.style.color = "var(--text-secondary)";
+                  }}
+                >
+                  DevLog
+                </Link>
+                <Link
+                  to="/lifeLog"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className="px-4 py-3 rounded-lg text-sm font-medium transition-all duration-200"
+                  style={{ color: "var(--text-secondary)", textDecoration: "none" }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.backgroundColor = "var(--bg-secondary)";
+                    e.currentTarget.style.color = "var(--text-primary)";
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.backgroundColor = "transparent";
+                    e.currentTarget.style.color = "var(--text-secondary)";
+                  }}
+                >
+                  LifeLog
+                </Link>
+                <Link
+                  to="/about"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className="px-4 py-3 rounded-lg text-sm font-medium transition-all duration-200"
+                  style={{ color: "var(--text-secondary)", textDecoration: "none" }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.backgroundColor = "var(--bg-secondary)";
+                    e.currentTarget.style.color = "var(--text-primary)";
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.backgroundColor = "transparent";
+                    e.currentTarget.style.color = "var(--text-secondary)";
+                  }}
+                >
+                  About
+                </Link>
+              </motion.div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </nav>
     </header>
   );

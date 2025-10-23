@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Link } from "gatsby";
+import { motion } from "framer-motion";
 
 interface LifeLogCardProps {
   title: string;
@@ -33,7 +34,11 @@ const LifeLogCard: React.FC<LifeLogCardProps> = ({ title, excerpt, date, tags, s
 
   return (
     <Link to={slug} style={{ textDecoration: "none" }}>
-      <article
+      <motion.article
+        initial={{ opacity: 0, y: 30 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: "-50px" }}
+        transition={{ duration: 0.6, ease: "easeOut" }}
         className={`transition-all shadow-none duration-300 ${sizeClasses[size]} relative overflow-hidden rounded-lg`}
         style={{
           minHeight: cardHeight[size],
@@ -180,7 +185,7 @@ const LifeLogCard: React.FC<LifeLogCardProps> = ({ title, excerpt, date, tags, s
             )}
           </>
         )}
-      </article>
+      </motion.article>
     </Link>
   );
 };

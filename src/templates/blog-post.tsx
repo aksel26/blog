@@ -7,6 +7,8 @@ import GiscusComments from "../components/GiscusComments";
 import Layout from "../components/Layout";
 import PostNavigation from "../components/PostNavigation";
 import RelatedPosts from "../components/RelatedPosts";
+import ScrollToBottom from "../components/ScrollToBottom";
+import ScrollToTop from "../components/ScrollToTop";
 import SEO from "../components/SEO";
 import SocialShare from "../components/SocialShare";
 import TableOfContents from "../components/TableOfContents";
@@ -238,6 +240,9 @@ const BlogPostTemplate: React.FC<PageProps<BlogPostData, BlogPostPageContext>> =
           </div>
         </footer>
       </article>
+
+      <ScrollToTop />
+      <ScrollToBottom />
     </Layout>
   );
 };

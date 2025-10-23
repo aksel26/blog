@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef, useMemo } from "react";
 import { createPortal } from "react-dom";
 import { Link, useStaticQuery, graphql } from "gatsby";
+import { motion, AnimatePresence } from "framer-motion";
 
 interface SearchPost {
   fields: {
@@ -115,29 +116,37 @@ const SearchDialog: React.FC<SearchDialogProps> = ({ isOpen, onClose }) => {
     }
   };
 
-  if (!isOpen) return null;
-
   const modalContent = (
-    <div
-      className="fixed inset-0 flex items-start justify-center pt-16 px-4"
-      style={{
-        backgroundColor: "rgba(0, 0, 0, 0.5)",
-        zIndex: 9999,
-        top: 0,
-        left: 0,
-        right: 0,
-        bottom: 0,
-        position: "fixed",
-      }}
-      onClick={handleBackdropClick}
-    >
-      <div
-        className="w-full max-w-2xl bg-white rounded-xl shadow-2xl overflow-hidden"
-        style={{
-          backgroundColor: "var(--bg-primary)",
-          border: "1px solid var(--border-color)",
-        }}
-      >
+    <AnimatePresence>
+      {isOpen && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.2 }}
+          className="fixed inset-0 flex items-start justify-center pt-16 px-4"
+          style={{
+            backgroundColor: "rgba(0, 0, 0, 0.5)",
+            zIndex: 9999,
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            position: "fixed",
+          }}
+          onClick={handleBackdropClick}
+        >
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95, y: -20 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.95, y: -20 }}
+            transition={{ duration: 0.2, ease: "easeOut" }}
+            className="w-full max-w-2xl bg-white rounded-xl shadow-2xl overflow-hidden"
+            style={{
+              backgroundColor: "var(--bg-primary)",
+              border: "1px solid var(--border-color)",
+            }}
+          >
         {/* Search Input */}
         <div
           className="p-6 border-b"
@@ -342,8 +351,10 @@ const SearchDialog: React.FC<SearchDialogProps> = ({ isOpen, onClose }) => {
             </div>
           )}
         </div>
-      </div>
-    </div>
+          </motion.div>
+        </motion.div>
+      )}
+    </AnimatePresence>
   );
 
   // Use portal to render outside of header component

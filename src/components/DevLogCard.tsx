@@ -1,5 +1,6 @@
 import React from "react";
 import { Link } from "gatsby";
+import { motion } from "framer-motion";
 
 interface DevLogCardProps {
   title: string;
@@ -14,7 +15,11 @@ interface DevLogCardProps {
 const DevLogCard: React.FC<DevLogCardProps> = ({ title, excerpt, date, tags, slug, readTime, thumbnail }) => {
   return (
     <Link to={slug} style={{ textDecoration: "none" }}>
-      <article
+      <motion.article
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: "-50px" }}
+        transition={{ duration: 0.5, ease: "easeOut" }}
         className="p-3 transition-all duration-300 border-none shadow-none"
         onMouseEnter={(e) => {
           e.currentTarget.style.transform = "translateY(-2px)";
@@ -71,7 +76,7 @@ const DevLogCard: React.FC<DevLogCardProps> = ({ title, excerpt, date, tags, slu
             </span>
           )}
         </div>
-      </article>
+      </motion.article>
     </Link>
   );
 };
