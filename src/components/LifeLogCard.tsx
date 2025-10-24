@@ -30,26 +30,21 @@ const LifeLogCard: React.FC<LifeLogCardProps> = ({ title, excerpt, date, tags, s
   };
 
   const hasValidThumbnail = thumbnail && !imageError;
-  const isVideo = thumbnail && (thumbnail.endsWith('.mp4') || thumbnail.endsWith('.mov') || thumbnail.endsWith('.avi'));
+  const isVideo = thumbnail && (thumbnail.endsWith(".mp4") || thumbnail.endsWith(".mov") || thumbnail.endsWith(".avi"));
 
   return (
     <Link to={slug} style={{ textDecoration: "none" }}>
       <motion.article
-        initial={{ opacity: 0, y: 30 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, margin: "-50px" }}
-        transition={{ duration: 0.6, ease: "easeOut" }}
-        className={`transition-all shadow-none duration-300 ${sizeClasses[size]} relative overflow-hidden rounded-lg`}
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
+        viewport={{ once: true, margin: "-100px" }}
+        transition={{ duration: 0.8, ease: [0.25, 0.1, 0.25, 1] }}
+        className={`shadow-none ${sizeClasses[size]} relative overflow-hidden rounded-lg`}
         style={{
           minHeight: cardHeight[size],
           background: hasValidThumbnail ? "transparent" : `linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 100%)`,
         }}
-        onMouseEnter={(e) => {
-          e.currentTarget.style.transform = "translateY(-4px) scale(1.02)";
-        }}
-        onMouseLeave={(e) => {
-          e.currentTarget.style.transform = "translateY(0) scale(1)";
-        }}
+        whileHover={{ y: -4, scale: 1.02 }}
       >
         {/* Thumbnail Background */}
         {hasValidThumbnail && (

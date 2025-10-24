@@ -16,17 +16,12 @@ const DevLogCard: React.FC<DevLogCardProps> = ({ title, excerpt, date, tags, slu
   return (
     <Link to={slug} style={{ textDecoration: "none" }}>
       <motion.article
-        initial={{ opacity: 0, y: 20 }}
+        initial={{ opacity: 0, y: 10 }}
         whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, margin: "-50px" }}
-        transition={{ duration: 0.5, ease: "easeOut" }}
-        className="p-3 transition-all duration-300 border-none shadow-none"
-        onMouseEnter={(e) => {
-          e.currentTarget.style.transform = "translateY(-2px)";
-        }}
-        onMouseLeave={(e) => {
-          e.currentTarget.style.transform = "translateY(0)";
-        }}
+        viewport={{ once: true, margin: "-100px" }}
+        transition={{ duration: 0.4, ease: [0.25, 0.1, 0.25, 1] }}
+        className="p-3 border-none shadow-none"
+        whileHover={{ y: -2 }}
       >
         <div className="flex items-start justify-between mb-3">
           <div className={`flex-1 ${thumbnail ? "pr-4" : ""}`}>
