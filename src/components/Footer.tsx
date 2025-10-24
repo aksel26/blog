@@ -1,50 +1,46 @@
-import React from "react"
+import React from "react";
 
 const Footer: React.FC = () => {
   return (
-    <footer 
+    <footer
       className="mt-auto py-12"
-      style={{ 
+      style={{
         backgroundColor: "var(--bg-secondary)",
-        borderTop: "1px solid var(--border-color)"
+        borderTop: "1px solid var(--border-color)",
       }}
     >
       <div className="container mx-auto px-6 max-w-6xl">
         <div className="flex flex-col md:flex-row justify-between items-start mb-8">
           <div className="mb-6 md:mb-0">
-            <h3 
-              className="text-xl font-bold mb-2"
-              style={{ 
+            <h3
+              className="text-2xl font-bold mb-2"
+              style={{
                 color: "var(--text-primary)",
-                letterSpacing: "-0.02em"
+                letterSpacing: "0.05em",
+                fontWeight: 500,
+                fontFamily: "Sacramento, cursive",
               }}
             >
-              Blog
+              hmkim
             </h3>
-            <p 
-              className="text-sm max-w-md leading-relaxed"
-              style={{ color: "var(--text-secondary)" }}
-            >
+            <p className="text-sm max-w-md leading-relaxed" style={{ color: "var(--text-secondary)" }}>
               개발과 일상을 기록하며, 배움과 경험을 나누는 공간입니다.
             </p>
           </div>
-          
+
           <div className="flex space-x-8">
             <div>
-              <h4 
-                className="text-sm font-semibold mb-3"
-                style={{ color: "var(--text-primary)" }}
-              >
+              <h4 className="text-sm font-semibold mb-3" style={{ color: "var(--text-primary)" }}>
                 카테고리
               </h4>
               <ul className="space-y-2">
                 <li>
-                  <a 
-                    href="/devLog" 
+                  <a
+                    href="/devLog"
                     className="text-sm transition-colors duration-200"
-                    style={{ 
+                    style={{
                       color: "var(--text-secondary)",
-                      textDecoration: "none"
+                      textDecoration: "none",
                     }}
                     onMouseEnter={(e) => {
                       e.currentTarget.style.color = "var(--accent-blue)";
@@ -57,12 +53,12 @@ const Footer: React.FC = () => {
                   </a>
                 </li>
                 <li>
-                  <a 
-                    href="/lifeLog" 
+                  <a
+                    href="/lifeLog"
                     className="text-sm transition-colors duration-200"
-                    style={{ 
+                    style={{
                       color: "var(--text-secondary)",
-                      textDecoration: "none"
+                      textDecoration: "none",
                     }}
                     onMouseEnter={(e) => {
                       e.currentTarget.style.color = "var(--accent-blue)";
@@ -75,12 +71,12 @@ const Footer: React.FC = () => {
                   </a>
                 </li>
                 <li>
-                  <a 
-                    href="/about" 
+                  <a
+                    href="/about"
                     className="text-sm transition-colors duration-200"
-                    style={{ 
+                    style={{
                       color: "var(--text-secondary)",
-                      textDecoration: "none"
+                      textDecoration: "none",
                     }}
                     onMouseEnter={(e) => {
                       e.currentTarget.style.color = "var(--accent-blue)";
@@ -94,22 +90,19 @@ const Footer: React.FC = () => {
                 </li>
               </ul>
             </div>
-            
+
             <div>
-              <h4 
-                className="text-sm font-semibold mb-3"
-                style={{ color: "var(--text-primary)" }}
-              >
+              <h4 className="text-sm font-semibold mb-3" style={{ color: "var(--text-primary)" }}>
                 연결
               </h4>
               <ul className="space-y-2">
                 <li>
-                  <a 
-                    href="mailto:contact@example.com" 
+                  <a
+                    href="mailto:contact@example.com"
                     className="text-sm transition-colors duration-200"
-                    style={{ 
+                    style={{
                       color: "var(--text-secondary)",
-                      textDecoration: "none"
+                      textDecoration: "none",
                     }}
                     onMouseEnter={(e) => {
                       e.currentTarget.style.color = "var(--accent-blue)";
@@ -122,14 +115,14 @@ const Footer: React.FC = () => {
                   </a>
                 </li>
                 <li>
-                  <a 
-                    href="https://github.com" 
-                    target="_blank" 
+                  <a
+                    href="https://github.com"
+                    target="_blank"
                     rel="noopener noreferrer"
                     className="text-sm transition-colors duration-200"
-                    style={{ 
+                    style={{
                       color: "var(--text-secondary)",
-                      textDecoration: "none"
+                      textDecoration: "none",
                     }}
                     onMouseEnter={(e) => {
                       e.currentTarget.style.color = "var(--accent-blue)";
@@ -145,29 +138,20 @@ const Footer: React.FC = () => {
             </div>
           </div>
         </div>
-        
-        <div 
-          className="pt-6"
-          style={{ borderTop: "1px solid var(--border-color)" }}
-        >
+
+        <div className="pt-6" style={{ borderTop: "1px solid var(--border-color)" }}>
           <div className="flex flex-col md:flex-row justify-between items-center">
-            <p 
-              className="text-xs mb-4 md:mb-0"
-              style={{ color: "var(--text-tertiary)" }}
-            >
+            <p className="text-xs mb-4 md:mb-0" style={{ color: "var(--text-tertiary)" }}>
               &copy; {new Date().getFullYear()} Blog. All rights reserved.
             </p>
-            <p 
-              className="text-xs"
-              style={{ color: "var(--text-tertiary)" }}
-            >
+            <p className="text-xs" style={{ color: "var(--text-tertiary)" }}>
               Built with Gatsby, TypeScript & Tailwind CSS
             </p>
           </div>
         </div>
       </div>
     </footer>
-  )
-}
+  );
+};
 
-export default Footer
+export default Footer;
