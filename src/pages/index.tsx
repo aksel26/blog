@@ -118,6 +118,12 @@ export const Head = () => (
     <meta name="google-site-verification" content="3Z0N6Zgzw95Uk6Xwd0iJX_xcWRFAPxL2iozSpiLpukM" />
     <meta name="naver-site-verification" content="b8551eee139d8570cac6b62587127de0de5c7d9d" />
 
+    {/* Favicon */}
+    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+
     {/* Open Graph */}
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://aksel26.netlify.app/" />

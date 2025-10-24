@@ -39,7 +39,7 @@ export const wrapPageElement: GatsbySSR["wrapPageElement"] = ({ element }) => {
   return <MDXProvider components={components}>{element}</MDXProvider>;
 };
 
-// Add Google Fonts to HTML head
+// Add Google Fonts and Favicon to HTML head
 export const onRenderBody: GatsbySSR["onRenderBody"] = ({ setHeadComponents }) => {
   setHeadComponents([
     <link
@@ -57,6 +57,33 @@ export const onRenderBody: GatsbySSR["onRenderBody"] = ({ setHeadComponents }) =
       key="google-fonts-sacramento"
       rel="stylesheet"
       href="https://fonts.googleapis.com/css2?family=Sacramento&display=swap"
+    />,
+    // Favicon links for SEO optimization
+    <link
+      key="favicon-ico"
+      rel="icon"
+      type="image/x-icon"
+      href="/favicon.ico"
+    />,
+    <link
+      key="favicon-png-32"
+      rel="icon"
+      type="image/png"
+      sizes="32x32"
+      href="/favicon-32x32.png"
+    />,
+    <link
+      key="favicon-png-16"
+      rel="icon"
+      type="image/png"
+      sizes="16x16"
+      href="/favicon-16x16.png"
+    />,
+    <link
+      key="apple-touch-icon"
+      rel="apple-touch-icon"
+      sizes="180x180"
+      href="/apple-touch-icon.png"
     />,
   ]);
 };
