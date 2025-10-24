@@ -152,6 +152,7 @@ const CategoryTemplate: React.FC<PageProps<CategoryData, CategoryPageContext>> =
                   tags={post.frontmatter.tags}
                   slug={post.fields.slug}
                   readTime={5}
+                  thumbnail={getThumbnailUrl(post)}
                 />
               ))}
             </div>
@@ -242,6 +243,7 @@ const CategoryTemplate: React.FC<PageProps<CategoryData, CategoryPageContext>> =
                   tags={post.frontmatter.tags}
                   slug={post.fields.slug}
                   readTime={5}
+                  thumbnail={getThumbnailUrl(post)}
                 />
               ))}
             </div>
