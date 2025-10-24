@@ -40,6 +40,9 @@ interface BlogPostData {
       tags: string[];
       excerpt: string;
       thumbnail?: string;
+      thumbnailFile?: {
+        publicURL: string;
+      };
     };
     fields: {
       slug: string;
@@ -85,8 +88,11 @@ interface BlogPostPageContext {
 
 const LifeLogPostTemplate: React.FC<PageProps<BlogPostData, BlogPostPageContext>> = ({ data, pageContext, children }) => {
   const post = data.mdx;
-  const { title, date, dateISO, modified, modifiedISO, category, tags, excerpt, thumbnail } = post.frontmatter;
+  const { title, date, dateISO, modified, modifiedISO, category, tags, excerpt, thumbnail, thumbnailFile } = post.frontmatter;
   const { previous, next } = pageContext;
+
+  // thumbnailFile이 있으면 publicURL을 사용, 없으면 thumbnail 사용
+  const thumbnailUrl = thumbnailFile?.publicURL || thumbnail;
 
   // 현재 포스트의 디렉토리를 가져옵니다
   const postDirectory = post.parent?.relativeDirectory || "";
@@ -145,7 +151,7 @@ const LifeLogPostTemplate: React.FC<PageProps<BlogPostData, BlogPostPageContext>
         title={title}
         description={excerpt}
         keywords={tags}
-        image={thumbnail}
+        image={thumbnailUrl}
         article={true}
         pathname={post.fields.slug}
         datePublished={dateISO}
@@ -290,6 +296,9 @@ export const query = graphql`
         tags
         excerpt
         thumbnail
+        thumbnailFile {
+          publicURL
+        }
       }
       fields {
         slug
