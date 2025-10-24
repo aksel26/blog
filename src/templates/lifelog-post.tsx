@@ -104,6 +104,7 @@ const LifeLogPostTemplate: React.FC<PageProps<BlogPostData, BlogPostPageContext>
       url: file.publicURL,
       type: (["mp4", "mov", "avi"].includes(file.extension.toLowerCase()) ? "video" : "image") as "image" | "video",
     }));
+  console.log("🔍 ~  ~ src/templates/lifelog-post.tsx:101 ~ galleryMedia:", galleryMedia);
 
   // thumbnail은 이제 { publicURL: string } 형태이므로 처리 불필요
   // 모든 이미지는 이미 galleryImages에 포함됨
@@ -239,21 +240,11 @@ const LifeLogPostTemplate: React.FC<PageProps<BlogPostData, BlogPostPageContext>
 
         {/* Social Share Buttons */}
         <div className="mt-12 pt-8" style={{ borderTop: "1px solid var(--border-color)" }}>
-          <SocialShare
-            url={`https://aksel26.netlify.app${post.fields.slug}`}
-            title={title}
-            description={excerpt}
-            className="mb-8"
-          />
+          <SocialShare url={`https://aksel26.netlify.app${post.fields.slug}`} title={title} description={excerpt} className="mb-8" />
         </div>
 
         {/* Related Posts */}
-        <RelatedPosts
-          currentPostSlug={post.fields.slug}
-          currentTags={tags}
-          allPosts={data.allMdx.nodes}
-          maxPosts={3}
-        />
+        {/* <RelatedPosts currentPostSlug={post.fields.slug} currentTags={tags} allPosts={data.allMdx.nodes} maxPosts={3} /> */}
 
         {/* Post Navigation */}
         <PostNavigation previous={previous} next={next} currentCategory={category} />
@@ -322,10 +313,7 @@ export const query = graphql`
         extension
       }
     }
-    allMdx(
-      sort: { frontmatter: { date: DESC } }
-      limit: 100
-    ) {
+    allMdx(sort: { frontmatter: { date: DESC } }, limit: 100) {
       nodes {
         fields {
           slug

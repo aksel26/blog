@@ -3,7 +3,7 @@ import { Link } from "gatsby";
 import Layout from "../components/Layout";
 import SEO from "../components/SEO";
 
-const NotFoundPage: React.FC = () => {
+const NotFoundPage = () => {
   return (
     <Layout>
       <SEO title="404: 페이지를 찾을 수 없습니다" />

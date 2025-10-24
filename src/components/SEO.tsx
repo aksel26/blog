@@ -15,6 +15,7 @@ interface SEOProps {
 }
 
 const SEO: React.FC<SEOProps> = ({ title, description, keywords = [], image, article = false, pathname = "", datePublished, dateModified, author }) => {
+  console.log("🔍 ~  ~ src/components/SEO.tsx:17 ~ image:", image);
   const { site } = useStaticQuery(
     graphql`
       query {
@@ -41,6 +42,7 @@ const SEO: React.FC<SEOProps> = ({ title, description, keywords = [], image, art
         : `${site.siteMetadata.siteUrl}${image}`
       : `${site.siteMetadata.siteUrl}/og-default.png`;
 
+  console.log("🔍 ~  ~ src/components/SEO.tsx:38 ~ metaImage:", metaImage);
   const canonical = pathname ? `${site.siteMetadata.siteUrl}${pathname}` : site.siteMetadata.siteUrl;
   const url = pathname ? `${site.siteMetadata.siteUrl}${pathname}` : site.siteMetadata.siteUrl;
 

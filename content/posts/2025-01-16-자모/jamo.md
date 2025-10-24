@@ -5,7 +5,7 @@ modified: "2025-01-16"
 category: "기술"
 tags: ["JavaScript", "Frontend", "한글 처리", "Unicode"]
 excerpt: "AWS Lightsail에서 파일명 검색 실패? 한글 자모 분리 현상의 원인과 normalize() 메서드를 활용한 해결 방법을 알아봅니다."
-thumbnail: "./2025-01-16-jamo-thumbnail.png"
+thumbnail: "./thumbnail.webp"
 ---
 
 # JavaScript에서 한글 자모 분리 현상 해결하기
@@ -35,6 +35,7 @@ const result = await findFile(fileName); // Error: File not found
 한글은 유니코드에서 두 가지 방식으로 표현될 수 있습니다:
 
 1. **NFC (Normalization Form Canonical Composition)**: 완성형
+
    - 예: `"가"` → U+AC00 (하나의 코드)
 
 2. **NFD (Normalization Form Canonical Decomposition)**: 조합형
@@ -76,12 +77,12 @@ console.log(normalizedStr); // '가나다라' (완성형)
 
 ### normalize() 메서드의 옵션들
 
-| 옵션 | 설명 | 사용 사례 |
-|------|------|-----------|
-| `NFC` | 정규 정규화 결합 (완성형) | 대부분의 경우 권장 |
-| `NFD` | 정규 정규화 분해 (조합형) | 텍스트 분석, 검색 |
-| `NFKC` | 호환성 정규화 결합 | 전각/반각 통일 |
-| `NFKD` | 호환성 정규화 분해 | 특수한 텍스트 처리 |
+| 옵션   | 설명                      | 사용 사례          |
+| ------ | ------------------------- | ------------------ |
+| `NFC`  | 정규 정규화 결합 (완성형) | 대부분의 경우 권장 |
+| `NFD`  | 정규 정규화 분해 (조합형) | 텍스트 분석, 검색  |
+| `NFKC` | 호환성 정규화 결합        | 전각/반각 통일     |
+| `NFKD` | 호환성 정규화 분해        | 특수한 텍스트 처리 |
 
 ---
 
@@ -130,9 +131,7 @@ console.log(matches); // ['나']
 
 ```javascript
 function sortKoreanNames(names) {
-  return names
-    .map(name => name.normalize("NFC"))
-    .sort((a, b) => a.localeCompare(b, "ko-KR"));
+  return names.map((name) => name.normalize("NFC")).sort((a, b) => a.localeCompare(b, "ko-KR"));
 }
 
 const names = ["김철수", "이영희", "박민수"];
@@ -162,14 +161,7 @@ function SearchInput() {
     setValue(normalized);
   };
 
-  return (
-    <input
-      type="text"
-      value={value}
-      onChange={handleChange}
-      placeholder="검색어를 입력하세요"
-    />
-  );
+  return <input type="text" value={value} onChange={handleChange} placeholder="검색어를 입력하세요" />;
 }
 ```
 
@@ -184,7 +176,7 @@ function fixJamoSeparation(str) {
 
 // 배열 전체 처리
 function fixJamoInArray(arr) {
-  return arr.map(item => {
+  return arr.map((item) => {
     if (typeof item === "string") {
       return item.normalize("NFC");
     }
@@ -208,7 +200,7 @@ function fixJamoInObject(obj) {
 // 사용 예
 const data = {
   name: "홍길동", // 자모 분리된 상태
-  address: "서울시 강남구"
+  address: "서울시 강남구",
 };
 
 const fixedData = fixJamoInObject(data);
@@ -238,7 +230,7 @@ console.timeEnd("normalize"); // 약 10-20ms (환경에 따라 다름)
 function searchOptimized(items, keyword) {
   const normalizedKeyword = keyword.normalize("NFC"); // 한 번만 정규화
 
-  return items.filter(item => {
+  return items.filter((item) => {
     const normalizedItem = item.normalize("NFC");
     return normalizedItem.includes(normalizedKeyword);
   });
@@ -308,12 +300,12 @@ function normalizeObject(obj) {
 const userSchema = new Schema({
   name: {
     type: String,
-    set: (value) => value.normalize("NFC")
+    set: (value) => value.normalize("NFC"),
   },
   email: {
     type: String,
-    set: (value) => value.normalize("NFC").toLowerCase()
-  }
+    set: (value) => value.normalize("NFC").toLowerCase(),
+  },
 });
 ```
 
