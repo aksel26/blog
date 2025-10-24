@@ -47,7 +47,7 @@ const CategoryTemplate: React.FC<PageProps<CategoryData, CategoryPageContext>> =
   const posts = data.allMdx.nodes;
 
   // Helper function to get thumbnail URL
-  const getThumbnailUrl = (post: CategoryData['allMdx']['nodes'][0]) => {
+  const getThumbnailUrl = (post: CategoryData["allMdx"]["nodes"][0]) => {
     const { thumbnail, thumbnailFile } = post.frontmatter;
 
     // 이미 thumbnailFile이 있으면 사용
@@ -56,16 +56,15 @@ const CategoryTemplate: React.FC<PageProps<CategoryData, CategoryPageContext>> =
     }
 
     // 외부 URL이면 그대로 사용
-    if (thumbnail && (thumbnail.startsWith('http://') || thumbnail.startsWith('https://'))) {
+    if (thumbnail && (thumbnail.startsWith("http://") || thumbnail.startsWith("https://"))) {
       return thumbnail;
     }
 
     // 상대 경로인 경우 매칭
     if (thumbnail && post.parent && post.parent.relativeDirectory) {
-      const thumbnailFileName = thumbnail.replace('./', '');
-      const matchedFile = data.allFile.nodes.find(file =>
-        file.relativeDirectory === post.parent!.relativeDirectory &&
-        file.relativePath.endsWith(thumbnailFileName)
+      const thumbnailFileName = thumbnail.replace("./", "");
+      const matchedFile = data.allFile.nodes.find(
+        (file) => file.relativeDirectory === post.parent!.relativeDirectory && file.relativePath.endsWith(thumbnailFileName)
       );
 
       if (matchedFile) {
@@ -81,31 +80,13 @@ const CategoryTemplate: React.FC<PageProps<CategoryData, CategoryPageContext>> =
       title: "DevLog",
       subtitle: "개발 여정의 기록",
       description: "코드로 문제를 해결하고, 새로운 기술을 학습하며, 개발 과정에서 얻은 인사이트를 기록합니다.",
-      icon: (
-        <svg className="w-8 h-8" fill="none" stroke="var(--accent-blue)" viewBox="0 0 24 24">
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"
-          />
-        </svg>
-      ),
+      icon: <img src="/devLogCard.webp" alt="devLogCard" />,
     },
     일상: {
       title: "LifeLog",
       subtitle: "일상 속 소중한 순간들",
       description: "여행, 경험, 그리고 삶에서 발견한 작은 기쁨들을 이야기로 나눕니다.",
-      icon: (
-        <svg className="w-8 h-8" fill="none" stroke="var(--accent-blue)" viewBox="0 0 24 24">
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
-          />
-        </svg>
-      ),
+      icon: <img src="/lifeLogCard.webp" alt="lifeLogCard" />,
     },
   };
 
@@ -119,7 +100,6 @@ const CategoryTemplate: React.FC<PageProps<CategoryData, CategoryPageContext>> =
   const isDevLog = category === "기술";
   const isLifeLog = category === "일상";
 
-
   return (
     <Layout>
       <SEO title={info.title} description={info.description} pathname={`/${mappedCategory}`} />
@@ -127,14 +107,7 @@ const CategoryTemplate: React.FC<PageProps<CategoryData, CategoryPageContext>> =
       <div className="max-w-6xl mx-auto">
         <header className="mb-12">
           <div className="flex items-center mb-4">
-            {info.icon && (
-              <div
-                className="w-16 h-16 rounded-full flex items-center justify-center mr-6"
-                style={{ backgroundColor: "var(--accent-blue-light)" }}
-              >
-                {info.icon}
-              </div>
-            )}
+            {info.icon && <div className="w-30 h-30  mr-6">{info.icon}</div>}
             <div>
               <h1
                 className="text-4xl font-bold mb-2"
@@ -276,10 +249,7 @@ const CategoryTemplate: React.FC<PageProps<CategoryData, CategoryPageContext>> =
         ) : (
           <div className="toss-card p-12 text-center" style={{ backgroundColor: "var(--bg-secondary)" }}>
             <div className="mb-4">
-              <div
-                className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4"
-                style={{ backgroundColor: "var(--bg-tertiary)" }}
-              >
+              <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4" style={{ backgroundColor: "var(--bg-tertiary)" }}>
                 <svg className="w-8 h-8" fill="none" stroke="var(--text-tertiary)" viewBox="0 0 24 24">
                   <path
                     strokeLinecap="round"

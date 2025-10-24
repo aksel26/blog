@@ -43,7 +43,7 @@ const RecentActivities: React.FC = () => {
   const [visibleMonths, setVisibleMonths] = useState(3);
 
   // Helper function to get thumbnail URL
-  const getThumbnailUrl = (post: Post, allFiles: RecentActivitiesData['allFile']['nodes']) => {
+  const getThumbnailUrl = (post: Post, allFiles: RecentActivitiesData["allFile"]["nodes"]) => {
     const { thumbnail, thumbnailFile } = post.frontmatter;
 
     // 이미 thumbnailFile이 있으면 사용
@@ -52,17 +52,14 @@ const RecentActivities: React.FC = () => {
     }
 
     // 외부 URL이면 그대로 사용
-    if (thumbnail && (thumbnail.startsWith('http://') || thumbnail.startsWith('https://'))) {
+    if (thumbnail && (thumbnail.startsWith("http://") || thumbnail.startsWith("https://"))) {
       return thumbnail;
     }
 
     // 상대 경로인 경우 매칭
     if (thumbnail && post.parent && post.parent.relativeDirectory) {
-      const thumbnailFileName = thumbnail.replace('./', '');
-      const matchedFile = allFiles.find(file =>
-        file.relativeDirectory === post.parent!.relativeDirectory &&
-        file.relativePath.endsWith(thumbnailFileName)
-      );
+      const thumbnailFileName = thumbnail.replace("./", "");
+      const matchedFile = allFiles.find((file) => file.relativeDirectory === post.parent!.relativeDirectory && file.relativePath.endsWith(thumbnailFileName));
 
       if (matchedFile) {
         return matchedFile.publicURL;
@@ -266,11 +263,11 @@ const RecentActivities: React.FC = () => {
             <div className="flex justify-center">
               <button
                 onClick={loadMore}
-                className="toss-card px-6 py-3 transition-all duration-300 hover:transform hover:-translate-y-1"
+                className="px-6 py-3 transition-all duration-300 hover:transform hover:-translate-y-1 rounded-xl"
                 style={{
-                  backgroundColor: "var(--bg-secondary)",
+                  // backgroundColor: "var(--bg-secondary)",
                   color: "var(--text-primary)",
-                  border: "1px solid var(--border-color)",
+                  border: "0.4px solid var(--border-color)",
                 }}
                 onMouseEnter={(e) => {
                   e.currentTarget.style.boxShadow = "var(--shadow-medium)";

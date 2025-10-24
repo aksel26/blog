@@ -56,8 +56,39 @@ body {
   font-feature-settings: "liga" 1, "kern" 1;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  line-height: 1.6;
+  line-height: 1.7;
+  letter-spacing: -0.01em;
   word-break: keep-all;
+}
+
+button {
+  cursor: pointer;
+}
+/* Improved typography for all text elements */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  letter-spacing: -0.02em;
+  line-height: 1.4;
+}
+
+p,
+li,
+td,
+th {
+  line-height: 1.8;
+  letter-spacing: -0.005em;
+}
+
+/* Smaller text elements */
+small,
+.text-xs,
+.text-sm {
+  letter-spacing: -0.003em;
+  line-height: 1.6;
 }
 
 /* Toss-style components */
@@ -167,7 +198,8 @@ body {
   font-size: 2.25em;
   margin-top: 0;
   margin-bottom: 0.8888889em;
-  line-height: 1.1111111;
+  line-height: 1.3;
+  letter-spacing: -0.025em;
 }
 
 .prose :where(h2):not(:where([class~="not-prose"] *)) {
@@ -176,7 +208,8 @@ body {
   font-size: 1.5em;
   margin-top: 2em;
   margin-bottom: 1em;
-  line-height: 1.3333333;
+  line-height: 1.5;
+  letter-spacing: -0.02em;
 }
 
 .prose :where(h3):not(:where([class~="not-prose"] *)) {
@@ -186,6 +219,7 @@ body {
   margin-top: 1.6em;
   margin-bottom: 0.6em;
   line-height: 1.6;
+  letter-spacing: -0.015em;
 }
 
 .prose :where(h4):not(:where([class~="not-prose"] *)) {
@@ -193,12 +227,15 @@ body {
   font-weight: 600;
   margin-top: 1.5em;
   margin-bottom: 0.5em;
-  line-height: 1.5;
+  line-height: 1.6;
+  letter-spacing: -0.01em;
 }
 
 .prose :where(p):not(:where([class~="not-prose"] *)) {
   margin-top: 1.25em;
   margin-bottom: 1.25em;
+  line-height: 1.8;
+  letter-spacing: -0.005em;
 }
 
 .prose :where(a):not(:where([class~="not-prose"] *)) {
@@ -262,6 +299,8 @@ body {
 .prose :where(li):not(:where([class~="not-prose"] *)) {
   margin-top: 0.5em;
   margin-bottom: 0.5em;
+  line-height: 1.75;
+  letter-spacing: -0.005em;
 }
 
 .prose :where(blockquote):not(:where([class~="not-prose"] *)) {
@@ -273,6 +312,8 @@ body {
   margin-top: 1.6em;
   margin-bottom: 1.6em;
   padding-left: 1em;
+  line-height: 1.75;
+  letter-spacing: -0.005em;
 }
 
 .prose :where(img):not(:where([class~="not-prose"] *)) {
