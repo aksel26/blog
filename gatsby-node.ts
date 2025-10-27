@@ -87,6 +87,20 @@ export const createPages: GatsbyNode["createPages"] = async ({ graphql, actions,
           internal {
             contentFilePath
           }
+          parent {
+            ... on File {
+              relativeDirectory
+            }
+          }
+        }
+      }
+      allFile(filter: { extension: { regex: "/(jpg|jpeg|png|gif|webp|mp4|mov|avi)/" }, sourceInstanceName: { eq: "posts" } }) {
+        nodes {
+          publicURL
+          relativePath
+          relativeDirectory
+          name
+          extension
         }
       }
     }
@@ -98,6 +112,21 @@ export const createPages: GatsbyNode["createPages"] = async ({ graphql, actions,
   // }
 
   const posts = (result.data as any).allMdx.nodes;
+  const allFiles = (result.data as any).allFile.nodes;
+
+  // Helper function to find thumbnail publicURL
+  const findThumbnailUrl = (post: any): string | undefined => {
+    if (!post.frontmatter.thumbnail || post.frontmatter.thumbnail.startsWith("http")) {
+      return post.frontmatter.thumbnail;
+    }
+
+    const postDirectory = post.parent?.relativeDirectory || "";
+    const thumbnailFileName = post.frontmatter.thumbnail.replace("./", "");
+    const thumbnailRelativePath = path.join(postDirectory, thumbnailFileName);
+
+    const thumbnailFile = allFiles.find((file: any) => file.relativePath === thumbnailRelativePath);
+    return thumbnailFile?.publicURL || post.frontmatter.thumbnail;
+  };
 
   // Create blog post pages
   const blogPostTemplate = path.resolve("./src/templates/blog-post.tsx");
@@ -111,8 +140,22 @@ export const createPages: GatsbyNode["createPages"] = async ({ graphql, actions,
     const previousPost = currentIndexInCategory === sameCategoryPosts.length - 1 ? null : sameCategoryPosts[currentIndexInCategory + 1];
     const nextPost = currentIndexInCategory === 0 ? null : sameCategoryPosts[currentIndexInCategory - 1];
 
-    const previous = previousPost || null;
-    const next = nextPost || null;
+    // Resolve thumbnail URLs for previous and next posts
+    const previous = previousPost ? {
+      ...previousPost,
+      frontmatter: {
+        ...previousPost.frontmatter,
+        thumbnailUrl: findThumbnailUrl(previousPost)
+      }
+    } : null;
+
+    const next = nextPost ? {
+      ...nextPost,
+      frontmatter: {
+        ...nextPost.frontmatter,
+        thumbnailUrl: findThumbnailUrl(nextPost)
+      }
+    } : null;
 
     // 카테고리에 따라 다른 템플릿 사용
     const template = post.frontmatter.category === "일상" ? lifeLogPostTemplate : blogPostTemplate;

@@ -11,6 +11,7 @@ interface NavigationPost {
     excerpt: string;
     date: string;
     thumbnail?: string;
+    thumbnailUrl?: string;
   };
 }
 
@@ -23,7 +24,14 @@ interface PostNavigationProps {
 const PostNavigation: React.FC<PostNavigationProps> = ({ previous, next, currentCategory }) => {
   if (!previous && !next) return null;
 
+  console.log(previous, next);
   const categoryName = currentCategory === "기술" ? "DevLog" : "LifeLog";
+
+  // Helper function to check if URL is a video
+  const isVideoUrl = (url?: string) => {
+    if (!url) return false;
+    return /\.(mp4|mov|avi|webm)$/i.test(url);
+  };
 
   return (
     <nav className="mt-12 pt-8" style={{ borderTop: "1px solid var(--border-color)" }}>
@@ -84,14 +92,25 @@ const PostNavigation: React.FC<PostNavigationProps> = ({ previous, next, current
                   </div>
 
                   {/* Thumbnail */}
-                  {previous.frontmatter.thumbnail && (
+                  {(previous.frontmatter.thumbnailUrl || previous.frontmatter.thumbnail) && (
                     <div className="flex-shrink-0 hidden sm:block">
-                      <div
-                        className="w-16 h-16 rounded-lg bg-cover bg-center"
-                        style={{
-                          backgroundImage: `url(${previous.frontmatter.thumbnail})`,
-                        }}
-                      />
+                      {isVideoUrl(previous.frontmatter.thumbnailUrl || previous.frontmatter.thumbnail) ? (
+                        <video
+                          className="w-16 h-16 rounded-lg object-cover"
+                          src={previous.frontmatter.thumbnailUrl || previous.frontmatter.thumbnail}
+                          muted
+                          loop
+                          autoPlay
+                          playsInline
+                        />
+                      ) : (
+                        <div
+                          className="w-16 h-16 rounded-lg bg-cover bg-center"
+                          style={{
+                            backgroundImage: `url(${previous.frontmatter.thumbnailUrl || previous.frontmatter.thumbnail})`,
+                          }}
+                        />
+                      )}
                     </div>
                   )}
                 </div>
@@ -123,14 +142,25 @@ const PostNavigation: React.FC<PostNavigationProps> = ({ previous, next, current
               >
                 <div className="flex items-start space-x-4">
                   {/* Thumbnail */}
-                  {next.frontmatter.thumbnail && (
+                  {(next.frontmatter.thumbnailUrl || next.frontmatter.thumbnail) && (
                     <div className="flex-shrink-0 hidden sm:block order-first md:order-last">
-                      <div
-                        className="w-16 h-16 rounded-lg bg-cover bg-center"
-                        style={{
-                          backgroundImage: `url(${next?.frontmatter.thumbnail})`,
-                        }}
-                      />
+                      {isVideoUrl(next.frontmatter.thumbnailUrl || next.frontmatter.thumbnail) ? (
+                        <video
+                          className="w-16 h-16 rounded-lg object-cover"
+                          src={next.frontmatter.thumbnailUrl || next.frontmatter.thumbnail}
+                          muted
+                          loop
+                          autoPlay
+                          playsInline
+                        />
+                      ) : (
+                        <div
+                          className="w-16 h-16 rounded-lg bg-cover bg-center"
+                          style={{
+                            backgroundImage: `url(${next.frontmatter.thumbnailUrl || next.frontmatter.thumbnail})`,
+                          }}
+                        />
+                      )}
                     </div>
                   )}
 
