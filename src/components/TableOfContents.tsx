@@ -45,7 +45,6 @@ const TableOfContents: React.FC<TableOfContentsProps> = ({ content = "", isMobil
       });
 
       setToc(tocItems);
-      console.log("TOC generated:", tocItems);
     }, 100); // DOM 렌더링 완료 후 실행
 
     return () => clearTimeout(timer);
@@ -95,18 +94,9 @@ const TableOfContents: React.FC<TableOfContentsProps> = ({ content = "", isMobil
   if (isMobile) {
     return (
       <nav className="mb-8 border rounded-lg" style={{ borderColor: "var(--border-color)", backgroundColor: "var(--bg-secondary)" }}>
-        <button
-          onClick={() => setIsOpen(!isOpen)}
-          className="w-full flex items-center justify-between p-4 text-left"
-          style={{ color: "var(--text-primary)" }}
-        >
+        <button onClick={() => setIsOpen(!isOpen)} className="w-full flex items-center justify-between p-4 text-left" style={{ color: "var(--text-primary)" }}>
           <h3 className="text-lg font-semibold">목차</h3>
-          <svg
-            className={`w-5 h-5 transition-transform ${isOpen ? "rotate-180" : ""}`}
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
+          <svg className={`w-5 h-5 transition-transform ${isOpen ? "rotate-180" : ""}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
           </svg>
         </button>

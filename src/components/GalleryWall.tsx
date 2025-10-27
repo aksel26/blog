@@ -69,18 +69,8 @@ const GalleryWall: React.FC<GalleryWallProps> = ({ media }) => {
                 backgroundColor: "rgba(0, 0, 0, 0.3)",
               }}
             >
-              <svg
-                className="w-8 h-8 text-white"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7"
-                />
+              <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7" />
               </svg>
             </div>
           </div>
@@ -105,36 +95,15 @@ const GalleryWall: React.FC<GalleryWallProps> = ({ media }) => {
             onClick={() => setSelectedMedia(null)}
             aria-label="Close"
           >
-            <svg
-              className="w-6 h-6"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M6 18L18 6M6 6l12 12"
-              />
+            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
             </svg>
           </button>
 
           {selectedMedia.type === "video" ? (
-            <video
-              src={selectedMedia.url}
-              className="max-w-full max-h-full object-contain"
-              controls
-              autoPlay
-              onClick={(e) => e.stopPropagation()}
-            />
+            <video src={selectedMedia.url} className="max-w-full max-h-full object-contain" controls autoPlay onClick={(e) => e.stopPropagation()} />
           ) : (
-            <img
-              src={selectedMedia.url}
-              alt="Selected"
-              className="max-w-full max-h-full object-contain"
-              onClick={(e) => e.stopPropagation()}
-            />
+            <img src={selectedMedia.url} alt="Selected" className="max-w-full max-h-full object-contain" onClick={(e) => e.stopPropagation()} />
           )}
 
           {/* Navigation Arrows */}
@@ -152,18 +121,8 @@ const GalleryWall: React.FC<GalleryWallProps> = ({ media }) => {
             }}
             aria-label="Previous media"
           >
-            <svg
-              className="w-6 h-6"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M15 19l-7-7 7-7"
-              />
+            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
             </svg>
           </button>
 
@@ -181,18 +140,8 @@ const GalleryWall: React.FC<GalleryWallProps> = ({ media }) => {
             }}
             aria-label="Next media"
           >
-            <svg
-              className="w-6 h-6"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M9 5l7 7-7 7"
-              />
+            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
             </svg>
           </button>
 
