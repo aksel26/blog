@@ -1,3 +1,4 @@
+import Giscus from "@giscus/react";
 import React, { useEffect, useRef } from "react";
 
 interface GiscusCommentsProps {
@@ -16,7 +17,7 @@ interface GiscusCommentsProps {
 const GiscusComments: React.FC<GiscusCommentsProps> = ({
   repo = "aksel26/blog", // 실제 GitHub 레포로 변경 필요
   repoId = "R_kgDOP_11hQ", // 실제 레포 ID로 변경 필요ㅓ
-  category = "comments",
+  category = "Comments",
   categoryId = "DIC_kwDOP_11hc4CwvVR", // 실제 카테고리 ID로 변경 필요
   mapping = "pathname",
   reactionsEnabled = true,
@@ -35,6 +36,8 @@ const GiscusComments: React.FC<GiscusCommentsProps> = ({
     if (existingScript) {
       existingScript.remove();
     }
+
+    console.log(category);
 
     const script = document.createElement("script");
     script.src = "https://giscus.app/client.js";
@@ -92,7 +95,19 @@ const GiscusComments: React.FC<GiscusCommentsProps> = ({
             GitHub 계정으로 로그인하여 댓글을 남겨보세요. 블로그에 대한 피드백이나 질문을 환영합니다! 🙋‍♂️
           </p>
         </div>
-        <div ref={ref} className="giscus-container" />
+        {/* <div ref={ref} className="giscus-container" /> */}
+        <Giscus
+          repo="aksel26/blog"
+          repoId="R_kgDOP_11hQ"
+          category="Comments"
+          categoryId="DIC_kwDOP_11hc4CwvVR"
+          mapping="pathname"
+          reactionsEnabled="1"
+          emitMetadata="1"
+          inputPosition="bottom"
+          theme="preferred_color_scheme"
+          lang="ko"
+        />
       </div>
     </div>
   );

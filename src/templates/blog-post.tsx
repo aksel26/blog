@@ -55,6 +55,7 @@ interface NavigationPost {
     excerpt: string;
     date: string;
     thumbnail?: string;
+    thumbnailUrl?: string;
   };
 }
 
@@ -212,21 +213,11 @@ const BlogPostTemplate: React.FC<PageProps<BlogPostData, BlogPostPageContext>> =
 
         {/* Social Share Buttons */}
         <div className="mt-12 pt-8" style={{ borderTop: "1px solid var(--border-color)" }}>
-          <SocialShare
-            url={`https://aksel26.netlify.app${post.fields.slug}`}
-            title={title}
-            description={excerpt}
-            className="mb-8"
-          />
+          <SocialShare url={`https://aksel26.netlify.app${post.fields.slug}`} title={title} description={excerpt} className="mb-8" />
         </div>
 
         {/* Related Posts */}
-        <RelatedPosts
-          currentPostSlug={post.fields.slug}
-          currentTags={tags}
-          allPosts={data.allMdx.nodes}
-          maxPosts={3}
-        />
+        <RelatedPosts currentPostSlug={post.fields.slug} currentTags={tags} allPosts={data.allMdx.nodes} maxPosts={3} />
 
         {/* Post Navigation */}
         <PostNavigation previous={previous} next={next} currentCategory={category} />
@@ -242,7 +233,7 @@ const BlogPostTemplate: React.FC<PageProps<BlogPostData, BlogPostPageContext>> =
               </p>
             </div>
 
-            <GiscusComments repo="aksel26/blog" repoId="R_kgDOP_11hQ" category="comments" categoryId="DIC_kwDOP_11hc4CwvVR" />
+            <GiscusComments repo="aksel26/blog" repoId="R_kgDOP_11hQ" category="Comments" categoryId="DIC_kwDOP_11hc4CwvVR" />
           </div>
         </footer>
       </article>
@@ -281,10 +272,7 @@ export const query = graphql`
         contentFilePath
       }
     }
-    allMdx(
-      sort: { frontmatter: { date: DESC } }
-      limit: 100
-    ) {
+    allMdx(sort: { frontmatter: { date: DESC } }, limit: 100) {
       nodes {
         fields {
           slug
