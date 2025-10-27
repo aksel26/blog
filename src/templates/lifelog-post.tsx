@@ -24,6 +24,7 @@ interface NavigationPost {
     excerpt: string;
     date: string;
     thumbnail?: string;
+    thumbnailUrl?: string;
   };
 }
 
@@ -40,9 +41,6 @@ interface BlogPostData {
       tags: string[];
       excerpt: string;
       thumbnail?: string;
-      thumbnailFile?: {
-        publicURL: string;
-      };
     };
     fields: {
       slug: string;
@@ -88,11 +86,9 @@ interface BlogPostPageContext {
 
 const LifeLogPostTemplate: React.FC<PageProps<BlogPostData, BlogPostPageContext>> = ({ data, pageContext, children }) => {
   const post = data.mdx;
-  const { title, date, dateISO, modified, modifiedISO, category, tags, excerpt, thumbnail, thumbnailFile } = post.frontmatter;
+  const { title, date, dateISO, modified, modifiedISO, category, tags, excerpt, thumbnail } = post.frontmatter;
+  console.log("🔍 ~  ~ src/templates/lifelog-post.tsx:91 ~ thumbnail!!!!!:", thumbnail);
   const { previous, next } = pageContext;
-
-  // thumbnailFile이 있으면 publicURL을 사용, 없으면 thumbnail 사용
-  const thumbnailUrl = thumbnailFile?.publicURL || thumbnail;
 
   // 현재 포스트의 디렉토리를 가져옵니다
   const postDirectory = post.parent?.relativeDirectory || "";
@@ -105,6 +101,12 @@ const LifeLogPostTemplate: React.FC<PageProps<BlogPostData, BlogPostPageContext>
       type: (["mp4", "mov", "avi"].includes(file.extension.toLowerCase()) ? "video" : "image") as "image" | "video",
     }));
   console.log("🔍 ~  ~ src/templates/lifelog-post.tsx:101 ~ galleryMedia:", galleryMedia);
+
+  // galleryMedia에서 thumbnail 파일 찾기
+  // const thumbnailFileName = thumbnail?.replace("./", "");
+  const thumbnailMedia = galleryMedia.find((media) => media.url.includes("thumbnail"));
+  const thumbnailUrl = thumbnailMedia?.url || thumbnail;
+  console.log("🔍 ~  ~ src/templates/lifelog-post.tsx:109 ~ thumbnailUrl@@@@:", thumbnailUrl);
 
   // thumbnail은 이제 { publicURL: string } 형태이므로 처리 불필요
   // 모든 이미지는 이미 galleryImages에 포함됨
@@ -260,7 +262,7 @@ const LifeLogPostTemplate: React.FC<PageProps<BlogPostData, BlogPostPageContext>
               </p>
             </div>
 
-            <GiscusComments repo="aksel26/blog" repoId="R_kgDOP_11hQ" category="comments" categoryId="DIC_kwDOP_11hc4CwvVR" />
+            <GiscusComments repo="aksel26/blog" repoId="R_kgDOP_11hQ" category="Comments" categoryId="DIC_kwDOP_11hc4CwvVR" />
           </div>
         </footer>
       </div>
@@ -287,9 +289,6 @@ export const query = graphql`
         tags
         excerpt
         thumbnail
-        thumbnailFile {
-          publicURL
-        }
       }
       fields {
         slug
