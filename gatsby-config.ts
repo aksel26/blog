@@ -126,8 +126,8 @@ const config: GatsbyConfig = {
             options: {
               maxWidth: 1200,
               quality: 90,
-              withWebp: true,
-              withAvif: true,
+              withWebp: false,
+              withAvif: false,
               loading: "lazy",
               linkImagesToOriginal: false,
               backgroundColor: "transparent",
