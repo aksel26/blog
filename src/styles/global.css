@@ -91,56 +91,6 @@ small,
   line-height: 1.6;
 }
 
-/* Toss-style components */
-.toss-card {
-  background: var(--bg-primary);
-  border: 1px solid var(--border-color);
-  border-radius: var(--radius-medium);
-  box-shadow: var(--shadow-light);
-  transition: all 0.2s ease-in-out;
-}
-
-.toss-card:hover {
-  border-color: var(--border-hover);
-  box-shadow: var(--shadow-medium);
-  transform: translateY(-1px);
-}
-
-.toss-button-primary {
-  background: var(--accent-blue);
-  color: white;
-  border: none;
-  border-radius: var(--radius-small);
-  padding: 12px 20px;
-  font-weight: 600;
-  font-size: 14px;
-  transition: all 0.2s ease-in-out;
-  cursor: pointer;
-}
-
-.toss-button-primary:hover {
-  background: var(--accent-blue-hover);
-  transform: translateY(-1px);
-  box-shadow: var(--shadow-medium);
-}
-
-.toss-button-secondary {
-  background: var(--bg-secondary);
-  color: var(--text-primary);
-  border: 1px solid var(--border-color);
-  border-radius: var(--radius-small);
-  padding: 12px 20px;
-  font-weight: 500;
-  font-size: 14px;
-  transition: all 0.2s ease-in-out;
-  cursor: pointer;
-}
-
-.toss-button-secondary:hover {
-  background: var(--bg-tertiary);
-  border-color: var(--border-hover);
-}
-
 .toss-input {
   background: var(--bg-primary);
   border: 1px solid var(--border-color);
