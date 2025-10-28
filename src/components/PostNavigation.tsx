@@ -35,68 +35,30 @@ const PostNavigation: React.FC<PostNavigationProps> = ({ previous, next, current
 
   return (
     <nav className="mt-12 pt-8" style={{ borderTop: "1px solid var(--border-color)" }}>
-      <div className="grid md:grid-cols-2 gap-6">
+      <div className="grid md:grid-cols-2 gap-4">
         {/* Previous Post */}
         <div className="md:col-span-1">
           {previous ? (
             <Link to={previous.fields.slug} style={{ textDecoration: "none" }}>
               <div
-                className="toss-card p-6 h-full transition-all duration-300 group"
+                className="rounded-xl overflow-hidden h-full transition-all duration-300 group"
+                style={{ backgroundColor: "var(--bg-secondary)" }}
                 onMouseEnter={(e) => {
                   e.currentTarget.style.transform = "translateY(-4px)";
                   e.currentTarget.style.boxShadow = "var(--shadow-medium)";
                 }}
                 onMouseLeave={(e) => {
                   e.currentTarget.style.transform = "translateY(0)";
-                  e.currentTarget.style.boxShadow = "var(--shadow-light)";
+                  e.currentTarget.style.boxShadow = "none";
                 }}
               >
-                <div className="flex items-start space-x-4">
-                  {/* Direction Indicator */}
-                  <div className="flex-shrink-0 mt-1">
-                    <div className="w-10 h-10 rounded-full flex items-center justify-center" style={{ backgroundColor: "var(--accent-blue-light)" }}>
-                      <svg className="w-5 h-5" fill="none" stroke="var(--accent-blue)" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-                      </svg>
-                    </div>
-                  </div>
-
-                  {/* Content */}
-                  <div className="flex-1 min-w-0">
-                    <p className="text-sm font-medium mb-2" style={{ color: "var(--accent-blue)" }}>
-                      이전 {previous.frontmatter.category === "기술" ? "DevLog" : "LifeLog"}
-                    </p>
-
-                    <h3 className="text-lg font-bold mb-2 line-clamp-2 group-hover:text-blue-600 transition-colors" style={{ color: "var(--text-primary)" }}>
-                      {previous.frontmatter.title}
-                    </h3>
-
-                    <p className="text-sm line-clamp-2 mb-3" style={{ color: "var(--text-secondary)" }}>
-                      {previous.frontmatter.excerpt}
-                    </p>
-
-                    <div className="flex items-center space-x-3">
-                      <span
-                        className="inline-block px-2 py-1 text-xs rounded-full"
-                        style={{
-                          backgroundColor: "var(--bg-tertiary)",
-                          color: "var(--text-tertiary)",
-                        }}
-                      >
-                        {previous.frontmatter.category}
-                      </span>
-                      <time className="text-xs" style={{ color: "var(--text-tertiary)" }}>
-                        {previous.frontmatter.date}
-                      </time>
-                    </div>
-                  </div>
-
+                <div className="flex items-center h-full">
                   {/* Thumbnail */}
                   {(previous.frontmatter.thumbnailUrl || previous.frontmatter.thumbnail) && (
-                    <div className="flex-shrink-0 hidden sm:block">
+                    <div className="flex-shrink-0 w-32 h-32">
                       {isVideoUrl(previous.frontmatter.thumbnailUrl || previous.frontmatter.thumbnail) ? (
                         <video
-                          className="w-16 h-16 rounded-lg object-cover"
+                          className="w-full h-full object-cover"
                           src={previous.frontmatter.thumbnailUrl || previous.frontmatter.thumbnail}
                           muted
                           loop
@@ -105,7 +67,7 @@ const PostNavigation: React.FC<PostNavigationProps> = ({ previous, next, current
                         />
                       ) : (
                         <div
-                          className="w-16 h-16 rounded-lg bg-cover bg-center"
+                          className="w-full h-full bg-cover bg-center"
                           style={{
                             backgroundImage: `url(${previous.frontmatter.thumbnailUrl || previous.frontmatter.thumbnail})`,
                           }}
@@ -113,11 +75,32 @@ const PostNavigation: React.FC<PostNavigationProps> = ({ previous, next, current
                       )}
                     </div>
                   )}
+
+                  {/* Content */}
+                  <div className="flex-1 p-4 flex items-center">
+                    <div className="flex items-center gap-3 w-full">
+                      {/* Chevron Icon */}
+                      <div className="flex-shrink-0">
+                        <svg className="w-6 h-6" fill="none" stroke="var(--text-tertiary)" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                        </svg>
+                      </div>
+
+                      <div className="flex-1 min-w-0">
+                        <p className="text-xs font-medium mb-1" style={{ color: "var(--text-tertiary)" }}>
+                          이전 글
+                        </p>
+                        <h3 className="text-sm font-semibold line-clamp-2 group-hover:text-blue-600 transition-colors" style={{ color: "var(--text-primary)" }}>
+                          {previous.frontmatter.title}
+                        </h3>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
             </Link>
           ) : (
-            <div className="h-full flex items-center justify-center opacity-50">
+            <div className="h-32 rounded-xl flex items-center justify-center" style={{ backgroundColor: "var(--bg-secondary)", opacity: 0.5 }}>
               <p className="text-sm" style={{ color: "var(--text-tertiary)" }}>
                 이전 {categoryName}이 없습니다
               </p>
@@ -130,23 +113,45 @@ const PostNavigation: React.FC<PostNavigationProps> = ({ previous, next, current
           {next ? (
             <Link to={next.fields.slug} style={{ textDecoration: "none" }}>
               <div
-                className="toss-card p-6 h-full transition-all duration-300 group"
+                className="rounded-xl overflow-hidden h-full transition-all duration-300 group"
+                style={{ backgroundColor: "var(--bg-secondary)" }}
                 onMouseEnter={(e) => {
                   e.currentTarget.style.transform = "translateY(-4px)";
                   e.currentTarget.style.boxShadow = "var(--shadow-medium)";
                 }}
                 onMouseLeave={(e) => {
                   e.currentTarget.style.transform = "translateY(0)";
-                  e.currentTarget.style.boxShadow = "var(--shadow-light)";
+                  e.currentTarget.style.boxShadow = "none";
                 }}
               >
-                <div className="flex items-start space-x-4">
+                <div className="flex items-center h-full">
+                  {/* Content */}
+                  <div className="flex-1 p-4 flex items-center">
+                    <div className="flex items-center gap-3 w-full">
+                      <div className="flex-1 min-w-0 text-right">
+                        <p className="text-xs font-medium mb-1" style={{ color: "var(--text-tertiary)" }}>
+                          다음 글
+                        </p>
+                        <h3 className="text-sm font-semibold line-clamp-2 group-hover:text-blue-600 transition-colors" style={{ color: "var(--text-primary)" }}>
+                          {next.frontmatter.title}
+                        </h3>
+                      </div>
+
+                      {/* Chevron Icon */}
+                      <div className="flex-shrink-0">
+                        <svg className="w-6 h-6" fill="none" stroke="var(--text-tertiary)" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                        </svg>
+                      </div>
+                    </div>
+                  </div>
+
                   {/* Thumbnail */}
                   {(next.frontmatter.thumbnailUrl || next.frontmatter.thumbnail) && (
-                    <div className="flex-shrink-0 hidden sm:block order-first md:order-last">
+                    <div className="flex-shrink-0 w-32 h-32">
                       {isVideoUrl(next.frontmatter.thumbnailUrl || next.frontmatter.thumbnail) ? (
                         <video
-                          className="w-16 h-16 rounded-lg object-cover"
+                          className="w-full h-full object-cover"
                           src={next.frontmatter.thumbnailUrl || next.frontmatter.thumbnail}
                           muted
                           loop
@@ -155,7 +160,7 @@ const PostNavigation: React.FC<PostNavigationProps> = ({ previous, next, current
                         />
                       ) : (
                         <div
-                          className="w-16 h-16 rounded-lg bg-cover bg-center"
+                          className="w-full h-full bg-cover bg-center"
                           style={{
                             backgroundImage: `url(${next.frontmatter.thumbnailUrl || next.frontmatter.thumbnail})`,
                           }}
@@ -163,50 +168,11 @@ const PostNavigation: React.FC<PostNavigationProps> = ({ previous, next, current
                       )}
                     </div>
                   )}
-
-                  {/* Content */}
-                  <div className="flex-1 min-w-0 md:text-right">
-                    <p className="text-sm font-medium mb-2" style={{ color: "var(--accent-blue)" }}>
-                      다음 {next.frontmatter.category === "기술" ? "DevLog" : "LifeLog"}
-                    </p>
-
-                    <h3 className="text-lg font-bold mb-2 line-clamp-2 group-hover:text-blue-600 transition-colors" style={{ color: "var(--text-primary)" }}>
-                      {next.frontmatter.title}
-                    </h3>
-
-                    <p className="text-sm line-clamp-2 mb-3" style={{ color: "var(--text-secondary)" }}>
-                      {next.frontmatter.excerpt}
-                    </p>
-
-                    <div className="flex items-center space-x-3 md:justify-end">
-                      <span
-                        className="inline-block px-2 py-1 text-xs rounded-full"
-                        style={{
-                          backgroundColor: "var(--bg-tertiary)",
-                          color: "var(--text-tertiary)",
-                        }}
-                      >
-                        {next.frontmatter.category}
-                      </span>
-                      <time className="text-xs" style={{ color: "var(--text-tertiary)" }}>
-                        {next.frontmatter.date}
-                      </time>
-                    </div>
-                  </div>
-
-                  {/* Direction Indicator */}
-                  <div className="flex-shrink-0 mt-1 order-last">
-                    <div className="w-10 h-10 rounded-full flex items-center justify-center" style={{ backgroundColor: "var(--accent-blue-light)" }}>
-                      <svg className="w-5 h-5" fill="none" stroke="var(--accent-blue)" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                      </svg>
-                    </div>
-                  </div>
                 </div>
               </div>
             </Link>
           ) : (
-            <div className="h-full flex items-center justify-center opacity-50">
+            <div className="h-32 rounded-xl flex items-center justify-center" style={{ backgroundColor: "var(--bg-secondary)", opacity: 0.5 }}>
               <p className="text-sm" style={{ color: "var(--text-tertiary)" }}>
                 다음 {categoryName}이 없습니다
               </p>

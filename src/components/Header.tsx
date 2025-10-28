@@ -7,6 +7,12 @@ import SearchDialog from "./SearchDialog";
 const Header: React.FC = () => {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isMounted, setIsMounted] = useState(false);
+
+  // Ensure component is mounted (client-side only)
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
 
   // Keyboard shortcut: Cmd+K (Mac) or Ctrl+K (Windows/Linux)
   useEffect(() => {
@@ -28,7 +34,6 @@ const Header: React.FC = () => {
     <header
       style={{
         backgroundColor: "var(--bg-primary)",
-        borderBottom: "1px solid var(--border-color)",
         backdropFilter: "blur(20px)",
         position: "sticky",
         top: 0,
@@ -188,22 +193,18 @@ const Header: React.FC = () => {
         <SearchDialog isOpen={isSearchOpen} onClose={() => setIsSearchOpen(false)} />
 
         {/* Mobile Menu Dropdown */}
-        <AnimatePresence>
-          {isMobileMenuOpen && (
-            <motion.div
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: "auto" }}
-              exit={{ opacity: 0, height: 0 }}
-              transition={{ duration: 0.3, ease: "easeInOut" }}
-              className="md:hidden mt-4 py-4 border-t overflow-hidden"
-              style={{ borderColor: "var(--border-color)" }}
-            >
+        {isMounted && (
+          <AnimatePresence>
+            {isMobileMenuOpen && (
               <motion.div
-                initial={{ y: -20 }}
-                animate={{ y: 0 }}
-                transition={{ duration: 0.3, ease: "easeOut" }}
-                className="flex flex-col space-y-2"
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: "auto" }}
+                exit={{ opacity: 0, height: 0 }}
+                transition={{ duration: 0.3, ease: "easeInOut" }}
+                className="md:hidden mt-4 py-4 border-t overflow-hidden"
+                style={{ borderColor: "var(--border-color)" }}
               >
+                <motion.div initial={{ y: -20 }} animate={{ y: 0 }} transition={{ duration: 0.3, ease: "easeOut" }} className="flex flex-col space-y-2">
                 <Link
                   to="/devLog"
                   onClick={() => setIsMobileMenuOpen(false)}
@@ -256,6 +257,7 @@ const Header: React.FC = () => {
             </motion.div>
           )}
         </AnimatePresence>
+        )}
       </nav>
     </header>
   );
