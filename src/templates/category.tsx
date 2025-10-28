@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useMemo } from "react";
 import { graphql, PageProps } from "gatsby";
 import Layout from "../components/Layout";
 import SEO from "../components/SEO";
@@ -44,7 +44,48 @@ interface CategoryPageContext {
 
 const CategoryTemplate: React.FC<PageProps<CategoryData, CategoryPageContext>> = ({ data, pageContext }) => {
   const { category, mappedCategory } = pageContext;
-  const posts = data.allMdx.nodes;
+  const allPosts = data.allMdx.nodes;
+  const [selectedTags, setSelectedTags] = useState<Set<string>>(new Set());
+
+  // Extract unique tags with counts
+  const tagCounts = useMemo(() => {
+    const counts: Record<string, number> = {};
+    allPosts.forEach((post) => {
+      post.frontmatter.tags?.forEach((tag) => {
+        counts[tag] = (counts[tag] || 0) + 1;
+      });
+    });
+    return counts;
+  }, [allPosts]);
+
+  // Sort tags alphabetically (ㄱ-ㅎ, A-Z, a-z)
+  const sortedTags = useMemo(() => {
+    return Object.entries(tagCounts).sort((a, b) => a[0].localeCompare(b[0], "ko-KR"));
+  }, [tagCounts]);
+
+  // Toggle tag selection
+  const toggleTag = (tag: string) => {
+    const newSelectedTags = new Set(selectedTags);
+    if (newSelectedTags.has(tag)) {
+      newSelectedTags.delete(tag);
+    } else {
+      newSelectedTags.add(tag);
+    }
+    setSelectedTags(newSelectedTags);
+  };
+
+  // Clear all selected tags
+  const clearAllTags = () => {
+    setSelectedTags(new Set());
+  };
+
+  // Filter posts by selected tags (OR logic - post must have at least one selected tag)
+  const posts = useMemo(() => {
+    if (selectedTags.size === 0) return allPosts;
+    return allPosts.filter((post) => {
+      return Array.from(selectedTags).some((tag) => post.frontmatter.tags?.includes(tag));
+    });
+  }, [allPosts, selectedTags]);
 
   // Helper function to get thumbnail URL
   const getThumbnailUrl = (post: CategoryData["allMdx"]["nodes"][0]) => {
@@ -137,6 +178,107 @@ const CategoryTemplate: React.FC<PageProps<CategoryData, CategoryPageContext>> =
               총 {posts.length}개의 포스트
             </span>
           </div>
+
+          {/* Tags Section */}
+          {Object.keys(tagCounts).length > 0 && (
+            <div className="mt-6">
+              {/* Selected Tags Display */}
+              {selectedTags.size > 0 && (
+                <div className="mb-4 flex items-center flex-wrap gap-2">
+                  {Array.from(selectedTags).map((tag) => (
+                    <div
+                      key={tag}
+                      className="inline-flex items-center px-3 py-1.5 rounded-full text-sm font-medium"
+                      style={{
+                        backgroundColor: "var(--text-primary)",
+                        color: "var(--bg-primary)",
+                      }}
+                    >
+                      {tag}
+                      <button
+                        onClick={() => toggleTag(tag)}
+                        className="ml-2 hover:opacity-70 transition-opacity"
+                        style={{
+                          background: "none",
+                          border: "none",
+                          cursor: "pointer",
+                          color: "var(--bg-primary)",
+                          fontSize: "16px",
+                          lineHeight: "1",
+                          padding: "0",
+                        }}
+                        aria-label={`Remove ${tag} tag`}
+                      >
+                        ×
+                      </button>
+                    </div>
+                  ))}
+                  <button
+                    onClick={clearAllTags}
+                    className="text-sm px-3 py-1.5 rounded-full hover:opacity-70 transition-opacity"
+                    style={{
+                      backgroundColor: "var(--bg-tertiary)",
+                      color: "var(--text-secondary)",
+                      border: "none",
+                      cursor: "pointer",
+                    }}
+                  >
+                    모두 지우기
+                  </button>
+                </div>
+              )}
+
+              {/* Tag Search - Commented out for now */}
+              {/* {sortedTags.length > 10 && (
+                <div className="mb-3">
+                  <input
+                    type="text"
+                    placeholder="태그 검색..."
+                    value={tagSearch}
+                    onChange={(e) => setTagSearch(e.target.value)}
+                    className="w-full px-4 py-2 rounded-lg text-sm"
+                    style={{
+                      backgroundColor: "var(--bg-secondary)",
+                      color: "var(--text-primary)",
+                      border: "1px solid var(--border-color)",
+                      outline: "none",
+                    }}
+                  />
+                </div>
+              )} */}
+
+              {/* Tag Buttons - Max 2 rows with horizontal scroll */}
+              <div
+                className="pb-2"
+                style={{
+                  display: "grid",
+                  gridAutoFlow: "column",
+                  gridTemplateRows: "repeat(2, minmax(0, 1fr))",
+                  gap: "0.5rem",
+                  overflowX: "auto",
+                  overflowY: "hidden",
+                  scrollbarWidth: "thin",
+                }}
+              >
+                {sortedTags.map(([tag, count]) => (
+                  <button
+                    key={tag}
+                    onClick={() => toggleTag(tag)}
+                    className="px-3 py-1 rounded-full text-xs font-medium transition-all duration-200 hover:scale-105"
+                    style={{
+                      backgroundColor: selectedTags.has(tag) ? "var(--text-primary)" : "var(--bg-tertiary)",
+                      color: selectedTags.has(tag) ? "var(--bg-primary)" : "var(--text-secondary)",
+                      border: selectedTags.has(tag) ? "2px solid var(--text-primary)" : "2px solid transparent",
+                      cursor: "pointer",
+                      whiteSpace: "nowrap",
+                    }}
+                  >
+                    {tag} ({count})
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
         </header>
 
         {posts.length > 0 ? (
