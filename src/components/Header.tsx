@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "gatsby";
 import { motion, AnimatePresence } from "framer-motion";
 import DarkModeToggle from "./DarkModeToggle";
@@ -7,6 +7,22 @@ import SearchDialog from "./SearchDialog";
 const Header: React.FC = () => {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+  // Keyboard shortcut: Cmd+K (Mac) or Ctrl+K (Windows/Linux)
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      // Check for Cmd+K (Mac) or Ctrl+K (Windows/Linux)
+      if ((event.metaKey || event.ctrlKey) && event.key === "k") {
+        event.preventDefault(); // Prevent browser's default behavior
+        setIsSearchOpen(true);
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, []);
 
   return (
     <header
@@ -109,7 +125,7 @@ const Header: React.FC = () => {
 
             <button
               onClick={() => setIsSearchOpen(!isSearchOpen)}
-              className="p-2 rounded-lg transition-all duration-200"
+              className="px-3 py-2 rounded-lg transition-all duration-200 flex items-center gap-2"
               style={{ color: "var(--text-secondary)" }}
               onMouseEnter={(e) => {
                 e.currentTarget.style.backgroundColor = "var(--bg-secondary)";
@@ -119,10 +135,21 @@ const Header: React.FC = () => {
                 e.currentTarget.style.backgroundColor = "transparent";
                 e.currentTarget.style.color = "var(--text-secondary)";
               }}
+              title="Search (⌘K)"
             >
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
               </svg>
+              <span
+                className="text-xs font-medium px-2 py-0.5 rounded"
+                style={{
+                  backgroundColor: "var(--bg-tertiary)",
+                  color: "var(--text-tertiary)",
+                  fontFamily: "monospace",
+                }}
+              >
+                ⌘K
+              </span>
             </button>
             <DarkModeToggle />
           </div>
