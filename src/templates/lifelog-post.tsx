@@ -87,7 +87,6 @@ interface BlogPostPageContext {
 const LifeLogPostTemplate: React.FC<PageProps<BlogPostData, BlogPostPageContext>> = ({ data, pageContext, children }) => {
   const post = data.mdx;
   const { title, date, dateISO, modified, modifiedISO, category, tags, excerpt, thumbnail } = post.frontmatter;
-  console.log("🔍 ~  ~ src/templates/lifelog-post.tsx:91 ~ thumbnail!!!!!:", thumbnail);
   const { previous, next } = pageContext;
 
   // 현재 포스트의 디렉토리를 가져옵니다
@@ -100,13 +99,11 @@ const LifeLogPostTemplate: React.FC<PageProps<BlogPostData, BlogPostPageContext>
       url: file.publicURL,
       type: (["mp4", "mov", "avi"].includes(file.extension.toLowerCase()) ? "video" : "image") as "image" | "video",
     }));
-  console.log("🔍 ~  ~ src/templates/lifelog-post.tsx:101 ~ galleryMedia:", galleryMedia);
 
   // galleryMedia에서 thumbnail 파일 찾기
   // const thumbnailFileName = thumbnail?.replace("./", "");
   const thumbnailMedia = galleryMedia.find((media) => media.url.includes("thumbnail"));
   const thumbnailUrl = thumbnailMedia?.url || thumbnail;
-  console.log("🔍 ~  ~ src/templates/lifelog-post.tsx:109 ~ thumbnailUrl@@@@:", thumbnailUrl);
 
   // thumbnail은 이제 { publicURL: string } 형태이므로 처리 불필요
   // 모든 이미지는 이미 galleryImages에 포함됨

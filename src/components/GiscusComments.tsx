@@ -37,8 +37,6 @@ const GiscusComments: React.FC<GiscusCommentsProps> = ({
       existingScript.remove();
     }
 
-    console.log(category);
-
     const script = document.createElement("script");
     script.src = "https://giscus.app/client.js";
     script.setAttribute("data-repo", repo);
@@ -88,7 +86,7 @@ const GiscusComments: React.FC<GiscusCommentsProps> = ({
 
   return (
     <div className="mt-8">
-      <div className="border-t border-gray-200 dark:border-gray-700 pt-8">
+      <div className=" pt-8">
         <h3 className="text-lg font-semibold mb-4 text-gray-900 dark:text-white">💬 댓글</h3>
         <div className="bg-gray-50 dark:bg-gray-800/50 p-4 rounded-lg mb-4">
           <p className="text-sm text-gray-600 dark:text-gray-400">

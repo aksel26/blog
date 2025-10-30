@@ -141,26 +141,29 @@ export const createPages: GatsbyNode["createPages"] = async ({ graphql, actions,
     const nextPost = currentIndexInCategory === 0 ? null : sameCategoryPosts[currentIndexInCategory - 1];
 
     // Resolve thumbnail URLs for previous and next posts
-    const previous = previousPost ? {
-      ...previousPost,
-      frontmatter: {
-        ...previousPost.frontmatter,
-        thumbnailUrl: findThumbnailUrl(previousPost)
-      }
-    } : null;
+    const previous = previousPost
+      ? {
+          ...previousPost,
+          frontmatter: {
+            ...previousPost.frontmatter,
+            thumbnailUrl: findThumbnailUrl(previousPost),
+          },
+        }
+      : null;
 
-    const next = nextPost ? {
-      ...nextPost,
-      frontmatter: {
-        ...nextPost.frontmatter,
-        thumbnailUrl: findThumbnailUrl(nextPost)
-      }
-    } : null;
+    const next = nextPost
+      ? {
+          ...nextPost,
+          frontmatter: {
+            ...nextPost.frontmatter,
+            thumbnailUrl: findThumbnailUrl(nextPost),
+          },
+        }
+      : null;
 
     // 카테고리에 따라 다른 템플릿 사용
     const template = post.frontmatter.category === "일상" ? lifeLogPostTemplate : blogPostTemplate;
     const componentPath = `${template}?__contentFilePath=${post.internal.contentFilePath}`;
-    console.log("Creating page:", post.fields.slug, "with component:", componentPath);
 
     createPage({
       path: post.fields.slug,

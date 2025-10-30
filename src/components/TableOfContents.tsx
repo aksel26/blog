@@ -70,14 +70,11 @@ const TableOfContents: React.FC<TableOfContentsProps> = ({ content = "", isMobil
   }, [toc]);
 
   const scrollToHeading = (id: string) => {
-    console.log("Scrolling to heading:", id);
     const element = document.getElementById(id);
-    console.log("Found element:", element);
 
     if (element) {
       // 헤더 높이를 고려한 오프셋 추가 (100px)
       const offsetTop = element.offsetTop - 100;
-      console.log("Scrolling to position:", offsetTop);
 
       window.scrollTo({
         top: offsetTop,

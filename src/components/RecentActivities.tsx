@@ -113,7 +113,6 @@ const RecentActivities: React.FC = () => {
       const postDate = new Date(post.frontmatter.date);
       return postDate >= cutoffDate;
     });
-    console.log("🔍 ~ useMemo() callback ~ src/components/RecentActivities.tsx:55 ~ posts:", posts);
 
     if (activeTab === "devLog") {
       posts = posts.filter((post) => post.frontmatter.category === "기술");

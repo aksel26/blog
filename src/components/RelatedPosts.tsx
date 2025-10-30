@@ -27,104 +27,60 @@ const RelatedPosts: React.FC<RelatedPostsProps> = ({ currentPostSlug, currentTag
     if (post.fields.slug === currentPostSlug) return -1; // Exclude current post
 
     const postTags = post.frontmatter.tags || [];
-    const commonTags = postTags.filter(tag => currentTags.includes(tag));
+    const commonTags = postTags.filter((tag) => currentTags.includes(tag));
 
     return commonTags.length;
   };
 
   // Get related posts sorted by relevance
   const relatedPosts = allPosts
-    .map(post => ({
+    .map((post) => ({
       post,
       relevance: calculateRelevance(post),
     }))
-    .filter(item => item.relevance > 0)
+    .filter((item) => item.relevance > 0)
     .sort((a, b) => b.relevance - a.relevance)
     .slice(0, maxPosts)
-    .map(item => item.post);
+    .map((item) => item.post);
 
   if (relatedPosts.length === 0) {
     return null;
   }
 
   return (
-    <section className="mt-16">
-      <h2
-        className="text-2xl font-bold mb-8"
-        style={{ color: "var(--text-primary)" }}
-      >
+    <section className="mt-16 border-t" style={{ borderColor: "var(--border-color)", paddingTop: "4rem" }}>
+      <h2 className="text-xl font-semibold mb-6" style={{ color: "var(--text-secondary)" }}>
         관련 포스트
       </h2>
 
       <div className="grid md:grid-cols-3 gap-6">
         {relatedPosts.map((post) => (
-          <Link
-            key={post.fields.slug}
-            to={post.fields.slug}
-            style={{ textDecoration: "none" }}
-          >
+          <Link key={post.fields.slug} to={post.fields.slug} style={{ textDecoration: "none" }}>
             <article
-              className="p-6 rounded-lg transition-all duration-300 h-full"
+              className="p-5 transition-all duration-200 h-full rounded-xl"
               style={{
-                border: "1px solid var(--border-color)",
-                background: "var(--bg-secondary)",
+                border: "0.5px solid var(--border-color)",
+                opacity: 1,
               }}
               onMouseEnter={(e) => {
-                e.currentTarget.style.transform = "translateY(-4px)";
-                e.currentTarget.style.boxShadow = "0 4px 12px rgba(0, 0, 0, 0.1)";
+                e.currentTarget.style.opacity = "0.6";
               }}
               onMouseLeave={(e) => {
-                e.currentTarget.style.transform = "translateY(0)";
-                e.currentTarget.style.boxShadow = "none";
+                e.currentTarget.style.opacity = "1";
               }}
             >
               <div className="flex flex-col h-full">
-                <div className="flex items-center gap-2 mb-3">
-                  <span
-                    className="text-xs px-2 py-1 rounded-full"
-                    style={{
-                      backgroundColor: "var(--accent-blue-light)",
-                      color: "var(--accent-blue)",
-                    }}
-                  >
-                    {post.frontmatter.category}
-                  </span>
-                  <time
-                    className="text-xs"
-                    style={{ color: "var(--text-tertiary)" }}
-                  >
-                    {post.frontmatter.date}
-                  </time>
-                </div>
-
-                <h3
-                  className="text-lg font-bold mb-2 line-clamp-2"
-                  style={{ color: "var(--text-primary)" }}
-                >
+                <h3 className="text-base font-semibold mb-2 line-clamp-2" style={{ color: "var(--text-primary)" }}>
                   {post.frontmatter.title}
                 </h3>
 
-                <p
-                  className="text-sm mb-4 line-clamp-3 flex-grow"
-                  style={{ color: "var(--text-secondary)" }}
-                >
+                <p className="text-sm line-clamp-2 mb-3" style={{ color: "var(--text-secondary)" }}>
                   {post.frontmatter.excerpt}
                 </p>
 
-                <div className="flex flex-wrap gap-1.5 mt-auto">
-                  {post.frontmatter.tags.slice(0, 3).map((tag) => (
-                    <span
-                      key={tag}
-                      className="text-xs px-2 py-0.5 rounded"
-                      style={{
-                        backgroundColor: "var(--bg-tertiary)",
-                        color: "var(--text-tertiary)",
-                      }}
-                    >
-                      {tag}
-                    </span>
-                  ))}
-                </div>
+                <time className="text-xs mt-auto" style={{ color: "var(--text-tertiary)" }}>
+                  {post.frontmatter.date}
+                </time>
               </div>
             </article>
           </Link>

@@ -24,7 +24,6 @@ interface PostNavigationProps {
 const PostNavigation: React.FC<PostNavigationProps> = ({ previous, next, currentCategory }) => {
   if (!previous && !next) return null;
 
-  console.log(previous, next);
   const categoryName = currentCategory === "기술" ? "DevLog" : "LifeLog";
 
   // Helper function to check if URL is a video
