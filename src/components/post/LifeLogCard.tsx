@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, memo, useCallback } from "react";
 import { Link } from "gatsby";
 import { motion } from "framer-motion";
 
@@ -13,9 +13,17 @@ interface LifeLogCardProps {
   thumbnail?: string;
 }
 
-const LifeLogCard: React.FC<LifeLogCardProps> = ({ title, excerpt, date, tags, slug, readTime, size = "medium", thumbnail }) => {
+const LifeLogCard: React.FC<LifeLogCardProps> = memo(({ title, excerpt, date, tags, slug, readTime, size = "medium", thumbnail }) => {
   const [imageError, setImageError] = useState(false);
   const [imageLoaded, setImageLoaded] = useState(false);
+
+  const handleImageLoad = useCallback(() => {
+    setImageLoaded(true);
+  }, []);
+
+  const handleImageError = useCallback(() => {
+    setImageError(true);
+  }, []);
 
   const sizeClasses = {
     small: "row-span-1",
@@ -58,8 +66,8 @@ const LifeLogCard: React.FC<LifeLogCardProps> = ({ title, excerpt, date, tags, s
                   loop
                   muted
                   playsInline
-                  onLoadedData={() => setImageLoaded(true)}
-                  onError={() => setImageError(true)}
+                  onLoadedData={handleImageLoad}
+                  onError={handleImageError}
                   style={{
                     opacity: imageLoaded ? 1 : 0,
                     transition: "opacity 0.3s ease-in-out",
@@ -70,7 +78,7 @@ const LifeLogCard: React.FC<LifeLogCardProps> = ({ title, excerpt, date, tags, s
             ) : (
               <>
                 {/* Hidden image for loading detection */}
-                <img src={thumbnail} alt="" className="hidden" onLoad={() => setImageLoaded(true)} onError={() => setImageError(true)} />
+                <img src={thumbnail} alt="" className="hidden" onLoad={handleImageLoad} onError={handleImageError} />
                 <div
                   className="absolute inset-0 bg-cover bg-center bg-no-repeat"
                   style={{
@@ -183,6 +191,8 @@ const LifeLogCard: React.FC<LifeLogCardProps> = ({ title, excerpt, date, tags, s
       </motion.article>
     </Link>
   );
-};
+});
+
+LifeLogCard.displayName = "LifeLogCard";
 
 export default LifeLogCard;

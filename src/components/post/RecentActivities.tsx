@@ -1,7 +1,8 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useCallback } from "react";
 import { graphql, useStaticQuery } from "gatsby";
 import DevLogCard from "./DevLogCard";
 import LifeLogCard from "./LifeLogCard";
+import { usePostFilter } from "../../hooks";
 
 interface Post {
   frontmatter: {
@@ -22,7 +23,7 @@ interface Post {
     relativePath?: string;
     relativeDirectory?: string;
   };
-  timeToRead: number;
+  timeToRead?: number;
 }
 
 interface RecentActivitiesData {
@@ -38,36 +39,36 @@ interface RecentActivitiesData {
   };
 }
 
+// Helper function to get thumbnail URL
+const getThumbnailUrl = (post: any, allFiles: RecentActivitiesData["allFile"]["nodes"]): string | undefined => {
+  const { thumbnail, thumbnailFile } = post.frontmatter;
+
+  // 이미 thumbnailFile이 있으면 사용
+  if (thumbnailFile?.publicURL) {
+    return thumbnailFile.publicURL;
+  }
+
+  // 외부 URL이면 그대로 사용
+  if (thumbnail && (thumbnail.startsWith("http://") || thumbnail.startsWith("https://"))) {
+    return thumbnail;
+  }
+
+  // 상대 경로인 경우 매칭
+  if (thumbnail && post.parent && post.parent.relativeDirectory) {
+    const thumbnailFileName = thumbnail.replace("./", "");
+    const matchedFile = allFiles.find((file) => file.relativeDirectory === post.parent!.relativeDirectory && file.relativePath.endsWith(thumbnailFileName));
+
+    if (matchedFile) {
+      return matchedFile.publicURL;
+    }
+  }
+
+  return thumbnail;
+};
+
 const RecentActivities: React.FC = () => {
   const [activeTab, setActiveTab] = useState<"all" | "devLog" | "lifeLog">("all");
   const [visibleMonths, setVisibleMonths] = useState(3);
-
-  // Helper function to get thumbnail URL
-  const getThumbnailUrl = (post: Post, allFiles: RecentActivitiesData["allFile"]["nodes"]) => {
-    const { thumbnail, thumbnailFile } = post.frontmatter;
-
-    // 이미 thumbnailFile이 있으면 사용
-    if (thumbnailFile?.publicURL) {
-      return thumbnailFile.publicURL;
-    }
-
-    // 외부 URL이면 그대로 사용
-    if (thumbnail && (thumbnail.startsWith("http://") || thumbnail.startsWith("https://"))) {
-      return thumbnail;
-    }
-
-    // 상대 경로인 경우 매칭
-    if (thumbnail && post.parent && post.parent.relativeDirectory) {
-      const thumbnailFileName = thumbnail.replace("./", "");
-      const matchedFile = allFiles.find((file) => file.relativeDirectory === post.parent!.relativeDirectory && file.relativePath.endsWith(thumbnailFileName));
-
-      if (matchedFile) {
-        return matchedFile.publicURL;
-      }
-    }
-
-    return thumbnail;
-  };
 
   const data = useStaticQuery<RecentActivitiesData>(graphql`
     query RecentActivitiesQuery {
@@ -105,58 +106,20 @@ const RecentActivities: React.FC = () => {
     }
   `);
 
-  const filteredPosts = useMemo(() => {
-    const now = new Date();
-    const cutoffDate = new Date(now.getFullYear(), now.getMonth() - visibleMonths, now.getDate());
+  const { filteredPosts, hasMorePosts, getCategoryCount } = usePostFilter({
+    posts: data.allMdx.nodes,
+    activeTab,
+    visibleMonths,
+  });
 
-    let posts = data.allMdx.nodes.filter((post) => {
-      const postDate = new Date(post.frontmatter.date);
-      return postDate >= cutoffDate;
-    });
-
-    if (activeTab === "devLog") {
-      posts = posts.filter((post) => post.frontmatter.category === "기술");
-    } else if (activeTab === "lifeLog") {
-      posts = posts.filter((post) => post.frontmatter.category === "일상");
-    }
-
-    return posts;
-  }, [data.allMdx?.nodes, activeTab, visibleMonths]);
-
-  const hasMorePosts = useMemo(() => {
-    const now = new Date();
-    const nextCutoffDate = new Date(now.getFullYear(), now.getMonth() - (visibleMonths + 3), now.getDate());
-
-    return data.allMdx.nodes.some((post) => {
-      const postDate = new Date(post.frontmatter.date);
-      return postDate >= nextCutoffDate && postDate < new Date(now.getFullYear(), now.getMonth() - visibleMonths, now.getDate());
-    });
-  }, [data.allMdx?.nodes, visibleMonths]);
-
-  const loadMore = () => {
+  const loadMore = useCallback(() => {
     setVisibleMonths((prev) => prev + 3);
-  };
+  }, []);
 
   const tabConfig = [
-    { key: "all" as const, label: "전체", count: filteredPosts.length },
-    {
-      key: "devLog" as const,
-      label: "DevLog",
-      count: data.allMdx.nodes.filter((post) => {
-        const postDate = new Date(post.frontmatter.date);
-        const cutoffDate = new Date(new Date().getFullYear(), new Date().getMonth() - visibleMonths, new Date().getDate());
-        return post.frontmatter.category === "기술" && postDate >= cutoffDate;
-      }).length,
-    },
-    {
-      key: "lifeLog" as const,
-      label: "LifeLog",
-      count: data.allMdx.nodes.filter((post) => {
-        const postDate = new Date(post.frontmatter.date);
-        const cutoffDate = new Date(new Date().getFullYear(), new Date().getMonth() - visibleMonths, new Date().getDate());
-        return post.frontmatter.category === "일상" && postDate >= cutoffDate;
-      }).length,
-    },
+    { key: "all" as const, label: "전체", count: getCategoryCount("all") },
+    { key: "devLog" as const, label: "DevLog", count: getCategoryCount("기술") },
+    { key: "lifeLog" as const, label: "LifeLog", count: getCategoryCount("일상") },
   ];
 
   return (
@@ -209,51 +172,60 @@ const RecentActivities: React.FC = () => {
           {activeTab === "devLog" ? (
             // DevLog: List format
             <div className="space-y-3 mb-8">
-              {filteredPosts.map((post) => (
-                <DevLogCard
-                  key={post.fields.slug}
-                  title={post.frontmatter.title}
-                  excerpt={post.frontmatter.excerpt}
-                  date={post.frontmatter.date}
-                  tags={post.frontmatter.tags}
-                  slug={post.fields.slug}
-                  readTime={5}
-                  thumbnail={getThumbnailUrl(post, data.allFile.nodes)}
-                />
-              ))}
+              {filteredPosts.map((post) => {
+                if (!post.fields?.slug || !post.frontmatter.title) return null;
+                return (
+                  <DevLogCard
+                    key={post.fields.slug}
+                    title={post.frontmatter.title}
+                    excerpt={post.frontmatter.excerpt || ""}
+                    date={post.frontmatter.date}
+                    tags={post.frontmatter.tags || []}
+                    slug={post.fields.slug}
+                    readTime={5}
+                    thumbnail={getThumbnailUrl(post, data.allFile.nodes)}
+                  />
+                );
+              })}
             </div>
           ) : activeTab === "lifeLog" ? (
             // LifeLog: Grid format with bottom-aligned text
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-              {filteredPosts.map((post) => (
-                <LifeLogCard
-                  key={post.fields.slug}
-                  title={post.frontmatter.title}
-                  excerpt={post.frontmatter.excerpt}
-                  date={post.frontmatter.date}
-                  tags={post.frontmatter.tags}
-                  slug={post.fields.slug}
-                  readTime={5}
-                  thumbnail={getThumbnailUrl(post, data.allFile.nodes)}
-                  size="medium"
-                />
-              ))}
+              {filteredPosts.map((post) => {
+                if (!post.fields?.slug || !post.frontmatter.title) return null;
+                return (
+                  <LifeLogCard
+                    key={post.fields.slug}
+                    title={post.frontmatter.title}
+                    excerpt={post.frontmatter.excerpt || ""}
+                    date={post.frontmatter.date}
+                    tags={post.frontmatter.tags || []}
+                    slug={post.fields.slug}
+                    readTime={5}
+                    thumbnail={getThumbnailUrl(post, data.allFile.nodes)}
+                    size="medium"
+                  />
+                );
+              })}
             </div>
           ) : (
             // All: Unified DevLog format
             <div className="space-y-6 mb-8">
-              {filteredPosts.map((post) => (
-                <DevLogCard
-                  key={`unified-${post.fields.slug}`}
-                  title={post.frontmatter.title}
-                  excerpt={post.frontmatter.excerpt}
-                  date={post.frontmatter.date}
-                  tags={post.frontmatter.tags}
-                  slug={post.fields.slug}
-                  readTime={5}
-                  thumbnail={getThumbnailUrl(post, data.allFile.nodes)}
-                />
-              ))}
+              {filteredPosts.map((post) => {
+                if (!post.fields?.slug || !post.frontmatter.title) return null;
+                return (
+                  <DevLogCard
+                    key={`unified-${post.fields.slug}`}
+                    title={post.frontmatter.title}
+                    excerpt={post.frontmatter.excerpt || ""}
+                    date={post.frontmatter.date}
+                    tags={post.frontmatter.tags || []}
+                    slug={post.fields.slug}
+                    readTime={5}
+                    thumbnail={getThumbnailUrl(post, data.allFile.nodes)}
+                  />
+                );
+              })}
             </div>
           )}
 
@@ -264,7 +236,6 @@ const RecentActivities: React.FC = () => {
                 onClick={loadMore}
                 className="px-6 py-3 transition-all duration-300 hover:transform hover:-translate-y-1 rounded-xl"
                 style={{
-                  // backgroundColor: "var(--bg-secondary)",
                   color: "var(--text-primary)",
                   border: "0.4px solid var(--border-color)",
                 }}
@@ -312,4 +283,4 @@ const RecentActivities: React.FC = () => {
   );
 };
 
-export default RecentActivities;
+export default React.memo(RecentActivities);

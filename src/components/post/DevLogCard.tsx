@@ -1,4 +1,4 @@
-import React from "react";
+import React, { memo } from "react";
 import { Link } from "gatsby";
 import { motion } from "framer-motion";
 
@@ -12,7 +12,7 @@ interface DevLogCardProps {
   thumbnail?: string;
 }
 
-const DevLogCard: React.FC<DevLogCardProps> = ({ title, excerpt, date, tags, slug, readTime, thumbnail }) => {
+const DevLogCard: React.FC<DevLogCardProps> = memo(({ title, excerpt, date, tags, slug, readTime, thumbnail }) => {
   return (
     <Link to={slug} style={{ textDecoration: "none" }}>
       <motion.article
@@ -74,6 +74,8 @@ const DevLogCard: React.FC<DevLogCardProps> = ({ title, excerpt, date, tags, slu
       </motion.article>
     </Link>
   );
-};
+});
+
+DevLogCard.displayName = "DevLogCard";
 
 export default DevLogCard;

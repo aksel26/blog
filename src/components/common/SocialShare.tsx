@@ -1,5 +1,5 @@
 import React from "react";
-import { trackShare } from "../utils/analytics";
+import { trackShare } from "../../utils/analytics";
 
 interface SocialShareProps {
   url: string;
