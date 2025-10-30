@@ -1,8 +1,8 @@
 import React from "react";
 import type { PageProps } from "gatsby";
 import { graphql } from "gatsby";
-import Layout from "../components/Layout";
-import SEO from "../components/SEO";
+import { Layout } from "../components/layout";
+import { SEO } from "../components/common";
 interface AboutPageData {
   site: {
     siteMetadata: {

@@ -3,16 +3,12 @@ import { graphql, PageProps } from "gatsby";
 import React from "react";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { oneDark } from "react-syntax-highlighter/dist/esm/styles/prism";
-import GalleryWall from "../components/GalleryWall";
-import GiscusComments from "../components/GiscusComments";
-import Layout from "../components/Layout";
-import PostNavigation from "../components/PostNavigation";
-import RelatedPosts from "../components/RelatedPosts";
-import ScrollToBottom from "../components/ScrollToBottom";
-import ScrollToTop from "../components/ScrollToTop";
-import SEO from "../components/SEO";
-import SocialShare from "../components/SocialShare";
-import ViewCount from "../components/ViewCount";
+import { Layout } from "../components/layout";
+import { PostNavigation } from "../components/post";
+import { SEO, SocialShare, ViewCount } from "../components/common";
+import { ScrollToBottom, ScrollToTop } from "../components/ui";
+import { GalleryWall } from "../components/gallery";
+import { GiscusComments } from "../components/common";
 
 interface NavigationPost {
   fields: {

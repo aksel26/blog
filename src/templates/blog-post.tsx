@@ -3,16 +3,10 @@ import { graphql, PageProps } from "gatsby";
 import React from "react";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { oneDark } from "react-syntax-highlighter/dist/esm/styles/prism";
-import GiscusComments from "../components/GiscusComments";
-import Layout from "../components/Layout";
-import PostNavigation from "../components/PostNavigation";
-import RelatedPosts from "../components/RelatedPosts";
-import ScrollToBottom from "../components/ScrollToBottom";
-import ScrollToTop from "../components/ScrollToTop";
-import SEO from "../components/SEO";
-import SocialShare from "../components/SocialShare";
-import TableOfContents from "../components/TableOfContents";
-import ViewCount from "../components/ViewCount";
+import { GiscusComments, SEO, SocialShare, ViewCount } from "../components/common";
+import { Layout } from "../components/layout";
+import { PostNavigation, RelatedPosts, TableOfContents } from "../components/post";
+import { ScrollToBottom, ScrollToTop } from "../components/ui";
 // 사용자 입력 언어를 react-syntax-highlighter가 인식하는 이름으로 매핑
 
 // Custom MDX components

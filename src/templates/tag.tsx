@@ -1,8 +1,8 @@
 import React from "react";
 import { graphql, Link, PageProps } from "gatsby";
-import Layout from "../components/Layout";
-import SEO from "../components/SEO";
-import BlogCard from "../components/BlogCard";
+import { Layout } from "../components/layout";
+import { SEO } from "../components/common";
+import { BlogCard } from "../components/post";
 
 interface TagPageData {
   allMdx: {

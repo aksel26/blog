@@ -1,9 +1,8 @@
 import React, { useState, useMemo } from "react";
 import { graphql, PageProps } from "gatsby";
-import Layout from "../components/Layout";
-import SEO from "../components/SEO";
-import DevLogCard from "../components/DevLogCard";
-import LifeLogCard from "../components/LifeLogCard";
+import { Layout } from "../components/layout";
+import { SEO } from "../components/common";
+import { DevLogCard, LifeLogCard } from "../components/post";
 
 interface CategoryData {
   allMdx: {
