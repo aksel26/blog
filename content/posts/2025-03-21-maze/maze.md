@@ -8,8 +8,6 @@ excerpt: "용리단길에 위치한 MAZE Sukiyaki를 다녀왔습니다. 정통 
 thumbnail: "./thumbnail.png"
 ---
 
-# MAZE Sukiyaki - 용리단길 스키야키 맛집
-
 용리단길에 위치한 MAZE Sukiyaki(마제 스키야키)를 다녀왔습니다. 정통 일본식 스키야키 전문점입니다.
 
 ## 위치 정보
@@ -19,6 +17,7 @@ thumbnail: "./thumbnail.png"
 📍 **위치**: 용리단길
 
 🕐 **영업시간**:
+
 - 매일: 11:30-23:00
 
 💻 **예약**: CatchTable 온라인 예약 가능
@@ -32,6 +31,7 @@ thumbnail: "./thumbnail.png"
 ## 스키야키란?
 
 🍲 **스키야키 (すき焼き)**:
+
 - 일본 전통 전골 요리
 - 얇게 썬 소고기와 다양한 채소
 - 간장, 설탕, 미림 베이스의 달콤짭짤한 국물

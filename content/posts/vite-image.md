@@ -8,8 +8,6 @@ excerpt: "Vite + React 프로젝트에서 PNG와 SVG 이미지를 효율적으�
 thumbnail: "https://images.unsplash.com/photo-1618477388954-7852f32655ec?w=640&h=425&fit=crop"
 ---
 
-# 🖼️ Vite + React에서 이미지 다루기: PNG vs SVG 완벽 가이드
-
 Vite + React 프로젝트에서 이미지를 어떻게 불러오고 사용해야 할까요? PNG와 SVG 각각의 특징과 최적의 사용 방법을 알아봅니다.
 
 ## 📋 목차
@@ -36,12 +34,14 @@ function MyComponent() {
 ```
 
 **장점:**
+
 - ✅ 빌드 시 최적화됨
 - ✅ 파일 해시가 자동으로 추가되어 캐싱 효율적
 - ✅ TypeScript 타입 지원
 - ✅ 존재하지 않는 파일은 빌드 에러 발생
 
 **빌드 결과:**
+
 ```html
 <!-- 실제 빌드 결과 -->
 <img src="/assets/image-a1b2c3d4.png" alt="설명" />
@@ -59,11 +59,13 @@ function MyComponent() {
 ```
 
 **적합한 경우:**
+
 - 파일명이 동적으로 결정되는 경우
 - 외부 HTML에서 참조해야 하는 경우
 - robots.txt, favicon.ico 같은 특수 파일
 
 **주의사항:**
+
 ```jsx
 // ❌ 잘못된 사용
 <img src="./images/photo.png" /> // 상대 경로 사용 불가
@@ -93,6 +95,7 @@ function MyComponent() {
 ```
 
 **적합한 경우:**
+
 - 조건부 로딩이 필요한 경우
 - 코드 스플리팅이 필요한 큰 이미지
 - 사용자 인터랙션 후에만 로드하는 경우
@@ -114,10 +117,12 @@ function MyComponent() {
 ```
 
 **장점:**
+
 - 간단한 사용법
 - 기존 이미지와 동일한 방식
 
 **단점:**
+
 - CSS로 스타일링 불가
 - 색상 변경 불가
 
@@ -130,7 +135,7 @@ SVG를 React 컴포넌트로 변환하여 사용하는 가장 강력한 방법�
 import Logo from "./assets/logo.svg?react";
 
 function MyComponent() {
-  return <Logo className="logo" style={{ fill: 'red' }} />;
+  return <Logo className="logo" style={{ fill: "red" }} />;
 }
 ```
 
@@ -144,6 +149,7 @@ function MyComponent() {
 ```
 
 **장점:**
+
 - ✅ CSS로 색상/크기 변경 가능
 - ✅ props로 스타일 전달 가능
 - ✅ 애니메이션 적용 가능
@@ -157,12 +163,12 @@ import SearchIcon from "./icons/search.svg?react";
 function SearchButton({ isActive }) {
   return (
     <button>
-      <SearchIcon 
-        className={isActive ? 'active' : 'inactive'}
-        style={{ 
-          width: 24, 
+      <SearchIcon
+        className={isActive ? "active" : "inactive"}
+        style={{
+          width: 24,
           height: 24,
-          fill: isActive ? '#007bff' : '#6c757d'
+          fill: isActive ? "#007bff" : "#6c757d",
         }}
       />
       검색
@@ -178,12 +184,7 @@ function SearchButton({ isActive }) {
 ```jsx
 function MyComponent() {
   return (
-    <svg 
-      width="24" 
-      height="24" 
-      viewBox="0 0 24 24"
-      fill="currentColor"
-    >
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
       <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
     </svg>
   );
@@ -191,6 +192,7 @@ function MyComponent() {
 ```
 
 **적합한 경우:**
+
 - 매우 간단한 아이콘
 - 외부 파일 관리가 불필요한 경우
 - 동적으로 생성해야 하는 도형
@@ -217,10 +219,10 @@ export default defineConfig({
   build: {
     rollupOptions: {
       output: {
-        assetFileNames: 'assets/[name]-[hash][extname]'
-      }
-    }
-  }
+        assetFileNames: "assets/[name]-[hash][extname]",
+      },
+    },
+  },
 });
 ```
 
@@ -236,15 +238,15 @@ export default defineConfig({
       output: {
         // 이미지는 별도 폴더로 분리
         assetFileNames: (assetInfo) => {
-          let extType = assetInfo.name.split('.').at(1);
+          let extType = assetInfo.name.split(".").at(1);
           if (/png|jpe?g|svg|gif|tiff|bmp|ico/i.test(extType)) {
             return `images/[name]-[hash][extname]`;
           }
           return `assets/[name]-[hash][extname]`;
-        }
-      }
-    }
-  }
+        },
+      },
+    },
+  },
 });
 ```
 
@@ -252,17 +254,17 @@ export default defineConfig({
 
 ### 특징 비교표
 
-| 특징 | PNG | SVG |
-|------|-----|-----|
-| **파일 형식** | 비트맵 (래스터) | 벡터 |
-| **확대/축소** | 품질 저하됨 | 항상 선명함 |
-| **파일 크기** | 큼 (특히 고해상도) | 작음 (단순한 경우) |
-| **사용 사례** | 사진, 복잡한 이미지 | 아이콘, 로고, 단순 그래픽 |
-| **CSS 스타일링** | ❌ 불가능 | ✅ 가능 |
-| **색상 변경** | ❌ 불가능 | ✅ 가능 (컴포넌트 사용 시) |
-| **애니메이션** | ❌ 어려움 | ✅ 쉬움 |
-| **브라우저 지원** | ✅ 모든 브라우저 | ✅ 모든 최신 브라우저 |
-| **SEO** | alt 텍스트만 | 내부 텍스트 읽기 가능 |
+| 특징              | PNG                 | SVG                        |
+| ----------------- | ------------------- | -------------------------- |
+| **파일 형식**     | 비트맵 (래스터)     | 벡터                       |
+| **확대/축소**     | 품질 저하됨         | 항상 선명함                |
+| **파일 크기**     | 큼 (특히 고해상도)  | 작음 (단순한 경우)         |
+| **사용 사례**     | 사진, 복잡한 이미지 | 아이콘, 로고, 단순 그래픽  |
+| **CSS 스타일링**  | ❌ 불가능           | ✅ 가능                    |
+| **색상 변경**     | ❌ 불가능           | ✅ 가능 (컴포넌트 사용 시) |
+| **애니메이션**    | ❌ 어려움           | ✅ 쉬움                    |
+| **브라우저 지원** | ✅ 모든 브라우저    | ✅ 모든 최신 브라우저      |
+| **SEO**           | alt 텍스트만        | 내부 텍스트 읽기 가능      |
 
 ### 성능 비교
 
@@ -300,15 +302,15 @@ SVG: ❌ 부적합
 ```jsx
 // ✅ 아이콘
 import MenuIcon from "./icons/menu.svg?react";
-<MenuIcon className="icon" />
+<MenuIcon className="icon" />;
 
 // ✅ 로고
 import CompanyLogo from "./logo.svg?react";
-<CompanyLogo style={{ fill: 'var(--primary-color)' }} />
+<CompanyLogo style={{ fill: "var(--primary-color)" }} />;
 
 // ✅ 단순한 일러스트
 import EmptyState from "./illustrations/empty.svg?react";
-<EmptyState className="empty-illustration" />
+<EmptyState className="empty-illustration" />;
 ```
 
 ## 💡 실전 팁
@@ -346,13 +348,8 @@ export default defineConfig({
 ```jsx
 function ResponsiveImage() {
   const isMobile = window.innerWidth < 768;
-  
-  return (
-    <img 
-      src={isMobile ? smallImage : largeImage}
-      alt="반응형 이미지"
-    />
-  );
+
+  return <img src={isMobile ? smallImage : largeImage} alt="반응형 이미지" />;
 }
 ```
 
@@ -360,13 +357,7 @@ function ResponsiveImage() {
 
 ```jsx
 function LazyImage({ src, alt }) {
-  return (
-    <img 
-      src={src} 
-      alt={alt}
-      loading="lazy"
-    />
-  );
+  return <img src={src} alt={alt} loading="lazy" />;
 }
 ```
 
@@ -408,11 +399,11 @@ import logo from "@/assets/logo.svg"; // alias 사용
 
 ```jsx
 // ❌ 불필요하게 public 사용
-<img src="/logo.png" /> // import로 처리 가능한데 public 사용
+<img src="/logo.png" />; // import로 처리 가능한데 public 사용
 
 // ✅ 적절한 사용
 import logo from "./assets/logo.png";
-<img src={logo} />
+<img src={logo} />;
 ```
 
 ### 3. SVG 컴포넌트 import 오류
@@ -433,10 +424,10 @@ import Icon from "./icon.svg?react";
 
 ## 📝 요약
 
-| 이미지 타입 | 권장 사용처 | 불러오기 방법 |
-|------------|-----------|-------------|
-| **PNG** | 사진, 복잡한 이미지 | `import img from './image.png'` |
-| **SVG** | 아이콘, 로고 | `import Icon from './icon.svg?react'` |
-| **Public** | 동적 경로, 외부 참조 | `<img src="/path/file.png" />` |
+| 이미지 타입 | 권장 사용처          | 불러오기 방법                         |
+| ----------- | -------------------- | ------------------------------------- |
+| **PNG**     | 사진, 복잡한 이미지  | `import img from './image.png'`       |
+| **SVG**     | 아이콘, 로고         | `import Icon from './icon.svg?react'` |
+| **Public**  | 동적 경로, 외부 참조 | `<img src="/path/file.png" />`        |
 
 Vite + React에서 이미지를 효율적으로 다루는 방법을 마스터했습니다! PNG는 사진에, SVG는 아이콘에 사용하고, 필요에 따라 적절한 import 방식을 선택하세요. 🎨

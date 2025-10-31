@@ -7,8 +7,6 @@ tags: ["React", "알고리즘", "Virtual DOM", "성능 최적화", "Reconciliati
 excerpt: "React의 조화 과정에서 사용되는 Diffing 알고리즘이 휴리스틱을 통해 O(n³)에서 O(n)으로 최적화되는 원리를 설명합니다."
 ---
 
-# React Diffing 알고리즘의 원리와 최적화 전략
-
 React의 성능을 이해하는 핵심은 바로 Diffing 알고리즘입니다. 이 글에서는 React가 Virtual DOM을 효율적으로 비교하고 업데이트하는 방식, 그리고 그 과정에서 적용되는 최적화 기법에 대해 자세히 알아보겠습니다.
 
 ---
@@ -202,9 +200,7 @@ function BadExample({ isImportant }) {
 
 // ✅ 좋은 예: 같은 타입 유지, 스타일로 변경
 function GoodExample({ isImportant }) {
-  return (
-    <p className={isImportant ? "title-important" : "title-normal"}>Title</p>
-  );
+  return <p className={isImportant ? "title-important" : "title-normal"}>Title</p>;
 }
 ```
 
@@ -278,9 +274,7 @@ function GoodExample({ isImportant }) {
 
 // ✅ 좋은 예 2: 여러 속성 조합 (ID가 없는 경우)
 {
-  items.map((item) => (
-    <Item key={`${item.category}-${item.name}`} data={item} />
-  ));
+  items.map((item) => <Item key={`${item.category}-${item.name}`} data={item} />);
 }
 ```
 
@@ -295,11 +289,7 @@ function TodoList() {
   ]);
 
   const handleToggle = (id) => {
-    setTodos(
-      todos.map((todo) =>
-        todo.id === id ? { ...todo, completed: !todo.completed } : todo
-      )
-    );
+    setTodos(todos.map((todo) => (todo.id === id ? { ...todo, completed: !todo.completed } : todo)));
   };
 
   return (
@@ -362,11 +352,7 @@ function DynamicComponent({ type }) {
 
 // ✅ 권장 패턴
 function StableComponent({ type, ...props }) {
-  return type === "button" ? (
-    <button {...props}>Click</button>
-  ) : (
-    <a {...props}>Click</a>
-  );
+  return type === "button" ? <button {...props}>Click</button> : <a {...props}>Click</a>;
 }
 ```
 

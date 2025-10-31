@@ -8,8 +8,6 @@ excerpt: "SMB 외부 접속 불가 문제를 AWS Lightsail과 Google Sheets API�
 thumbnail: "./thumbnail.webp"
 ---
 
-# 식대앱 개발기 #2: AWS Lightsail과 Google Sheets로 외부 접속 문제 해결하기
-
 ## 이전 편 요약
 
 [식대앱 개발기 #1](/devLog/app-log-1)에서는:

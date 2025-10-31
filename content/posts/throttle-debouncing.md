@@ -8,8 +8,6 @@ excerpt: "웹 성능 최적화의 필수 기법인 Throttle과 Debounce의 개�
 thumbnail: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=640&h=425&fit=crop"
 ---
 
-# ⚡ Throttle vs Debounce: 성능 최적화의 핵심 기법 완벽 이해하기
-
 웹 애플리케이션에서 빈번하게 발생하는 이벤트를 효율적으로 제어하는 방법, Throttle과 Debounce를 쉬운 비유와 실전 예제로 완벽하게 이해해봅시다.
 
 ## 📋 목차
@@ -24,9 +22,10 @@ thumbnail: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=640&h=42
 
 ### 실생활 비유로 이해하기
 
-좋아하는 연예인의 팬미팅에 갔다고 상상해보세요. 너무 신나서 "사랑해요!"를 1초에 10번씩 소리치고 싶지만, 연예인은 한 번에 여러 목소리를 다 들을 수 없습니다. 
+좋아하는 연예인의 팬미팅에 갔다고 상상해보세요. 너무 신나서 "사랑해요!"를 1초에 10번씩 소리치고 싶지만, 연예인은 한 번에 여러 목소리를 다 들을 수 없습니다.
 
 이때 팬미팅 진행 요원이 등장합니다:
+
 > "한 사람당 1초에 한 번만 소리치세요!"
 
 바로 이 진행 요원의 역할이 **Throttle**입니다.
@@ -50,19 +49,22 @@ thumbnail: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=640&h=42
 
 ```javascript
 // ❌ 스로틀링 없이 (성능 저하)
-window.addEventListener('scroll', () => {
-  console.log('스크롤 이벤트 발생!');
+window.addEventListener("scroll", () => {
+  console.log("스크롤 이벤트 발생!");
   // 복잡한 계산...
   // DOM 업데이트...
 });
 // 결과: 1초에 수백 번 실행 → 브라우저 버벅임
 
 // ✅ 스로틀링 적용 (최적화)
-window.addEventListener('scroll', throttle(() => {
-  console.log('스로틀링된 스크롤 이벤트');
-  // 복잡한 계산...
-  // DOM 업데이트...
-}, 200));
+window.addEventListener(
+  "scroll",
+  throttle(() => {
+    console.log("스로틀링된 스크롤 이벤트");
+    // 복잡한 계산...
+    // DOM 업데이트...
+  }, 200)
+);
 // 결과: 200ms에 1번 실행 → 부드러운 동작
 ```
 
@@ -83,6 +85,7 @@ Throttle 적용 시:
 ### 실생활 비유로 이해하기
 
 이번엔 진행 요원이 다른 규칙을 만들었습니다:
+
 > "일단 조용히 하시고, 마지막으로 '사랑해요!'라고 외친 후 **1초 동안 아무도 소리치지 않으면**, 그때 그 마지막 목소리를 연예인에게 전달할게요!"
 
 만약 1초가 지나기 전에 누군가 또 외치면? 타이머가 다시 시작됩니다.
@@ -104,15 +107,18 @@ Throttle 적용 시:
 
 ```javascript
 // ❌ 디바운싱 없이
-input.addEventListener('input', (e) => {
+input.addEventListener("input", (e) => {
   searchAPI(e.target.value);
 });
 // "리액트" 입력 시: 6번의 API 호출!
 
 // ✅ 디바운싱 적용
-input.addEventListener('input', debounce((e) => {
-  searchAPI(e.target.value);
-}, 300));
+input.addEventListener(
+  "input",
+  debounce((e) => {
+    searchAPI(e.target.value);
+  }, 300)
+);
 // "리액트" 입력 후 300ms 대기 → 1번만 API 호출!
 ```
 
@@ -134,21 +140,21 @@ Debounce (300ms):
 
 ### 상세 비교표
 
-| 구분 | Throttle | Debounce |
-|------|----------|----------|
-| **실행 타이밍** | 일정 시간 **간격마다** 실행 | 이벤트 **종료 후** 실행 |
-| **주기성** | 규칙적 (`tick-tock-tick-tock`) | 비규칙적 (`......(멈춤)......`) |
-| **첫 실행** | 즉시 실행 가능 | 대기 시간 필요 |
-| **중간 값** | 주기마다 처리 | 무시됨 |
-| **최종 값** | 마지막 주기에 포함 | 반드시 처리됨 |
+| 구분            | Throttle                       | Debounce                        |
+| --------------- | ------------------------------ | ------------------------------- |
+| **실행 타이밍** | 일정 시간 **간격마다** 실행    | 이벤트 **종료 후** 실행         |
+| **주기성**      | 규칙적 (`tick-tock-tick-tock`) | 비규칙적 (`......(멈춤)......`) |
+| **첫 실행**     | 즉시 실행 가능                 | 대기 시간 필요                  |
+| **중간 값**     | 주기마다 처리                  | 무시됨                          |
+| **최종 값**     | 마지막 주기에 포함             | 반드시 처리됨                   |
 
 ### 동작 방식 차이
 
-| 시나리오 | Throttle | Debounce |
-|---------|----------|----------|
-| **스크롤** | 스크롤 중에도 주기적 업데이트 | 스크롤 멈춘 후 1번 업데이트 |
-| **검색 입력** | 입력 중 주기적 검색 | 입력 완료 후 1번 검색 |
-| **버튼 클릭** | 연속 클릭 제한 (쿨다운) | 마지막 클릭만 처리 |
+| 시나리오      | Throttle                      | Debounce                    |
+| ------------- | ----------------------------- | --------------------------- |
+| **스크롤**    | 스크롤 중에도 주기적 업데이트 | 스크롤 멈춘 후 1번 업데이트 |
+| **검색 입력** | 입력 중 주기적 검색           | 입력 완료 후 1번 검색       |
+| **버튼 클릭** | 연속 클릭 제한 (쿨다운)       | 마지막 클릭만 처리          |
 
 ## 💻 실전 구현 코드
 
@@ -170,7 +176,7 @@ function throttle(func, delay) {
     } else {
       // 남은 시간 후 실행 예약
       if (timeoutId) clearTimeout(timeoutId);
-      
+
       timeoutId = setTimeout(() => {
         lastExecutedTime = Date.now();
         func.apply(this, args);
@@ -203,15 +209,15 @@ function debounce(func, delay) {
 ### Lodash 라이브러리 사용 (권장)
 
 ```javascript
-import _ from 'lodash';
+import _ from "lodash";
 
 // Throttle
 const throttledScroll = _.throttle(handleScroll, 200);
-window.addEventListener('scroll', throttledScroll);
+window.addEventListener("scroll", throttledScroll);
 
 // Debounce
 const debouncedSearch = _.debounce(handleSearch, 300);
-input.addEventListener('input', debouncedSearch);
+input.addEventListener("input", debouncedSearch);
 ```
 
 ## 🎨 실전 사용 예제
@@ -221,28 +227,28 @@ input.addEventListener('input', debouncedSearch);
 ```javascript
 const handleInfiniteScroll = throttle(() => {
   const { scrollTop, scrollHeight, clientHeight } = document.documentElement;
-  
+
   if (scrollTop + clientHeight >= scrollHeight - 5) {
     loadMoreItems();
   }
 }, 200);
 
-window.addEventListener('scroll', handleInfiniteScroll);
+window.addEventListener("scroll", handleInfiniteScroll);
 ```
 
 ### 2. 검색 자동완성 (Debounce)
 
 ```javascript
-const searchInput = document.querySelector('#search');
+const searchInput = document.querySelector("#search");
 
 const handleSearch = debounce(async (query) => {
   if (query.length < 2) return;
-  
+
   const results = await fetchSearchResults(query);
   displaySearchResults(results);
 }, 300);
 
-searchInput.addEventListener('input', (e) => {
+searchInput.addEventListener("input", (e) => {
   handleSearch(e.target.value);
 });
 ```
@@ -253,18 +259,18 @@ searchInput.addEventListener('input', (e) => {
 const handleResize = throttle(() => {
   const width = window.innerWidth;
   console.log(`현재 너비: ${width}px`);
-  
+
   // 반응형 레이아웃 조정
   adjustLayout(width);
 }, 250);
 
-window.addEventListener('resize', handleResize);
+window.addEventListener("resize", handleResize);
 ```
 
 ### 4. 폼 제출 방지 (Debounce)
 
 ```javascript
-const submitButton = document.querySelector('#submit');
+const submitButton = document.querySelector("#submit");
 
 const handleSubmit = debounce(async (formData) => {
   try {
@@ -275,7 +281,7 @@ const handleSubmit = debounce(async (formData) => {
   }
 }, 500);
 
-submitButton.addEventListener('click', () => {
+submitButton.addEventListener("click", () => {
   const formData = new FormData(form);
   handleSubmit(formData);
 });
@@ -286,6 +292,7 @@ submitButton.addEventListener('click', () => {
 ### Throttle을 사용해야 할 때
 
 ✅ **권장 사용 사례:**
+
 - 스크롤 이벤트 (무한 스크롤, 스크롤 애니메이션)
 - 마우스 이동 추적
 - 창 크기 조절 이벤트
@@ -303,6 +310,7 @@ const updateScrollProgress = throttle(() => {
 ### Debounce를 사용해야 할 때
 
 ✅ **권장 사용 사례:**
+
 - 검색창 자동완성
 - 입력 필드 유효성 검사
 - 버튼 중복 클릭 방지
@@ -316,7 +324,7 @@ const autoSave = debounce(async (content) => {
   showSavedIndicator();
 }, 1000);
 
-textarea.addEventListener('input', (e) => {
+textarea.addEventListener("input", (e) => {
   autoSave(e.target.value);
 });
 ```
@@ -336,7 +344,7 @@ useEffect(() => {
 useEffect(() => {
   const handleScroll = throttle(() => {...}, 200);
   window.addEventListener('scroll', handleScroll);
-  
+
   return () => {
     window.removeEventListener('scroll', handleScroll);
   };
@@ -347,20 +355,20 @@ useEffect(() => {
 
 ```javascript
 // 너무 짧음 (효과 없음)
-throttle(fn, 10);  // ❌ 거의 모든 이벤트 실행
+throttle(fn, 10); // ❌ 거의 모든 이벤트 실행
 
 // 적절한 값
-throttle(fn, 100-300);  // ✅ 성능과 반응성 균형
+throttle(fn, 100 - 300); // ✅ 성능과 반응성 균형
 
 // 너무 김 (반응성 저하)
-throttle(fn, 2000);  // ❌ 사용자 경험 저하
+throttle(fn, 2000); // ❌ 사용자 경험 저하
 ```
 
 ### 3. React에서의 사용
 
 ```javascript
-import { useCallback } from 'react';
-import { debounce } from 'lodash';
+import { useCallback } from "react";
+import { debounce } from "lodash";
 
 function SearchComponent() {
   // ✅ useCallback으로 메모이제이션
@@ -371,11 +379,7 @@ function SearchComponent() {
     []
   );
 
-  return (
-    <input 
-      onChange={(e) => debouncedSearch(e.target.value)}
-    />
-  );
+  return <input onChange={(e) => debouncedSearch(e.target.value)} />;
 }
 ```
 
@@ -397,10 +401,10 @@ function SearchComponent() {
 
 ### 핵심 정리
 
-| 기법 | 한마디 설명 | 대표 사례 |
-|------|-----------|----------|
+| 기법         | 한마디 설명             | 대표 사례        |
+| ------------ | ----------------------- | ---------------- |
 | **Throttle** | "일정 간격마다 실행해!" | 스크롤, 리사이즈 |
-| **Debounce** | "입력 끝나면 실행해!" | 검색, 자동 저장 |
+| **Debounce** | "입력 끝나면 실행해!"   | 검색, 자동 저장  |
 
 ## 🔗 참고 자료
 

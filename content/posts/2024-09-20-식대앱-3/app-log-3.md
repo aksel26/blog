@@ -8,8 +8,6 @@ excerpt: "AWS Lightsail로 간편하게 배포하고, PM2로 무중단 서비스
 thumbnail: "./thumbnail.webp"
 ---
 
-# 식대앱 개발기 #3: AWS Lightsail 배포와 HTTPS 적용 완벽 가이드
-
 ## 이전 편 요약
 
 - [식대앱 개발기 #1](/devLog/app-log-1): SMB 프로토콜과 외부 접속 문제
@@ -25,14 +23,14 @@ thumbnail: "./thumbnail.webp"
 
 ### EC2 vs Lightsail 비교
 
-| 항목 | AWS EC2 | AWS Lightsail |
-|------|---------|---------------|
-| **설정 복잡도** | 높음 (VPC, 보안그룹 등) | 낮음 (원클릭 설정) |
-| **가격 체계** | 사용량 기반 (복잡) | 고정 요금제 (명확) |
-| **대시보드** | 여러 곳에 분산 | 한 곳에 통합 |
-| **초보자 친화성** | 낮음 | 높음 ✅ |
-| **확장성** | 무한 | 제한적 |
-| **적합한 경우** | 대규모 서비스 | 소규모 프로젝트 ✅ |
+| 항목              | AWS EC2                 | AWS Lightsail      |
+| ----------------- | ----------------------- | ------------------ |
+| **설정 복잡도**   | 높음 (VPC, 보안그룹 등) | 낮음 (원클릭 설정) |
+| **가격 체계**     | 사용량 기반 (복잡)      | 고정 요금제 (명확) |
+| **대시보드**      | 여러 곳에 분산          | 한 곳에 통합       |
+| **초보자 친화성** | 낮음                    | 높음 ✅            |
+| **확장성**        | 무한                    | 제한적             |
+| **적합한 경우**   | 대규모 서비스           | 소규모 프로젝트 ✅ |
 
 ### Lightsail의 장점
 
@@ -69,11 +67,13 @@ aws lightsail put-bucket-object \
 ### 2단계: Ubuntu 인스턴스 생성
 
 **Lightsail 인스턴스 스펙**:
+
 - OS: Ubuntu 22.04 LTS
 - Plan: $12/month (2GB RAM, 2 vCPU, 60GB SSD)
 - Region: ap-northeast-2 (서울)
 
 **초기 설정**:
+
 ```bash
 # SSH 접속
 ssh -i LightsailDefaultKey.pem ubuntu@[IP_ADDRESS]
@@ -123,43 +123,46 @@ pm2 save
 
 ```javascript
 module.exports = {
-  apps: [{
-    name: 'meal-app',
-    script: './server.js',
-    instances: 2, // 클러스터 모드 (CPU 코어 활용)
-    exec_mode: 'cluster',
+  apps: [
+    {
+      name: "meal-app",
+      script: "./server.js",
+      instances: 2, // 클러스터 모드 (CPU 코어 활용)
+      exec_mode: "cluster",
 
-    // 환경 변수
-    env: {
-      NODE_ENV: 'production',
-      PORT: 3000,
-      AWS_REGION: 'ap-northeast-2'
+      // 환경 변수
+      env: {
+        NODE_ENV: "production",
+        PORT: 3000,
+        AWS_REGION: "ap-northeast-2",
+      },
+
+      // 자동 재시작 조건
+      max_memory_restart: "500M",
+
+      // 로그 설정
+      error_file: "./logs/err.log",
+      out_file: "./logs/out.log",
+      log_date_format: "YYYY-MM-DD HH:mm:ss",
+
+      // 모니터링
+      merge_logs: true,
+
+      // 재시작 정책
+      watch: false,
+      ignore_watch: ["node_modules", "logs"],
+
+      // Graceful reload
+      kill_timeout: 5000,
+      wait_ready: true,
+      listen_timeout: 10000,
     },
-
-    // 자동 재시작 조건
-    max_memory_restart: '500M',
-
-    // 로그 설정
-    error_file: './logs/err.log',
-    out_file: './logs/out.log',
-    log_date_format: 'YYYY-MM-DD HH:mm:ss',
-
-    // 모니터링
-    merge_logs: true,
-
-    // 재시작 정책
-    watch: false,
-    ignore_watch: ['node_modules', 'logs'],
-
-    // Graceful reload
-    kill_timeout: 5000,
-    wait_ready: true,
-    listen_timeout: 10000
-  }]
+  ],
 };
 ```
 
 **PM2 Ecosystem으로 시작**:
+
 ```bash
 # ecosystem 파일로 시작
 pm2 start ecosystem.config.js
@@ -224,8 +227,8 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '18'
-          cache: 'npm'
+          node-version: "18"
+          cache: "npm"
 
       - name: Install dependencies
         run: npm ci
@@ -278,6 +281,7 @@ jobs:
 GitHub 저장소 Settings > Secrets and variables > Actions에서 추가:
 
 1. **SSH_PRIVATE_KEY**: Lightsail SSH 개인 키
+
    ```bash
    # 로컬에서 키 내용 확인
    cat ~/.ssh/LightsailDefaultKey.pem
@@ -331,6 +335,7 @@ echo "🎉 Deployment completed!"
 ```
 
 **스크립트 실행 권한 부여**:
+
 ```bash
 chmod +x deploy.sh
 ```
@@ -342,10 +347,12 @@ chmod +x deploy.sh
 ### 1단계: 도메인 구매 및 DNS 설정
 
 **Lightsail DNS 설정**:
+
 - 최소 $0.50/month (월 300만 쿼리)
 - 도메인: `meal.acg-playground.com`
 
 **DNS 레코드 설정**:
+
 ```
 Type: A
 Name: meal
@@ -356,19 +363,21 @@ Points to: [Lightsail 인스턴스 고정 IP]
 
 Lightsail 네트워킹 탭에서 다음 포트 허용:
 
-| 포트 | 프로토콜 | 용도 |
-|------|----------|------|
-| 22 | TCP | SSH |
-| 80 | TCP | HTTP |
-| 443 | TCP | HTTPS |
-| 3000 | TCP | Node.js (선택) |
+| 포트 | 프로토콜 | 용도           |
+| ---- | -------- | -------------- |
+| 22   | TCP      | SSH            |
+| 80   | TCP      | HTTP           |
+| 443  | TCP      | HTTPS          |
+| 3000 | TCP      | Node.js (선택) |
 
 ### 3단계: Nginx 설치 및 설정
 
 **Nginx란?**
+
 > 고성능 웹 서버이자 리버스 프록시 서버. 포트 포워딩, 로드 밸런싱, SSL 종료 등의 역할을 수행합니다.
 
 **Nginx 설치**:
+
 ```bash
 # Nginx 설치
 sudo apt install nginx -y
@@ -435,6 +444,7 @@ server {
 ```
 
 **설정 활성화**:
+
 ```bash
 # 심볼릭 링크 생성
 sudo ln -s /etc/nginx/sites-available/meal-app /etc/nginx/sites-enabled/
@@ -450,6 +460,7 @@ sudo systemctl restart nginx
 ```
 
 **접속 확인**:
+
 ```
 http://meal.acg-playground.com
 ```
@@ -457,18 +468,21 @@ http://meal.acg-playground.com
 ### 4단계: Let's Encrypt로 HTTPS 적용
 
 **Certbot 설치**:
+
 ```bash
 # Certbot 및 Nginx 플러그인 설치
 sudo apt install certbot python3-certbot-nginx -y
 ```
 
 **SSL 인증서 발급**:
+
 ```bash
 # 인증서 자동 발급 및 Nginx 설정
 sudo certbot --nginx -d meal.acg-playground.com
 ```
 
 **Certbot 대화형 프롬프트**:
+
 ```
 Please choose whether or not to redirect HTTP traffic to HTTPS:
 -------------------------------------------------------------------------------
@@ -481,6 +495,7 @@ Select the appropriate number [1-2] then [enter]:
 **✅ 선택**: `2` (HTTP를 HTTPS로 자동 리다이렉트)
 
 **자동으로 추가된 Nginx 설정**:
+
 ```nginx
 server {
     server_name meal.acg-playground.com;
@@ -511,12 +526,14 @@ server {
 Let's Encrypt 인증서는 **90일**마다 갱신이 필요합니다.
 
 **자동 갱신 타이머 확인**:
+
 ```bash
 # Certbot 자동 갱신 타이머 상태 확인
 sudo systemctl list-timers | grep certbot
 ```
 
 **수동 갱신 테스트**:
+
 ```bash
 # 드라이런 (실제 갱신 안 함)
 sudo certbot renew --dry-run
@@ -525,6 +542,7 @@ sudo certbot renew --dry-run
 **갱신 설정 커스터마이징**:
 
 `/etc/letsencrypt/renewal/meal.acg-playground.com.conf`:
+
 ```ini
 # 기존 설정...
 
@@ -540,6 +558,7 @@ email = your-email@example.com
 ```
 
 **크론 작업 추가 (선택)**:
+
 ```bash
 # crontab 편집
 sudo crontab -e
@@ -554,7 +573,7 @@ sudo crontab -e
 
 최종적으로 **https://meal.acg-playground.com** 도메인으로 서비스를 제공할 수 있게 되었습니다!
 
-*(현재는 다른 도메인으로 마이그레이션한 상태)*
+_(현재는 다른 도메인으로 마이그레이션한 상태)_
 
 ### 🎉 달성한 목표
 
@@ -571,6 +590,7 @@ sudo crontab -e
 ### 예상보다 복잡했던 부분
 
 **1. 기획 & 디자인**
+
 > "정답이 없는 영역"이라는 것을 깨달았습니다.
 
 - 사용자 플로우 설계
@@ -579,6 +599,7 @@ sudo crontab -e
 - 색상, 레이아웃 결정
 
 **2. 인프라 설정**
+
 > "도메인 하나 연결하는데 설정이 이렇게 많다니..."
 
 - DNS 레코드 설정
@@ -588,6 +609,7 @@ sudo crontab -e
 - 자동 갱신 설정
 
 **3. 배포 자동화**
+
 > "수동 배포는 이제 그만!"
 
 - SSH 키 관리
@@ -600,11 +622,13 @@ sudo crontab -e
 #### 1. 기술 스택 확장
 
 **Before**:
+
 - 프론트엔드 개발만 경험
 - AWS 미경험
 - 배포 개념 부족
 
 **After**:
+
 - 풀스택 개발 경험 ✅
 - AWS Lightsail 활용 ✅
 - 인프라 구축 능력 ✅
@@ -680,23 +704,25 @@ sudo iftop
 
 ### 현재 월간 비용
 
-| 항목 | 비용 |
-|------|------|
-| Lightsail 인스턴스 (2GB) | $12 |
-| Lightsail Object Storage (5GB) | $1 |
-| Lightsail DNS | $0.50 |
-| 도메인 (연간 $12) | $1 |
-| **총 월간 비용** | **$14.50** |
+| 항목                           | 비용       |
+| ------------------------------ | ---------- |
+| Lightsail 인스턴스 (2GB)       | $12        |
+| Lightsail Object Storage (5GB) | $1         |
+| Lightsail DNS                  | $0.50      |
+| 도메인 (연간 $12)              | $1         |
+| **총 월간 비용**               | **$14.50** |
 
 ### 비용 절감 팁
 
 1. **Lightsail 스냅샷 관리**
+
    ```bash
    # 오래된 스냅샷 삭제
    aws lightsail delete-instance-snapshot --snapshot-name old-snapshot
    ```
 
 2. **S3 수명 주기 정책**
+
    - 90일 이상 된 파일 자동 삭제
 
 3. **CDN 활용 (선택)**
@@ -740,18 +766,22 @@ sudo iftop
 ### 핵심 교훈 5가지
 
 1. **작은 것부터 시작하라**
+
    - MVP(Minimum Viable Product)로 시작
    - 점진적으로 기능 추가
 
 2. **자동화는 필수다**
+
    - CI/CD로 배포 시간 90% 단축
    - 수동 작업은 에러의 원인
 
 3. **사용자 피드백이 중요하다**
+
    - 실제 사용자 의견 반영
    - 지속적인 개선
 
 4. **문서화를 게을리하지 말자**
+
    - 배포 프로세스 문서화
    - 트러블슈팅 가이드 작성
 
@@ -765,14 +795,14 @@ sudo iftop
 
 ### 프로젝트 통계
 
-| 항목 | 수치 |
-|------|------|
-| 개발 기간 | 3주 |
-| 코드 라인 수 | ~5,000 lines |
-| 커밋 수 | 87 commits |
-| 사용자 수 | 전 직원 (약 30명) |
-| 일평균 접속 | ~50회 |
-| 절감 시간 | 1인당 5분/일 |
+| 항목         | 수치              |
+| ------------ | ----------------- |
+| 개발 기간    | 3주               |
+| 코드 라인 수 | ~5,000 lines      |
+| 커밋 수      | 87 commits        |
+| 사용자 수    | 전 직원 (약 30명) |
+| 일평균 접속  | ~50회             |
+| 절감 시간    | 1인당 5분/일      |
 
 ### 감사의 말
 
@@ -790,22 +820,27 @@ sudo iftop
 ## 참고 자료
 
 ### AWS Lightsail
+
 - [AWS Lightsail 공식 문서](https://docs.aws.amazon.com/lightsail/)
 - [Lightsail 가격 정책](https://aws.amazon.com/lightsail/pricing/)
 
 ### PM2
+
 - [PM2 공식 문서](https://pm2.keymetrics.io/docs/)
 - [PM2 Ecosystem 파일](https://pm2.keymetrics.io/docs/usage/application-declaration/)
 
 ### Nginx
+
 - [Nginx 공식 문서](https://nginx.org/en/docs/)
 - [Nginx 리버스 프록시 가이드](https://docs.nginx.com/nginx/admin-guide/web-server/reverse-proxy/)
 
 ### Let's Encrypt
+
 - [Certbot 공식 문서](https://certbot.eff.org/)
 - [Let's Encrypt 사용 가이드](https://letsencrypt.org/getting-started/)
 
 ### CI/CD
+
 - [GitHub Actions 문서](https://docs.github.com/en/actions)
 - [SSH 배포 가이드](https://github.com/appleboy/ssh-action)
 

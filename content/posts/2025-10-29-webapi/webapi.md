@@ -7,8 +7,6 @@ tags: ["Javascript", "WebAPI"]
 excerpt: "웹 애플리케이션 개발에 필수적인 Web API들을 기능별로 소개합니다."
 ---
 
-# 현대 웹 개발을 위한 필수 Web API 완벽 가이드
-
 웹 애플리케이션 개발에 필수적인 Web API들을 기능별로 정리하여 소개합니다. 각 API의 개념과 실제 활용 사례를 통해 현대 웹 개발의 핵심 기술을 이해할 수 있습니다.
 
 ---
@@ -40,11 +38,7 @@ if ("serviceWorker" in navigator) {
 
 // sw.js - 캐싱 전략
 self.addEventListener("fetch", (event) => {
-  event.respondWith(
-    caches
-      .match(event.request)
-      .then((response) => response || fetch(event.request))
-  );
+  event.respondWith(caches.match(event.request).then((response) => response || fetch(event.request)));
 });
 ```
 

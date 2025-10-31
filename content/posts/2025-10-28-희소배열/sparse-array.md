@@ -7,8 +7,6 @@ tags: ["Javascript", "기초", "배열", "정적메서드"]
 excerpt: "정적메서드와 희소배열에 관한 개념을 공유합니다."
 ---
 
-# 희소배열과 JavaScript 메모리 관리
-
 희소 배열의 `length`가 100이라고 해서 100개의 메모리 공간을 미리 확보할까?
 
 **아니다.** JavaScript는 희소 배열을 위해 메모리를 미리 확보하지 않는다.
@@ -32,9 +30,9 @@ JavaScript의 배열은 사실 **'키(key)가 숫자인 특수한 객체(Object)
 ```javascript
 // JavaScript 엔진이 '희소 배열'을 인식하는 방식 (개념적으로)
 let sparseArrayStorage = {
-  '0': 'a',   // 0번 키에 'a' 저장
-  '99': 'b',  // 99번 키에 'b' 저장
-  'length': 100 // 'length'라는 속성을 따로 관리
+  0: "a", // 0번 키에 'a' 저장
+  99: "b", // 99번 키에 'b' 저장
+  length: 100, // 'length'라는 속성을 따로 관리
 };
 ```
 
@@ -55,11 +53,11 @@ let sparseArrayStorage = {
 
 ```javascript
 const arr = [];
-arr[0] = 'first';
-arr[99] = 'last';
+arr[0] = "first";
+arr[99] = "last";
 
 console.log(arr.length); // 100
-console.log(arr[50]);    // undefined (존재하지 않음)
+console.log(arr[50]); // undefined (존재하지 않음)
 console.log(Object.keys(arr)); // ['0', '99'] - 실제로는 2개만 존재
 ```
 
@@ -80,8 +78,8 @@ const dense = [1, 2, 3, 4, 5];
 
 ```javascript
 const sparse = [];
-sparse[0] = 'a';
-sparse[1000] = 'b';
+sparse[0] = "a";
+sparse[1000] = "b";
 // 엔진은 이걸 객체처럼 관리함
 // 메모리는 2개의 값 + length 속성만 사용
 ```

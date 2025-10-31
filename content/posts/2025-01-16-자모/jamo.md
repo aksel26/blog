@@ -8,8 +8,6 @@ excerpt: "AWS Lightsail에서 파일명 검색 실패? 한글 자모 분리 현�
 thumbnail: "./thumbnail.webp"
 ---
 
-# JavaScript에서 한글 자모 분리 현상 해결하기
-
 ## 문제 상황
 
 AWS Lightsail bucket에 저장된 엑셀 파일을 불러오는 작업을 진행하던 중, 이상한 문제에 직면했습니다.

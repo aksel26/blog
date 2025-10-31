@@ -8,8 +8,6 @@ excerpt: "용산구 한강대로에 위치한 3층 감성 카페 3F LOBBY를 다
 thumbnail: "./thumbnail.webp"
 ---
 
-# 3F LOBBY - 용산 숨은 감성 카페
-
 용산구 한강대로에 위치한 3층 감성 카페 3F LOBBY를 다녀왔습니다.
 
 ## 위치 정보
@@ -35,4 +33,3 @@ thumbnail: "./thumbnail.webp"
 **평점: ⭐⭐⭐⭐**
 
 월화 휴무가 아쉽지만, 조용한 공간에서 여유로운 시간을 보내기 좋은 카페입니다.
-

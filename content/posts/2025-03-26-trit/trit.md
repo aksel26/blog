@@ -8,8 +8,6 @@ excerpt: "용산 센트럴파크 해링턴스퀘어에 위치한 TRIT 카페를 
 thumbnail: "./thumbnail.webp"
 ---
 
-# TRIT - 용산 센트럴파크의 숨은 카페
-
 용산 센트럴파크 해링턴스퀘어에 위치한 TRIT 카페를 다녀왔습니다.
 
 ## 위치 정보

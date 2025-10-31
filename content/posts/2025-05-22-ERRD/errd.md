@@ -8,8 +8,6 @@ excerpt: "용리단길에 위치한 ERRD(에르디) 카페를 다녀왔습니다
 thumbnail: "./thumbnail.webp"
 ---
 
-# ERRD - 용리단길의 감각적인 카페
-
 용리단길에 위치한 ERRD(에르디) 카페를 다녀왔습니다.
 
 ## 위치 정보

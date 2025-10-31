@@ -8,8 +8,6 @@ excerpt: "Gatsby 프로젝트에서 개발 환경에서는 잘 보이던 Google 
 thumbnail: "https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=640&h=425&fit=crop"
 ---
 
-# 🎨 Gatsby 빌드 시 Google Fonts가 적용되지 않는 문제 해결하기
-
 블로그에 Sacramento 폰트를 적용하는 과정에서 흥미로운 문제를 발견했습니다. `gatsby develop`에서는 폰트가 잘 적용되는데, `gatsby build`로 빌드한 후 `gatsby serve`로 실행하면 폰트가 적용되지 않는 현상이 발생했죠.
 
 ## 🔍 문제 상황
@@ -62,22 +60,9 @@ import { GatsbySSR } from "gatsby";
 // Add Google Fonts to HTML head
 export const onRenderBody: GatsbySSR["onRenderBody"] = ({ setHeadComponents }) => {
   setHeadComponents([
-    <link
-      key="google-fonts-preconnect"
-      rel="preconnect"
-      href="https://fonts.googleapis.com"
-    />,
-    <link
-      key="google-fonts-preconnect-gstatic"
-      rel="preconnect"
-      href="https://fonts.gstatic.com"
-      crossOrigin="anonymous"
-    />,
-    <link
-      key="google-fonts-sacramento"
-      rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=Sacramento&display=swap"
-    />,
+    <link key="google-fonts-preconnect" rel="preconnect" href="https://fonts.googleapis.com" />,
+    <link key="google-fonts-preconnect-gstatic" rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />,
+    <link key="google-fonts-sacramento" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sacramento&display=swap" />,
   ]);
 };
 ```
@@ -161,11 +146,7 @@ gatsby serve
 여러 Google Fonts를 사용한다면 한 번의 요청으로 로드하는 것이 효율적입니다:
 
 ```tsx
-<link
-  key="google-fonts"
-  rel="stylesheet"
-  href="https://fonts.googleapis.com/css2?family=Sacramento&family=Roboto:wght@400;700&display=swap"
-/>
+<link key="google-fonts" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sacramento&family=Roboto:wght@400;700&display=swap" />
 ```
 
 ### 폰트 로딩 전략

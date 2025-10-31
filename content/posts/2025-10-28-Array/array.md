@@ -7,8 +7,6 @@ tags: ["Javascript", "기초", "배열"]
 excerpt: "배열을 다루는 new Array와 Array.from의 차이점에 대해서 공유합니다."
 ---
 
-# new Array와 Array.from의 차이
-
 평소에 배열을 초기화할 때 `Array.from`을 주로 사용한다.
 
 `{length}`로 길이를 명확하게 정의할 수 있고, 콜백 함수를 통해 `new Array().fill()`보다 원하는 값을 더 쉽게 채울 수 있기 때문이다.
@@ -20,6 +18,7 @@ excerpt: "배열을 다루는 new Array와 Array.from의 차이점에 대해서 
 두 메서드 모두 배열을 만들지만, 사용 목적과 동작 방식이 완전히 다르다.
 
 핵심 차이는 이렇다.
+
 - **`new Array()`**: 길이를 지정해 빈 배열을 만드는 생성자
 - **`Array.from()`**: 유사 배열 객체나 이터러블을 복사하거나 변환해서 새 배열을 만드는 정적 메서드
 
@@ -30,6 +29,7 @@ excerpt: "배열을 다루는 new Array와 Array.from의 차이점에 대해서 
 `new Array()`는 인자의 개수와 타입에 따라 다르게 동작해서 혼란을 줄 수 있다.
 
 ### 동작 1: 인자가 1개이고 숫자인 경우
+
 해당 숫자만큼의 길이를 가진 **희소 배열(sparse array)**을 만든다. 값은 비어있다.
 
 ```javascript
@@ -48,6 +48,7 @@ console.log(mappedArr); // [ <5 empty items> ]
 ```
 
 ### 동작 2: 인자가 2개 이상이거나, 1개라도 숫자가 아닌 경우
+
 전달된 인자들을 요소로 가지는 배열을 만든다.
 
 ```javascript
@@ -59,6 +60,7 @@ console.log(arr2); // ['hello']
 ```
 
 이 방식은 배열 리터럴(`[]`)을 쓰는 게 훨씬 낫다. 가독성도 좋고 명확하기 때문이다.
+
 - `new Array(1, 2, 3)` ❌
 - `[1, 2, 3]` ✅
 
@@ -69,6 +71,7 @@ console.log(arr2); // ['hello']
 `Array.from()`은 "어떤 것으로부터 배열을 만든다"는 의미로, `new Array()`보다 훨씬 명확하고 강력하다.
 
 ### 주요 용도 1: 유사 배열(Array-like) 객체 변환
+
 `length` 속성과 인덱스를 가진 객체(예: `NodeList`, `arguments`)를 실제 배열로 변환한다.
 
 ```javascript
@@ -84,6 +87,7 @@ divArray.map((node) => node.textContent);
 ```
 
 ### 주요 용도 2: 이터러블(Iterable) 객체 변환
+
 `Set`, `Map`, `String` 등 반복 가능한 객체를 배열로 변환한다.
 
 ```javascript
@@ -98,6 +102,7 @@ console.log(arrFromSet); // [1, 2, 3]
 ```
 
 ### 주요 용도 3: `map` 기능 내장 (매우 유용)
+
 `Array.from()`은 두 번째 인자로 `map` 함수를 받을 수 있다. 이 기능이 `new Array(N)`의 문제를 완벽하게 해결한다.
 
 `{ length: 5 }`는 유사 배열 객체다. `Array.from`은 이 객체를 배열로 변환하면서 각 요소를 `undefined`로 채운다. (희소 배열이 아님!)

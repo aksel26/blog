@@ -7,8 +7,6 @@ tags: ["면접"]
 excerpt: "프론트엔드 면접 시 Javascript 면접 질문들입니다."
 ---
 
-# 프론트엔드 기술면접
-
 ## JavaScript 기본기
 
 ### Q1. 클로저(Closure)란 무엇이며, 실무에서 어떻게 활용하나요?

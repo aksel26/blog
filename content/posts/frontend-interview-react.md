@@ -7,8 +7,6 @@ tags: ["면접"]
 excerpt: "프론트엔드 면접 시 React,Next 면접 질문들입니다."
 ---
 
-# 프론트엔드 기술면접
-
 ## React 관련 질문
 
 ### Q1. Virtual DOM의 작동 원리와 Reconciliation 과정을 설명해주세요.

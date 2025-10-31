@@ -7,8 +7,6 @@ tags: ["면접"]
 excerpt: "프론트엔드 면접 시 JS 면접 질문들입니다."
 ---
 
-# JavaScript 심화 면접 질문
-
 ## 🔥 1. 실행 컨텍스트와 스코프
 
 ### Q1. 실행 컨텍스트(Execution Context)란 무엇인가요?

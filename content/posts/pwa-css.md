@@ -7,8 +7,6 @@ tags: ["PWA", "Frontend", "CSS", "모바일", "iOS"]
 excerpt: "PWA를 iPhone에 설치했는데 노치 부분이 이상하다? Safe Area와 viewport-fit을 활용해 네이티브 앱처럼 자연스러운 UI를 만드는 방법을 알아봅니다."
 ---
 
-# PWA를 네이티브 앱처럼 보이게 만들기
-
 ## 문제 상황
 
 PWA(Progressive Web App)를 개발하고 iPhone 홈 화면에 설치해서 실행했을 때, 다음과 같은 문제들을 마주했습니다:

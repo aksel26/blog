@@ -8,8 +8,6 @@ excerpt: "Next.js 14의 'use server' Server Actions와 전통적인 API Routes�
 thumbnail: "https://images.unsplash.com/photo-1633356122544-f134324a6cee?w=640&h=425&fit=crop"
 ---
 
-# ⚡ Next.js 14 Server Actions vs API Routes: 완벽 비교 가이드
-
 Next.js 14에서 도입된 `'use server'` Server Actions와 전통적인 API Routes, 어떤 것을 선택해야 할까요? 두 방식의 차이점과 사용 케이스를 상세히 비교해드립니다.
 
 ## 📋 목차
@@ -28,7 +26,7 @@ Next.js 14에서 도입된 `'use server'` Server Actions와 전통적인 API Rou
 // app/actions/login.ts
 export async function login(formData: FormData) {
   "use server"; // 서버 측 실행 선언
-  
+
   // 서버 측 로직 직접 작성
   const data = {
     email: formData.get("email") as string,
@@ -78,24 +76,25 @@ export async function POST(request: Request) {
 
 ## 3. 핵심 차이점 비교
 
-| 항목 | Server Actions (`'use server'`) | API Routes (app/api) |
-|------|--------------------------------|---------------------|
-| **실행 위치** | 서버 측 함수 | 전통적 API 엔드포인트 |
-| **호출 방식** | 컴포넌트에서 직접 호출 | fetch/axios로 HTTP 요청 |
-| **데이터 전송** | FormData 자동 처리 | 수동 파싱 (JSON/FormData 등) |
-| **라우팅** | 파일 시스템 기반 아님 | 파일 시스템 기반 라우팅 |
-| **사용 사례** | 폼 제출, 컴포넌트 특화 로직 | 외부 시스템 연동, REST API 제공 |
-| **에러 처리** | try/catch로 직접 처리 | HTTP 상태 코드 반환 |
-| **재검증(Revalidation)** | `revalidatePath`/`revalidateTag` 즉시 사용 가능 | 캐시 헤더로 제어 |
-| **보안** | CSRF 보호 자동 적용 | 수동 보안 처리 필요 |
-| **타입 안전성** | Zod 등으로 유효성 검사 가능 | 수동 유효성 검사 구현 필요 |
-| **클라이언트 번들** | 번들 크기 영향 없음 | API 핸들러 코드 포함 |
+| 항목                     | Server Actions (`'use server'`)                 | API Routes (app/api)            |
+| ------------------------ | ----------------------------------------------- | ------------------------------- |
+| **실행 위치**            | 서버 측 함수                                    | 전통적 API 엔드포인트           |
+| **호출 방식**            | 컴포넌트에서 직접 호출                          | fetch/axios로 HTTP 요청         |
+| **데이터 전송**          | FormData 자동 처리                              | 수동 파싱 (JSON/FormData 등)    |
+| **라우팅**               | 파일 시스템 기반 아님                           | 파일 시스템 기반 라우팅         |
+| **사용 사례**            | 폼 제출, 컴포넌트 특화 로직                     | 외부 시스템 연동, REST API 제공 |
+| **에러 처리**            | try/catch로 직접 처리                           | HTTP 상태 코드 반환             |
+| **재검증(Revalidation)** | `revalidatePath`/`revalidateTag` 즉시 사용 가능 | 캐시 헤더로 제어                |
+| **보안**                 | CSRF 보호 자동 적용                             | 수동 보안 처리 필요             |
+| **타입 안전성**          | Zod 등으로 유효성 검사 가능                     | 수동 유효성 검사 구현 필요      |
+| **클라이언트 번들**      | 번들 크기 영향 없음                             | API 핸들러 코드 포함            |
 
 ## 4. 사용 사례별 선택 가이드
 
 ### ✅ Server Actions 추천 경우
 
 **적합한 상황:**
+
 1. 폼 제출 처리 (로그인/회원가입)
 2. 데이터 재검증이 필요한 업데이트
 3. 컴포넌트와 긴밀한 상호작용이 필요한 경우
@@ -114,6 +113,7 @@ export async function POST(request: Request) {
 ### ✅ API Routes 추천 경우
 
 **적합한 상황:**
+
 1. 타 시스템과의 REST API 통신
 2. 서드파티 웹훅(Webhook) 처리
 3. CORS가 필요한 외부 호출
@@ -142,10 +142,7 @@ import { createClient } from "@/utils/supabase/server";
 
 export async function fetchTables() {
   const supabase = createClient();
-  const { data, error } = await supabase
-    .from("information_schema.tables")
-    .select("table_name")
-    .eq("table_schema", "public");
+  const { data, error } = await supabase.from("information_schema.tables").select("table_name").eq("table_schema", "public");
 
   if (error) throw new Error("테이블 조회 실패");
   return data;
@@ -153,6 +150,7 @@ export async function fetchTables() {
 ```
 
 **적합한 경우:**
+
 - 테이블 구조/메타데이터가 **민감정보**일 때
 - **관리자 전용 페이지**에서 사용할 때
 - **RBAC(Role-Based Access Control)** 이 필요한 경우
@@ -173,10 +171,7 @@ export default function TableList() {
 
   useEffect(() => {
     const loadTables = async () => {
-      const { data } = await supabase
-        .from("information_schema.tables")
-        .select("table_name")
-        .eq("table_schema", "public");
+      const { data } = await supabase.from("information_schema.tables").select("table_name").eq("table_schema", "public");
       console.log(data);
     };
     loadTables();
@@ -187,6 +182,7 @@ export default function TableList() {
 ```
 
 **적합한 경우:**
+
 - **개발자 도구** 같은 **비보안 환경**에서 사용할 때
 - **실시간 동기화**가 필요한 경우
 - **CLI 툴**이나 **로컬 전용 앱**에서 사용할 때
@@ -194,14 +190,14 @@ export default function TableList() {
 
 ## 📊 결정 매트릭스
 
-| 기준 | Server Action 우선 | Client-Side 우선 |
-|------|-------------------|-----------------|
-| **보안 중요도** | 높음 (민감정보 포함) | 낮음 (공개 정보) |
+| 기준              | Server Action 우선      | Client-Side 우선       |
+| ----------------- | ----------------------- | ---------------------- |
+| **보안 중요도**   | 높음 (민감정보 포함)    | 낮음 (공개 정보)       |
 | **데이터 민감성** | 스키마 구조가 보호 필요 | 공개 가능한 메타데이터 |
-| **접근 제어** | RBAC 필수 | Anonymous 접근 허용 |
-| **성능 요구사항** | 캐싱/재검증 필요 | 실시간성 우선 |
-| **사용자 권한** | 관리자 전용 | 모든 사용자 접근 가능 |
-| **빌드 최적화** | SSG/ISR 필요 | CSR만으로 충분 |
+| **접근 제어**     | RBAC 필수               | Anonymous 접근 허용    |
+| **성능 요구사항** | 캐싱/재검증 필요        | 실시간성 우선          |
+| **사용자 권한**   | 관리자 전용             | 모든 사용자 접근 가능  |
+| **빌드 최적화**   | SSG/ISR 필요            | CSR만으로 충분         |
 
 ## ⚠️ 보안 주의사항
 
@@ -215,6 +211,7 @@ const { data } = await supabase
 ```
 
 **보안 원칙:**
+
 - `information_schema`나 `pg_catalog` 접근 시 **반드시 서버 단에서 처리**
 - **Row Level Security(RLS)** 가 시스템 테이블에 적용되지 않을 수 있음
 
@@ -260,11 +257,12 @@ Client-Side
 
 ## 🎯 결론
 
-보안과 안정성이 중요한 경우 **Server Actions**을, 개발 편의성과 실시간성이 중요한 경우 **Client-Side** 호출을 선택하세요. 
+보안과 안정성이 중요한 경우 **Server Actions**을, 개발 편의성과 실시간성이 중요한 경우 **Client-Side** 호출을 선택하세요.
 
 **프로덕션 환경에서는 95% 이상 서버 측 처리를 권장합니다.**
 
 두 방식 모두 장단점이 있으므로 프로젝트 요구사항에 맞게 혼용해서 사용하는 것이 가장 효과적입니다. 예를 들어:
+
 - 인증 처리 → Server Actions
 - 외부 서비스 연동 → API Routes
 
