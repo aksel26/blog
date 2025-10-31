@@ -6,8 +6,8 @@ import { NavLink, SearchButton, MobileMenuButton, Logo } from "./HeaderComponent
 import { useKeyboardShortcut, useMobileMenu } from "../../hooks";
 
 const NAV_LINKS = [
-  { to: "/devLog", label: "DevLog" },
-  { to: "/lifeLog", label: "LifeLog" },
+  { to: "/devlog", label: "DevLog" },
+  { to: "/lifelog", label: "LifeLog" },
   { to: "/about", label: "About" },
 ];
 
@@ -85,12 +85,7 @@ const Header: React.FC = () => {
                 className="md:hidden mt-4 py-4 border-t overflow-hidden"
                 style={{ borderColor: "var(--border-color)" }}
               >
-                <motion.div
-                  initial={{ y: -20 }}
-                  animate={{ y: 0 }}
-                  transition={{ duration: 0.3, ease: "easeOut" }}
-                  className="flex flex-col space-y-2"
-                >
+                <motion.div initial={{ y: -20 }} animate={{ y: 0 }} transition={{ duration: 0.3, ease: "easeOut" }} className="flex flex-col space-y-2">
                   {NAV_LINKS.map((link) => (
                     <NavLink key={link.to} to={link.to} onClick={closeMobileMenu} className="py-3">
                       {link.label}

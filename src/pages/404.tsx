@@ -59,7 +59,7 @@ const NotFoundPage = () => {
             </div>
           </Link>
 
-          <Link to="/devLog" style={{ textDecoration: "none" }}>
+          <Link to="/devlog" style={{ textDecoration: "none" }}>
             <div
               className="toss-card p-6 h-full transition-all duration-300"
               onMouseEnter={(e) => {
@@ -87,7 +87,7 @@ const NotFoundPage = () => {
             </div>
           </Link>
 
-          <Link to="/lifeLog" style={{ textDecoration: "none" }}>
+          <Link to="/lifelog" style={{ textDecoration: "none" }}>
             <div
               className="toss-card p-6 h-full transition-all duration-300"
               onMouseEnter={(e) => {

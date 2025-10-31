@@ -24,8 +24,8 @@ export const onCreateNode: GatsbyNode["onCreateNode"] = ({ node, actions, getNod
 
     // Map categories to new navigation structure
     const categoryMap: Record<string, string> = {
-      기술: "devLog",
-      일상: "lifeLog",
+      기술: "devlog",
+      일상: "lifelog",
     };
 
     const mappedCategory = categoryMap[frontmatter?.category] || category;
@@ -185,8 +185,8 @@ export const createPages: GatsbyNode["createPages"] = async ({ graphql, actions,
     if (typeof category === "string") {
       // Map categories to new navigation structure
       const categoryMap: Record<string, string> = {
-        기술: "devLog",
-        일상: "lifeLog",
+        기술: "devlog",
+        일상: "lifelog",
       };
 
       const mappedCategory = categoryMap[category] || category.toLowerCase();

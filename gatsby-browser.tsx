@@ -75,11 +75,11 @@ export const wrapPageElement: GatsbyBrowser["wrapPageElement"] = ({ element }) =
 export const onRouteUpdate = ({ location }: { location: { pathname: string } }) => {
   // In development, manually navigate to 404 page for non-existent routes
   if (typeof window !== "undefined" && process.env.NODE_ENV === "development") {
-    const validRoutes = ["/", "/devLog", "/lifeLog", "/about", "/404"];
+    const validRoutes = ["/", "/devlog", "/lifelog", "/about", "/404"];
     const isValidRoute =
       validRoutes.includes(location.pathname) ||
-      location.pathname.startsWith("/devLog/") ||
-      location.pathname.startsWith("/lifeLog/") ||
+      location.pathname.startsWith("/devlog/") ||
+      location.pathname.startsWith("/lifelog/") ||
       location.pathname.startsWith("/about/");
 
     if (!isValidRoute && location.pathname !== "/404/") {

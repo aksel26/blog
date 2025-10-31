@@ -36,7 +36,7 @@ const Footer: React.FC = () => {
               <ul className="space-y-2">
                 <li>
                   <a
-                    href="/devLog"
+                    href="/devlog"
                     className="text-sm transition-colors duration-200"
                     style={{
                       color: "var(--text-secondary)",
@@ -54,7 +54,7 @@ const Footer: React.FC = () => {
                 </li>
                 <li>
                   <a
-                    href="/lifeLog"
+                    href="/lifelog"
                     className="text-sm transition-colors duration-200"
                     style={{
                       color: "var(--text-secondary)",
