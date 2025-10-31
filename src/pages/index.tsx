@@ -18,7 +18,7 @@ const navigationCards = [
   {
     to: "/devlog",
     title: "DevLog",
-    description: "개발 과정에서 배운 기술, 문제 해결 과정, \n그리고 새로운 트렌드에 대한 기록",
+    description: `개발 과정에서 배운 기술, 문제 해결 과정,\n그리고 새로운 트렌드에 대한 기록`,
     linkText: "개발 포스트 보기",
     imageSrc: "/devLogCard.webp",
     imageAlt: "devCardImage",
