@@ -173,7 +173,25 @@ const config: GatsbyConfig = {
         background_color: "#ffffff",
         theme_color: "#ffffff",
         display: "minimal-ui",
-        icon: "src/images/favicon.png", // Add your icon file here
+        icon: "src/images/favicon.png",
+        icons: [
+          {
+            src: "/favicon/favicon-192x192.png",
+            sizes: "192x192",
+            type: "image/png",
+          },
+          {
+            src: "/favicon/favicon-512x512.png",
+            sizes: "512x512",
+            type: "image/png",
+          },
+          {
+            src: "/favicon/android-icon-192x192.png",
+            sizes: "192x192",
+            type: "image/png",
+            purpose: "any maskable",
+          },
+        ],
       },
     },
     {
