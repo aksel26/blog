@@ -60,11 +60,31 @@ export const onRenderBody: GatsbySSR["onRenderBody"] = ({ setHeadComponents }) =
     />,
     // Favicon links for SEO optimization
     <link
+      key="icon-svg"
+      rel="icon"
+      type="image/svg+xml"
+      href="/favicon/favicon.svg"
+    />,
+    <link
+      key="icon-512"
+      rel="icon"
+      type="image/png"
+      sizes="512x512"
+      href="/favicon/favicon-512x512.png"
+    />,
+    <link
       key="icon-192"
       rel="icon"
       type="image/png"
       sizes="192x192"
-      href="/favicon/android-icon-192x192.png"
+      href="/favicon/favicon-192x192.png"
+    />,
+    <link
+      key="icon-96"
+      rel="icon"
+      type="image/png"
+      sizes="96x96"
+      href="/favicon/favicon-96x96.png"
     />,
     <link
       key="icon-32"
