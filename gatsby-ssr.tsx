@@ -60,37 +60,32 @@ export const onRenderBody: GatsbySSR["onRenderBody"] = ({ setHeadComponents }) =
     />,
     // Favicon links for SEO optimization
     <link
-      key="favicon-png-32"
+      key="icon-192"
+      rel="icon"
+      type="image/png"
+      sizes="192x192"
+      href="/favicon/android-icon-192x192.png"
+    />,
+    <link
+      key="icon-32"
       rel="icon"
       type="image/png"
       sizes="32x32"
       href="/favicon/favicon-32x32.png"
     />,
     <link
-      key="favicon-png-16"
+      key="icon-16"
       rel="icon"
       type="image/png"
       sizes="16x16"
       href="/favicon/favicon-16x16.png"
     />,
-    // Apple touch icons
-    <link
-      key="apple-icon-180"
-      rel="apple-touch-icon"
-      sizes="180x180"
-      href="/favicon/apple-icon-180x180.png"
-    />,
+    // Apple touch icons (avoiding duplicates with manifest plugin)
     <link
       key="apple-icon-152"
       rel="apple-touch-icon"
       sizes="152x152"
       href="/favicon/apple-icon-152x152.png"
-    />,
-    <link
-      key="apple-icon-144"
-      rel="apple-touch-icon"
-      sizes="144x144"
-      href="/favicon/apple-icon-144x144.png"
     />,
     <link
       key="apple-icon-120"
@@ -109,12 +104,6 @@ export const onRenderBody: GatsbySSR["onRenderBody"] = ({ setHeadComponents }) =
       rel="apple-touch-icon"
       sizes="76x76"
       href="/favicon/apple-icon-76x76.png"
-    />,
-    <link
-      key="apple-icon-72"
-      rel="apple-touch-icon"
-      sizes="72x72"
-      href="/favicon/apple-icon-72x72.png"
     />,
     <link
       key="apple-icon-60"
