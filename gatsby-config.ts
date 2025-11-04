@@ -116,6 +116,14 @@ const config: GatsbyConfig = {
         path: "./content/posts/",
       },
     },
+
+    {
+      resolve: `gatsby-transformer-remark`,
+      options: {
+        gfm: true, // Enables GitHub Flavored Markdown
+        // other options...
+      },
+    },
     {
       resolve: "gatsby-plugin-mdx",
       options: {
@@ -211,10 +219,7 @@ const config: GatsbyConfig = {
                   date: node.frontmatter.date,
                   url: site.siteMetadata.siteUrl + node.fields.slug,
                   guid: site.siteMetadata.siteUrl + node.fields.slug,
-                  custom_elements: [
-                    { "content:encoded": node.excerpt },
-                    { "dc:creator": site.siteMetadata.author || "HMKIM" },
-                  ],
+                  custom_elements: [{ "content:encoded": node.excerpt }, { "dc:creator": site.siteMetadata.author || "HMKIM" }],
                 });
               });
             },
@@ -251,10 +256,7 @@ const config: GatsbyConfig = {
                   date: node.frontmatter.date,
                   url: site.siteMetadata.siteUrl + node.fields.slug,
                   guid: site.siteMetadata.siteUrl + node.fields.slug,
-                  custom_elements: [
-                    { "content:encoded": node.excerpt },
-                    { "dc:creator": site.siteMetadata.author || "HMKIM" },
-                  ],
+                  custom_elements: [{ "content:encoded": node.excerpt }, { "dc:creator": site.siteMetadata.author || "HMKIM" }],
                 });
               });
             },
@@ -291,10 +293,7 @@ const config: GatsbyConfig = {
                   date: node.frontmatter.date,
                   url: site.siteMetadata.siteUrl + node.fields.slug,
                   guid: site.siteMetadata.siteUrl + node.fields.slug,
-                  custom_elements: [
-                    { "content:encoded": node.excerpt },
-                    { "dc:creator": site.siteMetadata.author || "HMKIM" },
-                  ],
+                  custom_elements: [{ "content:encoded": node.excerpt }, { "dc:creator": site.siteMetadata.author || "HMKIM" }],
                 });
               });
             },
