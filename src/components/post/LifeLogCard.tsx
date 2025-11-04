@@ -8,12 +8,11 @@ interface LifeLogCardProps {
   date: string;
   tags: string[];
   slug: string;
-  readTime?: number;
   size?: "small" | "medium" | "large";
   thumbnail?: string;
 }
 
-const LifeLogCard: React.FC<LifeLogCardProps> = memo(({ title, excerpt, date, tags, slug, readTime, size = "medium", thumbnail }) => {
+const LifeLogCard: React.FC<LifeLogCardProps> = memo(({ title, excerpt, date, tags, slug, size = "medium", thumbnail }) => {
   const [imageError, setImageError] = useState(false);
   const [imageLoaded, setImageLoaded] = useState(false);
 
@@ -151,17 +150,6 @@ const LifeLogCard: React.FC<LifeLogCardProps> = memo(({ title, excerpt, date, ta
               >
                 {date}
               </time>
-              {readTime && size !== "small" && (
-                <span
-                  className="text-xs"
-                  style={{
-                    color: hasValidThumbnail ? "rgba(255, 255, 255, 0.9)" : "var(--text-tertiary)",
-                    textShadow: hasValidThumbnail ? "0 1px 2px rgba(0,0,0,0.7)" : "none",
-                  }}
-                >
-                  {readTime}분
-                </span>
-              )}
             </div>
           </div>
         </div>

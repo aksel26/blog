@@ -8,7 +8,6 @@ interface BlogCardProps {
   category: string
   tags: string[]
   slug: string
-  readTime?: number
   viewCount?: number
   thumbnail?: string
 }
@@ -20,7 +19,6 @@ const BlogCard: React.FC<BlogCardProps> = ({
   category,
   tags,
   slug,
-  readTime,
   viewCount
 }) => {
   return (
@@ -58,9 +56,6 @@ const BlogCard: React.FC<BlogCardProps> = ({
         
         <div className="flex items-center justify-between text-sm text-gray-500 dark:text-gray-400">
           <div className="flex items-center space-x-4">
-            {readTime && (
-              <span>읽는 시간: {readTime}분</span>
-            )}
             {viewCount && (
               <span>조회수: {viewCount}</span>
             )}

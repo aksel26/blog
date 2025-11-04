@@ -182,7 +182,6 @@ const RecentActivities: React.FC = () => {
                     date={post.frontmatter.date}
                     tags={post.frontmatter.tags || []}
                     slug={post.fields.slug}
-                    readTime={5}
                     thumbnail={getThumbnailUrl(post, data.allFile.nodes)}
                   />
                 );
@@ -201,7 +200,6 @@ const RecentActivities: React.FC = () => {
                     date={post.frontmatter.date}
                     tags={post.frontmatter.tags || []}
                     slug={post.fields.slug}
-                    readTime={5}
                     thumbnail={getThumbnailUrl(post, data.allFile.nodes)}
                     size="medium"
                   />
@@ -221,7 +219,6 @@ const RecentActivities: React.FC = () => {
                     date={post.frontmatter.date}
                     tags={post.frontmatter.tags || []}
                     slug={post.fields.slug}
-                    readTime={5}
                     thumbnail={getThumbnailUrl(post, data.allFile.nodes)}
                   />
                 );

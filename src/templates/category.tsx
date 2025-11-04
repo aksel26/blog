@@ -292,7 +292,6 @@ const CategoryTemplate: React.FC<PageProps<CategoryData, CategoryPageContext>> =
                   date={post.frontmatter.date}
                   tags={post.frontmatter.tags}
                   slug={post.fields.slug}
-                  readTime={5}
                   thumbnail={getThumbnailUrl(post)}
                 />
               ))}
@@ -314,7 +313,6 @@ const CategoryTemplate: React.FC<PageProps<CategoryData, CategoryPageContext>> =
                           date={posts[0].frontmatter.date}
                           tags={posts[0].frontmatter.tags}
                           slug={posts[0].fields.slug}
-                          readTime={5}
                           size="large"
                           thumbnail={getThumbnailUrl(posts[0])}
                         />
@@ -328,7 +326,6 @@ const CategoryTemplate: React.FC<PageProps<CategoryData, CategoryPageContext>> =
                           date={posts[1].frontmatter.date}
                           tags={posts[1].frontmatter.tags}
                           slug={posts[1].fields.slug}
-                          readTime={5}
                           size="medium"
                           thumbnail={getThumbnailUrl(posts[1])}
                         />
@@ -344,7 +341,6 @@ const CategoryTemplate: React.FC<PageProps<CategoryData, CategoryPageContext>> =
                         date={posts[0].frontmatter.date}
                         tags={posts[0].frontmatter.tags}
                         slug={posts[0].fields.slug}
-                        readTime={5}
                         size="large"
                         thumbnail={getThumbnailUrl(posts[0])}
                       />
@@ -362,7 +358,6 @@ const CategoryTemplate: React.FC<PageProps<CategoryData, CategoryPageContext>> =
                           date={post.frontmatter.date}
                           tags={post.frontmatter.tags}
                           slug={post.fields.slug}
-                          readTime={5}
                           size="medium"
                           thumbnail={getThumbnailUrl(post)}
                         />
@@ -383,7 +378,6 @@ const CategoryTemplate: React.FC<PageProps<CategoryData, CategoryPageContext>> =
                   date={post.frontmatter.date}
                   tags={post.frontmatter.tags}
                   slug={post.fields.slug}
-                  readTime={5}
                   thumbnail={getThumbnailUrl(post)}
                 />
               ))}

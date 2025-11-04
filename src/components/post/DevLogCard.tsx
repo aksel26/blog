@@ -8,11 +8,10 @@ interface DevLogCardProps {
   date: string;
   tags: string[];
   slug: string;
-  readTime?: number;
   thumbnail?: string;
 }
 
-const DevLogCard: React.FC<DevLogCardProps> = memo(({ title, excerpt, date, tags, slug, readTime, thumbnail }) => {
+const DevLogCard: React.FC<DevLogCardProps> = memo(({ title, excerpt, date, tags, slug, thumbnail }) => {
   return (
     <Link to={slug} style={{ textDecoration: "none" }}>
       <motion.article
@@ -65,11 +64,6 @@ const DevLogCard: React.FC<DevLogCardProps> = memo(({ title, excerpt, date, tags
           <time className="text-xs" style={{ color: "var(--text-tertiary)" }}>
             {date}
           </time>
-          {readTime && (
-            <span className="text-xs" style={{ color: "var(--text-tertiary)" }}>
-              {readTime}분 읽기
-            </span>
-          )}
         </div>
       </motion.article>
     </Link>
