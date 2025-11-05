@@ -98,7 +98,7 @@ const LifeLogPostTemplate: React.FC<PageProps<BlogPostData, BlogPostPageContext>
 
   // galleryMedia에서 thumbnail 파일 찾기
   // const thumbnailFileName = thumbnail?.replace("./", "");
-  const thumbnailMedia = galleryMedia.find((media) => media.url.includes("thumbnail"));
+  const thumbnailMedia = galleryMedia.find((media) => media.url.includes("thumbnail") || media.url.includes("content"));
   const thumbnailUrl = thumbnailMedia?.url || thumbnail;
 
   // thumbnail은 이제 { publicURL: string } 형태이므로 처리 불필요
