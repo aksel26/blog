@@ -68,7 +68,6 @@ const SearchDialog: React.FC<SearchDialogProps> = ({ isOpen, onClose }) => {
   `);
 
   const allPosts: SearchPost[] = data.allMdx.nodes;
-  console.log("🔍 ~  ~ src/components/common/SearchDialog.tsx:30 ~ data:", data);
 
   // Helper function to get thumbnail URL
   const getThumbnailUrl = (post: SearchPost): string | undefined => {
@@ -104,8 +103,6 @@ const SearchDialog: React.FC<SearchDialogProps> = ({ isOpen, onClose }) => {
 
     return allPosts.filter((post) => post.frontmatter.title.toLowerCase().includes(query.toLowerCase())).slice(0, 8); // 최대 8개 결과만 표시
   }, [query, allPosts]);
-
-  console.log("🔍 ~  ~ src/components/common/SearchDialog.tsx:51 ~ filteredPosts:", filteredPosts);
 
   // Dialog가 열릴 때 포커스
   useEffect(() => {
