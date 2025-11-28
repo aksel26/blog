@@ -1,7 +1,7 @@
 import React from "react";
 import { graphql, Link, PageProps } from "gatsby";
 import { Layout } from "../components/layout";
-import { SEO } from "../components/common";
+import SEO from "../components/common/SEO";
 import { BlogCard } from "../components/post";
 
 interface TagPageData {
@@ -35,11 +35,6 @@ const TagTemplate: React.FC<PageProps<TagPageData, TagPageContext>> = ({ data, p
 
   return (
     <Layout>
-      <SEO
-        title={`"${tag}" 태그 포스트`}
-        description={`"${tag}" 태그가 포함된 ${totalCount}개의 포스트를 확인해보세요.`}
-        keywords={[tag, "블로그", "포스트"]}
-      />
 
       <div className="max-w-4xl mx-auto">
         {/* Header */}
@@ -112,6 +107,19 @@ const TagTemplate: React.FC<PageProps<TagPageData, TagPageContext>> = ({ data, p
 };
 
 export default TagTemplate;
+
+export const Head: React.FC<PageProps<TagPageData, TagPageContext>> = ({ data, pageContext }) => {
+  const { tag } = pageContext;
+  const totalCount = data.allMdx.totalCount;
+
+  return (
+    <SEO
+      title={`"${tag}" 태그 포스트`}
+      description={`"${tag}" 태그가 포함된 ${totalCount}개의 포스트를 확인해보세요.`}
+      keywords={[tag, "블로그", "포스트"]}
+    />
+  );
+};
 
 export const query = graphql`
   query TagPage($tag: String!) {

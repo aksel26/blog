@@ -55,32 +55,10 @@ const IndexPage: React.FC<PageProps<IndexPageData>> = ({ data }) => {
 
 export default IndexPage;
 
+import SEO from "../components/common/SEO";
+
 export const Head = () => (
-  <>
-    <title>Blog - 개발과 일상을 기록하는 공간</title>
-    <meta name="description" content="개발 과정에서 배운 것들과 일상의 소중한 순간들을 나누는 개인 블로그입니다." />
-    <meta name="google-site-verification" content="3Z0N6Zgzw95Uk6Xwd0iJX_xcWRFAPxL2iozSpiLpukM" />
-    <meta name="naver-site-verification" content="b8551eee139d8570cac6b62587127de0de5c7d9d" />
-
-    {/* Favicon */}
-    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
-    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
-    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
-    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
-
-    {/* Open Graph */}
-    <meta property="og:type" content="website" />
-    <meta property="og:url" content="https://aksel26.netlify.app/" />
-    <meta property="og:title" content="개발과 일상을 기록하는 공간" />
-    <meta property="og:description" content="개발 과정에서 배운 것들과 일상의 소중한 순간들을 나누는 개인 블로그입니다." />
-    <meta property="og:site_name" content="개발과 일상을 기록하는 공간" />
-    <meta property="og:locale" content="ko_KR" />
-
-    {/* Twitter Card */}
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="개발과 일상을 기록하는 공간" />
-    <meta name="twitter:description" content="개발 과정에서 배운 것들과 일상의 소중한 순간들을 나누는 개인 블로그입니다." />
-  </>
+  <SEO />
 );
 
 export const query = graphql`

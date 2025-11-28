@@ -13,7 +13,7 @@ const config: GatsbyConfig = {
     type: "website",
   },
   plugins: [
-    "gatsby-plugin-react-helmet",
+
     "gatsby-plugin-image",
     "gatsby-plugin-sharp",
     "gatsby-plugin-postcss",

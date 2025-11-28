@@ -1,7 +1,7 @@
 import React, { useState, useMemo } from "react";
 import { graphql, PageProps } from "gatsby";
 import { Layout } from "../components/layout";
-import { SEO } from "../components/common";
+import SEO from "../components/common/SEO";
 import { DevLogCard, LifeLogCard } from "../components/post";
 
 interface CategoryData {
@@ -142,7 +142,6 @@ const CategoryTemplate: React.FC<PageProps<CategoryData, CategoryPageContext>> =
 
   return (
     <Layout>
-      <SEO title={info.title} description={info.description} pathname={`/${mappedCategory}`} />
 
       <div className="max-w-6xl mx-auto">
         <header className="mb-12">
@@ -411,6 +410,28 @@ const CategoryTemplate: React.FC<PageProps<CategoryData, CategoryPageContext>> =
 };
 
 export default CategoryTemplate;
+
+export const Head: React.FC<PageProps<CategoryData, CategoryPageContext>> = ({ pageContext }) => {
+  const { category, mappedCategory } = pageContext;
+  
+  const categoryInfo = {
+    기술: {
+      title: "DevLog",
+      description: "코드로 문제를 해결하고, 새로운 기술을 학습하며, 개발 과정에서 얻은 인사이트를 기록합니다.",
+    },
+    일상: {
+      title: "LifeLog",
+      description: "여행, 경험, 그리고 삶에서 발견한 작은 기쁨들을 이야기로 나눕니다.",
+    },
+  };
+
+  const info = categoryInfo[category as keyof typeof categoryInfo] || {
+    title: category,
+    description: `${category} 관련 포스트들입니다.`,
+  };
+
+  return <SEO title={info.title} description={info.description} pathname={`/${mappedCategory}`} />;
+};
 
 export const query = graphql`
   query PostsByCategory($category: String!) {

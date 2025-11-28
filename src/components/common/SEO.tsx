@@ -1,5 +1,4 @@
 import React from "react";
-import { Helmet } from "react-helmet";
 import { useStaticQuery, graphql } from "gatsby";
 
 interface SEOProps {
@@ -102,6 +101,7 @@ const SEO: React.FC<SEOProps> = ({ title, description, keywords = [], image, art
           "query-input": "required name=search_term_string",
         },
         inLanguage: "ko-KR",
+        isAccessibleForFree: true,
       };
     }
   };
@@ -132,131 +132,47 @@ const SEO: React.FC<SEOProps> = ({ title, description, keywords = [], image, art
   const structuredData = getStructuredData();
 
   return (
-    <Helmet
-      htmlAttributes={{
-        lang: "ko",
-      }}
-      title={metaTitle}
-      meta={[
-        {
-          name: "description",
-          content: metaDescription,
-        },
-        {
-          property: "og:title",
-          content: metaTitle,
-        },
-        {
-          property: "og:description",
-          content: metaDescription,
-        },
-        {
-          property: "og:type",
-          content: article ? "article" : "website",
-        },
-        {
-          property: "og:site_name",
-          content: site.siteMetadata.title,
-        },
-        {
-          property: "og:url",
-          content: url,
-        },
-        {
-          property: "og:locale",
-          content: "ko_KR",
-        },
-        {
-          name: "google-site-verification",
-          content: "3Z0N6Zgzw95Uk6Xwd0iJX_xcWRFAPxL2iozSpiLpukM",
-        },
-        {
-          name: "twitter:card",
-          content: "summary_large_image",
-        },
-        {
-          name: "twitter:creator",
-          content: site.siteMetadata.author,
-        },
-        {
-          name: "twitter:title",
-          content: metaTitle,
-        },
-        {
-          name: "twitter:description",
-          content: metaDescription,
-        },
-        {
-          property: "og:image",
-          content: metaImage,
-        },
-        {
-          property: "og:image:width",
-          content: "1200",
-        },
-        {
-          property: "og:image:height",
-          content: "630",
-        },
-        {
-          name: "twitter:image",
-          content: metaImage,
-        },
-        ...keywords.map((keyword) => ({
-          name: "keywords",
-          content: keyword,
-        })),
-        // Article-specific meta tags
-        ...(article && datePublished
-          ? [
-              {
-                property: "article:published_time",
-                content: datePublished,
-              },
-              {
-                property: "article:modified_time",
-                content: dateModified || datePublished,
-              },
-              {
-                property: "article:author",
-                content: author || site.siteMetadata.author,
-              },
-              ...keywords.map((tag) => ({
-                property: "article:tag",
-                content: tag,
-              })),
-            ]
-          : []),
-      ]}
-      script={[
-        ...(structuredData
-          ? [
-              {
-                type: "application/ld+json",
-                innerHTML: JSON.stringify(structuredData),
-              },
-            ]
-          : []),
-        ...(breadcrumbSchema
-          ? [
-              {
-                type: "application/ld+json",
-                innerHTML: JSON.stringify(breadcrumbSchema),
-              },
-            ]
-          : []),
-      ]}
-      link={
-        canonical
-          ? [
-              {
-                rel: "canonical",
-                href: canonical,
-              },
-            ]
-          : []
-      }
-    />
+    <>
+      <html lang="ko" />
+      <title>{metaTitle}</title>
+      <meta name="description" content={metaDescription} />
+      <meta name="keywords" content={keywords.join(", ")} />
+      
+      <meta property="og:title" content={metaTitle} />
+      <meta property="og:description" content={metaDescription} />
+      <meta property="og:type" content={article ? "article" : "website"} />
+      <meta property="og:site_name" content={site.siteMetadata.title} />
+      <meta property="og:url" content={url} />
+      <meta property="og:locale" content="ko_KR" />
+      <meta property="og:image" content={metaImage} />
+      <meta property="og:image:width" content="1200" />
+      <meta property="og:image:height" content="630" />
+
+      <meta name="twitter:card" content="summary_large_image" />
+      <meta name="twitter:creator" content={site.siteMetadata.author} />
+      <meta name="twitter:title" content={metaTitle} />
+      <meta name="twitter:description" content={metaDescription} />
+      <meta name="twitter:image" content={metaImage} />
+
+      <meta name="google-site-verification" content="3Z0N6Zgzw95Uk6Xwd0iJX_xcWRFAPxL2iozSpiLpukM" />
+      <meta name="naver-site-verification" content="b8551eee139d8570cac6b62587127de0de5c7d9d" />
+
+      {article && datePublished && (
+        <>
+          <meta property="article:published_time" content={datePublished} />
+          <meta property="article:modified_time" content={dateModified || datePublished} />
+          <meta property="article:author" content={author || site.siteMetadata.author} />
+          {keywords.map((tag) => (
+            <meta key={tag} property="article:tag" content={tag} />
+          ))}
+        </>
+      )}
+
+      {canonical && <link rel="canonical" href={canonical} />}
+
+      {structuredData && <script type="application/ld+json">{JSON.stringify(structuredData)}</script>}
+      {breadcrumbSchema && <script type="application/ld+json">{JSON.stringify(breadcrumbSchema)}</script>}
+    </>
   );
 };
 

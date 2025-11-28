@@ -1,12 +1,11 @@
 import React from "react";
 import { Link } from "gatsby";
 import { Layout } from "../components/layout";
-import { SEO } from "../components/common";
+import SEO from "../components/common/SEO";
 
 const NotFoundPage = () => {
   return (
     <Layout>
-      <SEO title="404: 페이지를 찾을 수 없습니다" />
 
       <div className="max-w-4xl mx-auto text-center py-16">
         <div className="mb-8">
@@ -158,9 +157,4 @@ const NotFoundPage = () => {
 
 export default NotFoundPage;
 
-export const Head = () => (
-  <>
-    <title>404: 페이지를 찾을 수 없습니다 - Blog</title>
-    <meta name="description" content="요청하신 페이지를 찾을 수 없습니다. 다른 페이지로 이동해보세요." />
-  </>
-);
+export const Head = () => <SEO title="404: 페이지를 찾을 수 없습니다" description="요청하신 페이지를 찾을 수 없습니다." />;
