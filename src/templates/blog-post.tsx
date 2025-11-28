@@ -3,10 +3,11 @@ import { graphql, PageProps } from "gatsby";
 import React from "react";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { oneDark } from "react-syntax-highlighter/dist/esm/styles/prism";
-import { GiscusComments, SEO, SocialShare, ViewCount } from "../components/common";
+import { GiscusComments, SocialShare, ViewCount } from "../components/common";
+import SEO from "../components/common/SEO";
 import { Layout } from "../components/layout";
 import { PostNavigation, RelatedPosts, TableOfContents } from "../components/post";
-import { ScrollToBottom, ScrollToTop } from "../components/ui";
+import { ReadingProgressBar, ScrollToBottom, ScrollToTop } from "../components/ui";
 // 사용자 입력 언어를 react-syntax-highlighter가 인식하는 이름으로 매핑
 
 // Custom MDX components
@@ -114,17 +115,7 @@ const BlogPostTemplate: React.FC<PageProps<BlogPostData, BlogPostPageContext>> =
 
   return (
     <Layout>
-      <SEO
-        title={title}
-        description={excerpt}
-        keywords={tags}
-        image={thumbnailUrl}
-        article={true}
-        pathname={post.fields.slug}
-        datePublished={dateISO}
-        dateModified={modifiedISO}
-        author="HMKIM"
-      />
+      <ReadingProgressBar />
 
       <article className="max-w-4xl mx-auto">
         <header className="mb-12">
@@ -238,6 +229,26 @@ const BlogPostTemplate: React.FC<PageProps<BlogPostData, BlogPostPageContext>> =
 };
 
 export default BlogPostTemplate;
+
+export const Head: React.FC<PageProps<BlogPostData>> = ({ data }) => {
+  const post = data.mdx;
+  const { title, dateISO, modifiedISO, tags, excerpt, thumbnail, thumbnailFile } = post.frontmatter;
+  const thumbnailUrl = thumbnailFile?.publicURL || thumbnail;
+
+  return (
+    <SEO
+      title={title}
+      description={excerpt}
+      keywords={tags}
+      image={thumbnailUrl}
+      article={true}
+      pathname={post.fields.slug}
+      datePublished={dateISO}
+      dateModified={modifiedISO}
+      author="HMKIM"
+    />
+  );
+};
 
 export const query = graphql`
   query BlogPostBySlug($slug: String!) {

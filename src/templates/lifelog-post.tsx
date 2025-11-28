@@ -5,8 +5,9 @@ import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { oneDark } from "react-syntax-highlighter/dist/esm/styles/prism";
 import { Layout } from "../components/layout";
 import { PostNavigation } from "../components/post";
-import { SEO, SocialShare, ViewCount } from "../components/common";
-import { ScrollToBottom, ScrollToTop } from "../components/ui";
+import { SocialShare, ViewCount } from "../components/common";
+import SEO from "../components/common/SEO";
+import { ReadingProgressBar, ScrollToBottom, ScrollToTop } from "../components/ui";
 import { GalleryWall } from "../components/gallery";
 import { GiscusComments } from "../components/common";
 
@@ -143,17 +144,7 @@ const LifeLogPostTemplate: React.FC<PageProps<BlogPostData, BlogPostPageContext>
 
   return (
     <Layout>
-      <SEO
-        title={title}
-        description={excerpt}
-        keywords={tags}
-        image={thumbnailUrl}
-        article={true}
-        pathname={post.fields.slug}
-        datePublished={dateISO}
-        dateModified={modifiedISO}
-        author="HMKIM"
-      />
+      <ReadingProgressBar />
 
       <div className="max-w-8xl mx-auto">
         {/* 헤더 */}
@@ -267,6 +258,36 @@ const LifeLogPostTemplate: React.FC<PageProps<BlogPostData, BlogPostPageContext>
 };
 
 export default LifeLogPostTemplate;
+
+export const Head: React.FC<PageProps<BlogPostData>> = ({ data }) => {
+  const post = data.mdx;
+  const { title, dateISO, modifiedISO, tags, excerpt, thumbnail } = post.frontmatter;
+  const postDirectory = post.parent?.relativeDirectory || "";
+  
+  let galleryMedia = data.allFile.nodes
+    .filter((file) => file.relativeDirectory === postDirectory)
+    .map((file) => ({
+      url: file.publicURL,
+      type: (["mp4", "mov", "avi"].includes(file.extension.toLowerCase()) ? "video" : "image") as "image" | "video",
+    }));
+
+  const thumbnailMedia = galleryMedia.find((media) => media.url.includes("thumbnail") || media.url.includes("content"));
+  const thumbnailUrl = thumbnailMedia?.url || thumbnail;
+
+  return (
+    <SEO
+      title={title}
+      description={excerpt}
+      keywords={tags}
+      image={thumbnailUrl}
+      article={true}
+      pathname={post.fields.slug}
+      datePublished={dateISO}
+      dateModified={modifiedISO}
+      author="HMKIM"
+    />
+  );
+};
 
 export const query = graphql`
   query LifeLogPostBySlug($slug: String!) {
