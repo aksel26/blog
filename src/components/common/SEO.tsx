@@ -11,9 +11,10 @@ interface SEOProps {
   datePublished?: string;
   dateModified?: string;
   author?: string;
+  category?: string;
 }
 
-const SEO: React.FC<SEOProps> = ({ title, description, keywords = [], image, article = false, pathname = "", datePublished, dateModified, author }) => {
+const SEO: React.FC<SEOProps> = ({ title, description, keywords = [], image, article = false, pathname = "", datePublished, dateModified, author, category }) => {
   const { site } = useStaticQuery(
     graphql`
       query {
@@ -23,6 +24,7 @@ const SEO: React.FC<SEOProps> = ({ title, description, keywords = [], image, art
             description
             author
             siteUrl
+            keywords
           }
         }
       }
@@ -42,6 +44,17 @@ const SEO: React.FC<SEOProps> = ({ title, description, keywords = [], image, art
 
   const canonical = pathname ? `${site.siteMetadata.siteUrl}${pathname}` : site.siteMetadata.siteUrl;
   const url = pathname ? `${site.siteMetadata.siteUrl}${pathname}` : site.siteMetadata.siteUrl;
+
+  // 키워드 병합
+  const siteKeywords = site.siteMetadata.keywords || [];
+  const allKeywords = [...new Set([...keywords, ...siteKeywords])];
+
+  // 카테고리 URL 매핑
+  const getCategoryUrl = (cat: string) => {
+    if (cat === "기술") return `${site.siteMetadata.siteUrl}/devlog`;
+    if (cat === "일상") return `${site.siteMetadata.siteUrl}/lifelog`;
+    return site.siteMetadata.siteUrl;
+  };
 
   // JSON-LD structured data
   const getStructuredData = () => {
@@ -79,8 +92,8 @@ const SEO: React.FC<SEOProps> = ({ title, description, keywords = [], image, art
           "@type": "WebPage",
           "@id": url,
         },
-        keywords: keywords.join(", "),
-        articleSection: keywords[0] || "기술",
+        keywords: allKeywords.join(", "),
+        articleSection: category || keywords[0] || "기술",
         inLanguage: "ko-KR",
         isAccessibleForFree: true,
       };
@@ -119,9 +132,19 @@ const SEO: React.FC<SEOProps> = ({ title, description, keywords = [], image, art
               name: "홈",
               item: site.siteMetadata.siteUrl,
             },
+            ...(category
+              ? [
+                  {
+                    "@type": "ListItem",
+                    position: 2,
+                    name: category,
+                    item: getCategoryUrl(category),
+                  },
+                ]
+              : []),
             {
               "@type": "ListItem",
-              position: 2,
+              position: category ? 3 : 2,
               name: title || "페이지",
               item: url,
             },
@@ -136,7 +159,7 @@ const SEO: React.FC<SEOProps> = ({ title, description, keywords = [], image, art
       <html lang="ko" />
       <title>{metaTitle}</title>
       <meta name="description" content={metaDescription} />
-      <meta name="keywords" content={keywords.join(", ")} />
+      <meta name="keywords" content={allKeywords.join(", ")} />
       
       <meta property="og:title" content={metaTitle} />
       <meta property="og:description" content={metaDescription} />
@@ -145,6 +168,7 @@ const SEO: React.FC<SEOProps> = ({ title, description, keywords = [], image, art
       <meta property="og:url" content={url} />
       <meta property="og:locale" content="ko_KR" />
       <meta property="og:image" content={metaImage} />
+      <meta property="og:image:alt" content={title || site.siteMetadata.title} />
       <meta property="og:image:width" content="1200" />
       <meta property="og:image:height" content="630" />
 
@@ -153,6 +177,7 @@ const SEO: React.FC<SEOProps> = ({ title, description, keywords = [], image, art
       <meta name="twitter:title" content={metaTitle} />
       <meta name="twitter:description" content={metaDescription} />
       <meta name="twitter:image" content={metaImage} />
+      <meta name="twitter:image:alt" content={title || site.siteMetadata.title} />
 
       <meta name="google-site-verification" content="3Z0N6Zgzw95Uk6Xwd0iJX_xcWRFAPxL2iozSpiLpukM" />
       <meta name="naver-site-verification" content="b8551eee139d8570cac6b62587127de0de5c7d9d" />
@@ -162,6 +187,7 @@ const SEO: React.FC<SEOProps> = ({ title, description, keywords = [], image, art
           <meta property="article:published_time" content={datePublished} />
           <meta property="article:modified_time" content={dateModified || datePublished} />
           <meta property="article:author" content={author || site.siteMetadata.author} />
+          <meta property="article:section" content={category} />
           {keywords.map((tag) => (
             <meta key={tag} property="article:tag" content={tag} />
           ))}

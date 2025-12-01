@@ -246,6 +246,7 @@ export const Head: React.FC<PageProps<BlogPostData>> = ({ data }) => {
       datePublished={dateISO}
       dateModified={modifiedISO}
       author="HMKIM"
+      category={post.frontmatter.category}
     />
   );
 };
