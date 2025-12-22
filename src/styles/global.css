@@ -64,6 +64,7 @@ body {
 button {
   cursor: pointer;
 }
+
 /* Improved typography for all text elements */
 h1,
 h2,
@@ -139,7 +140,7 @@ small,
 /* MDX Content Styles */
 .prose {
   color: var(--text-primary);
-  max-width: 65ch;
+  max-width: 80ch;
 }
 
 .prose :where(h1):not(:where([class~="not-prose"] *)) {
@@ -258,7 +259,7 @@ small,
   font-style: italic;
   color: var(--text-secondary);
   border-left: 0.25rem solid var(--border-color);
-  quotes: "\201C""\201D""\2018""\2019";
+  quotes: "\201C" "\201D" "\2018" "\2019";
   margin-top: 1.6em;
   margin-bottom: 1.6em;
   padding-left: 1em;

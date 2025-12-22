@@ -202,16 +202,16 @@ const LifeLogPostTemplate: React.FC<PageProps<BlogPostData, BlogPostPageContext>
         {/* 6:4 비율 레이아웃 */}
         <div className="grid grid-cols-1 lg:grid-cols-10 gap-8">
           {/* 좌측: 갤러리 (60%) */}
-          <div className="lg:col-span-6">
+          <div className="lg:col-span-4">
             <GalleryWall media={galleryMedia} />
           </div>
 
           {/* 우측: 컨텐츠 (40%) */}
-          <article className="lg:col-span-4">
+          <article className="lg:col-span-6">
             <div className="lg:sticky lg:top-24 lg:max-h-[calc(100vh-8rem)] lg:overflow-y-auto">
               <MDXProvider components={mdxComponents}>
                 <div
-                  className="prose prose-lg max-w-none mdx-content"
+                  className="prose prose-xl max-w-none mdx-content"
                   style={{
                     color: "var(--text-primary)",
                     lineHeight: "1.7",
@@ -261,9 +261,10 @@ export default LifeLogPostTemplate;
 
 export const Head: React.FC<PageProps<BlogPostData>> = ({ data }) => {
   const post = data.mdx;
+  console.log(post)
   const { title, dateISO, modifiedISO, tags, excerpt, thumbnail } = post.frontmatter;
   const postDirectory = post.parent?.relativeDirectory || "";
-  
+
   let galleryMedia = data.allFile.nodes
     .filter((file) => file.relativeDirectory === postDirectory)
     .map((file) => ({
