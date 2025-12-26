@@ -1,3 +1,7 @@
+require("dotenv").config({
+  path: `.env.${process.env.NODE_ENV}`,
+});
+
 import type { GatsbyConfig } from "gatsby";
 import remarkGfm from "remark-gfm";
 import remarkExternalLinks from "remark-external-links";
@@ -116,7 +120,15 @@ const config: GatsbyConfig = {
         path: "./content/posts/",
       },
     },
-
+    {
+      resolve: "gatsby-source-notion-api",
+      options: {
+        token: process.env.NOTION_INTEGRATION_TOKEN,
+        databaseId: process.env.NOTION_DATABASE_ID,
+        propsToFrontmatter: true,
+        lowerTitleLevel: true,
+      },
+    },
     {
       resolve: `gatsby-transformer-remark`,
       options: {

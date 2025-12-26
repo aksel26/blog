@@ -53,6 +53,7 @@ const SEO: React.FC<SEOProps> = ({ title, description, keywords = [], image, art
   const getCategoryUrl = (cat: string) => {
     if (cat === "기술") return `${site.siteMetadata.siteUrl}/devlog`;
     if (cat === "일상") return `${site.siteMetadata.siteUrl}/lifelog`;
+    if (cat === "Notion") return `${site.siteMetadata.siteUrl}/notion`;
     return site.siteMetadata.siteUrl;
   };
 

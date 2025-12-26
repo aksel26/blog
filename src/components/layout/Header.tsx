@@ -8,6 +8,7 @@ import { useKeyboardShortcut, useMobileMenu } from "../../hooks";
 const NAV_LINKS = [
   { to: "/devlog", label: "DevLog" },
   { to: "/lifelog", label: "LifeLog" },
+  { to: "/notion", label: "Notion" }, // 임시 테스트 메뉴
   { to: "/about", label: "About" },
 ];
 

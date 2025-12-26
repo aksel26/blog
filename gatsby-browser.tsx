@@ -67,12 +67,18 @@ const components = {
 };
 
 // Wrap page element with MDXProvider
-export const wrapPageElement: GatsbyBrowser["wrapPageElement"] = ({ element }) => {
+export const wrapPageElement: GatsbyBrowser["wrapPageElement"] = ({
+  element,
+}) => {
   return <MDXProvider components={components}>{element}</MDXProvider>;
 };
 
 // Handle client-side routing for 404 pages
-export const onRouteUpdate = ({ location }: { location: { pathname: string } }) => {
+export const onRouteUpdate = ({
+  location,
+}: {
+  location: { pathname: string };
+}) => {
   // In development, manually navigate to 404 page for non-existent routes
   if (typeof window !== "undefined" && process.env.NODE_ENV === "development") {
     const validRoutes = ["/", "/devlog", "/lifelog", "/about", "/404"];
@@ -80,7 +86,8 @@ export const onRouteUpdate = ({ location }: { location: { pathname: string } }) 
       validRoutes.includes(location.pathname) ||
       location.pathname.startsWith("/devlog/") ||
       location.pathname.startsWith("/lifelog/") ||
-      location.pathname.startsWith("/about/");
+      location.pathname.startsWith("/notion/");
+    location.pathname.startsWith("/about/");
 
     if (!isValidRoute && location.pathname !== "/404/") {
       setTimeout(() => {

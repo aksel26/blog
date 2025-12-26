@@ -9,13 +9,24 @@ export const createSchemaCustomization: GatsbyNode["createSchemaCustomization"] 
       thumbnail: String
       thumbnailFile: File @link(by: "id")
     }
+
+    type NotionFrontmatter {
+      title: String
+      date: Date @dateformat
+      modified: Date @dateformat
+      category: String
+      tags: [String]
+      excerpt: String
+      thumbnail: String
+      status: String
+    }
   `;
 
   createTypes(typeDefs);
 };
 
 export const onCreateNode: GatsbyNode["onCreateNode"] = ({ node, actions, getNode, getNodesByType }) => {
-  const { createNodeField, createParentChildLink } = actions;
+  const { createNodeField } = actions;
 
   if (node.internal.type === "Mdx") {
     const fileNode = getNode(node.parent!);
@@ -56,6 +67,18 @@ export const onCreateNode: GatsbyNode["onCreateNode"] = ({ node, actions, getNod
         (node as any).frontmatter.thumbnailFile = thumbnailFileNode.id;
       }
     }
+  }
+
+  // Notion 페이지 처리
+  if (node.internal.type === "Notion") {
+    const title = (node as any).title || "untitled";
+    const slug = `/notion/${title.toLowerCase().replace(/\s+/g, "-").replace(/[^a-z0-9-]/g, "")}`;
+
+    createNodeField({
+      node,
+      name: "slug",
+      value: slug,
+    });
   }
 };
 
@@ -113,6 +136,44 @@ export const createPages: GatsbyNode["createPages"] = async ({ graphql, actions,
 
   const posts = (result.data as any).allMdx.nodes;
   const allFiles = (result.data as any).allFile.nodes;
+
+  // Notion 페이지 쿼리
+  const notionResult = await graphql(`
+    {
+      allNotion(
+        filter: { properties: { Status: { value: { name: { eq: "Published" } } } } }
+        sort: { createdAt: DESC }
+      ) {
+        nodes {
+          id
+          title
+          fields {
+            slug
+          }
+          properties {
+            Description {
+              value
+            }
+            Status {
+              value {
+                name
+              }
+            }
+          }
+          markdownString
+          createdAt
+          updatedAt
+        }
+      }
+    }
+  `);
+
+  if (notionResult.errors) {
+    reporter.panicOnBuild("Error loading Notion pages", notionResult.errors);
+    return;
+  }
+
+  const notionPosts = (notionResult.data as any)?.allNotion?.nodes || [];
 
   // Helper function to find thumbnail publicURL
   const findThumbnailUrl = (post: any): string | undefined => {
@@ -222,5 +283,45 @@ export const createPages: GatsbyNode["createPages"] = async ({ graphql, actions,
         tag,
       },
     });
+  });
+
+  // Notion 포스트 템플릿
+  const notionPostTemplate = path.resolve("./src/templates/notion-post.tsx");
+
+  notionPosts.forEach((post: any, index: number) => {
+    const previous = index === notionPosts.length - 1 ? null : notionPosts[index + 1];
+    const next = index === 0 ? null : notionPosts[index - 1];
+
+    createPage({
+      path: post.fields.slug,
+      component: notionPostTemplate,
+      context: {
+        slug: post.fields.slug,
+        id: post.id,
+        previous: previous
+          ? {
+              fields: previous.fields,
+              title: previous.title,
+              excerpt: previous.properties?.Description?.value || "",
+            }
+          : null,
+        next: next
+          ? {
+              fields: next.fields,
+              title: next.title,
+              excerpt: next.properties?.Description?.value || "",
+            }
+          : null,
+      },
+    });
+  });
+
+  // Notion 목록 페이지
+  createPage({
+    path: "/notion",
+    component: path.resolve("./src/templates/notion-list.tsx"),
+    context: {
+      category: "notion",
+    },
   });
 };
